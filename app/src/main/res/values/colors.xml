@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#F1BB3A</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="login_keypad_bg">#EFEFEF</color>
+    <color name="gold_color">#F1BB3A</color>
+</resources>

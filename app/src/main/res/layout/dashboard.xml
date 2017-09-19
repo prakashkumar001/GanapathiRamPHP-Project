@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:orientation="horizontal"
+        android:background="@android:color/black"
+        >
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center|end"
+            android:layout_height="wrap_content">
+            </android.support.v4.widget.Space>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:textColor="@android:color/white"
+            android:layout_height="match_parent"
+            android:text="Select Food Items"
+            />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center|end"
+            android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/cartRelativeLayout"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:paddingRight="3dip">
+
+            <ImageView
+                android:id="@+id/carticon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:clickable="false"
+                android:src="@mipmap/cart_icon" />
+
+            <TextView
+                android:id="@+id/cartcount"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/notification_circle"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="16dp"
+                android:gravity="center"
+                android:text="0"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="12sp" />
+        </RelativeLayout>
+        </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/appbar_icon"
+            />
+    </FrameLayout>
+
+
+<HorizontalScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+    >
+
+
+    <RadioGroup
+        android:id="@+id/rg_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_title"
+        android:layout_marginLeft="@dimen/marginsmall"
+        android:layout_marginRight="@dimen/marginsmall"
+        android:layout_marginTop="@dimen/categorytext"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/maincourse"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginsmall"
+            android:background="@drawable/radio_selector_circle"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginsmall"
+            android:paddingTop="@dimen/marginsmall"
+            android:text="Main Course"
+            android:textColor="@drawable/rbtn_textcolor_selector"
+            android:textSize="@dimen/categorytext" />
+
+
+        <RadioButton
+            android:id="@+id/appetize"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginsmall"
+            android:background="@drawable/radio_selector_circle"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginsmall"
+            android:paddingTop="@dimen/marginsmall"
+            android:text="Appetizers"
+            android:textColor="@drawable/rbtn_textcolor_selector"
+            android:textSize="@dimen/categorytext" />
+
+        <RadioButton
+            android:id="@+id/deserts2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginsmall"
+            android:background="@drawable/radio_selector_circle"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginsmall"
+            android:paddingTop="@dimen/marginsmall"
+            android:text="Deserts"
+            android:textColor="@drawable/rbtn_textcolor_selector"
+            android:textSize="@dimen/categorytext" />
+
+        <RadioButton
+            android:id="@+id/appetize2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginsmall"
+            android:background="@drawable/radio_selector_circle"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginsmall"
+            android:paddingTop="@dimen/marginsmall"
+            android:text="Appetizers"
+            android:textColor="@drawable/rbtn_textcolor_selector"
+            android:textSize="@dimen/categorytext" />
+
+        <RadioButton
+            android:id="@+id/deserts3"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginsmall"
+            android:background="@drawable/radio_selector_circle"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginsmall"
+            android:paddingTop="@dimen/marginsmall"
+            android:text="Deserts"
+            android:textColor="@drawable/rbtn_textcolor_selector"
+            android:textSize="@dimen/categorytext" />
+
+
+    </RadioGroup>
+
+</HorizontalScrollView>
+
+<!--<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_below="@id/rl_header"
+android:background="@color/screenbackground"
+android:orientation="vertical">
+
+<android.support.v4.view.ViewPager
+    android:id="@+id/v_pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+</LinearLayout>-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/productList"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</LinearLayout>

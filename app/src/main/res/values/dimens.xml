@@ -1,0 +1,21 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="marginsmall">6dp</dimen>
+    <dimen name="textSizemiddle">17dp</dimen>
+    <dimen name="autocompletetextbox">50dp</dimen>
+    <dimen name="otpbox">30dp</dimen>
+    <dimen name="categorytext">11dp</dimen>
+    <dimen name="textsmall">12dp</dimen>
+    <dimen name="logopadding">90dp</dimen>
+    <dimen name="loginbuttonwidth">130dp</dimen>
+    <dimen name="loginbuttonheight">40dp</dimen>
+
+    <dimen name="circleimagewidth">100dp</dimen>
+
+    <dimen name="closebutton_margin">65dp</dimen>
+    <dimen name="profileicon_padding">10dp</dimen>
+    <dimen name="scoreboxsize">70dp</dimen>
+</resources>
