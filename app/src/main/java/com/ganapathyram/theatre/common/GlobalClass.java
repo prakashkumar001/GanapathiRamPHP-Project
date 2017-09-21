@@ -3,16 +3,24 @@ package com.ganapathyram.theatre.common;
 import android.app.Application;
 import android.content.Context;
 
+import com.ganapathyram.theatre.model.Product;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+
+import java.util.ArrayList;
 
 /**
  * Created by Prakash on 9/19/2017.
  */
 
 public class GlobalClass extends Application{
+
+    public static ArrayList<Product> cartList=new ArrayList<>();
+    public static String BadgeCount="0";
+
+
     public void onCreate() {
 
 

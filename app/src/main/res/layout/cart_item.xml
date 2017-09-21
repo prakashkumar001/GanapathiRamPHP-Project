@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/container">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        card_view:cardCornerRadius="10dp"
+        android:elevation="3dp"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            >
+            <ImageView
+                android:id="@+id/product_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/placeholder"
+                />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_height="wrap_content"
+                android:text="Pop Corn"
+                />
+
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_height="wrap_content"
+                android:text=""
+                />
+
+            </LinearLayout>
+
+
+
+
+    </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-25dp"
+        android:layout_below="@+id/container"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/parking"
+        android:layout_gravity="center|bottom"
+
+        />
+</RelativeLayout>

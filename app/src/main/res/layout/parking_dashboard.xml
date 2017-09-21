@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:orientation="horizontal"
+            android:background="@android:color/black"
+            >
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textSize="16dp"
+                android:textColor="@android:color/white"
+                android:layout_height="match_parent"
+                android:text="Parking"
+                />
+
+        </LinearLayout>
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/appbar_icon"
+            />
+    </FrameLayout>
+
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/parking"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</LinearLayout>

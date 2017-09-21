@@ -23,6 +23,17 @@
             android:theme="@style/AppTheme.NoActionBar"
 
             />
+
+        <activity android:name=".parking.ParkingDashboard"
+            android:theme="@style/AppTheme.NoActionBar"
+
+            />
+
+        <activity android:name=".activities.CartPage"
+            android:theme="@style/AppTheme.NoActionBar"
+
+
+            />
     </application>
 
 </manifest>
