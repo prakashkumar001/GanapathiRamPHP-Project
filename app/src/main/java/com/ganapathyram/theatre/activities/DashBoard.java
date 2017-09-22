@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,8 +31,9 @@ public class DashBoard extends AppCompatActivity {
     public  RecyclerView productListView;
     public ProductListAdapter adapter;
     ArrayList<Product> productList;
-    public static TextView cartcount;
+    public static TextView cartcount,totalprice;
     RelativeLayout cartRelativeLayout;
+    public static  RecyclerView cartview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,9 +87,11 @@ public class DashBoard extends AppCompatActivity {
         // custom dialog
         final Dialog dialog = new Dialog(DashBoard.this, R.style.ThemeDialogCustom);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
         dialog.setContentView(R.layout.cartpage);
         dialog.getWindow().setGravity(Gravity.CENTER);
         //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        String rupee = getResources().getString(R.string.Rupee_symbol);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
@@ -95,15 +99,27 @@ public class DashBoard extends AppCompatActivity {
         dialog.show();
         dialog.getWindow().setLayout((8 * width) / 10, (8 * height) / 10);
 
-        RecyclerView cartview=(RecyclerView)dialog.findViewById(R.id.cartlist) ;
-        CartAdapter adapter=new CartAdapter(DashBoard.this);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
+         cartview=(RecyclerView)dialog.findViewById(R.id.cartlist) ;
+         totalprice=(TextView) dialog.findViewById(R.id.total_price) ;
+        ImageView iv_close=(ImageView)dialog.findViewById(R.id.iv_close);
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter = new ProductListAdapter(getApplicationContext(), productList);
+                productListView.setAdapter(adapter);
+                dialog.dismiss();
+            }
+        });
+
+        CartAdapter adapter=new CartAdapter(DashBoard.this,dialog);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
         cartview.setLayoutManager(layoutManager);
         cartview.setItemAnimator(new DefaultItemAnimator());
         cartview.setAdapter(adapter);
         cartview.setNestedScrollingEnabled(false);
         cartview.setAdapter(adapter);
 
+        totalprice.setText(rupee+" "+String.valueOf(adapter.totalvalue()));
 
 
         dialog.show();

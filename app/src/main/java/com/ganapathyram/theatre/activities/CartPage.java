@@ -46,13 +46,15 @@ public class CartPage extends AppCompatActivity {
         dialog.getWindow().setLayout((8 * width) / 10, (8 * height) / 10);
 
        RecyclerView cartview=(RecyclerView)dialog.findViewById(R.id.cartlist) ;
-        CartAdapter adapter=new CartAdapter(CartPage.this);
+        CartAdapter adapter=new CartAdapter(CartPage.this,dialog);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
         cartview.setLayoutManager(layoutManager);
         cartview.setItemAnimator(new DefaultItemAnimator());
         cartview.setAdapter(adapter);
         cartview.setNestedScrollingEnabled(false);
         cartview.setAdapter(adapter);
+
+
 
 
 

@@ -86,6 +86,22 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
         holder.price.setText(ruppee+" "+products.get(position).productprice);
         holder.product_image.setImageResource(products.get(position).productimage);
 
+        if(global.cartList.size()>0)
+        {
+            for(int i=0;i<global.cartList.size();i++)
+            {
+                if(global.cartList.get(i).getProductid().equalsIgnoreCase(products.get(position).getProductid()))
+                {
+                    holder.addtocart.setImageResource(R.mipmap.add_buy_select);
+                    holder.quantity.setText(String.valueOf(global.cartList.get(i).getQuantity()));
+                    holder.price.setText(global.cartList.get(i).getTotalprice());
+                }
+            }
+
+
+
+        }
+
         holder.addtocart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,7 +178,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
                     holder.quantity.setText(String.valueOf(global.cartList.get(index).getQuantity()));
                     b = global.cartList.get(index).getQuantity() * Double.parseDouble(global.cartList.get(index).getProductprice());
-                    global.cartList.get(position).setTotalprice(String.valueOf(b));
+                    global.cartList.get(index).setTotalprice(String.valueOf(b));
                     holder.price.setText(ruppee + String.valueOf(b));
 
 
