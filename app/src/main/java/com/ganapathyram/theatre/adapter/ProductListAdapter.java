@@ -38,7 +38,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView price, productname;
-        public ImageView product_image,addtocart;
+        public ImageView product_image;
         public TextView quantity;
         public ImageView plus,minus;
         LinearLayout productbg;
@@ -49,7 +49,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
             super(view);
 
             product_image = (ImageView) view.findViewById(R.id.product_image);
-            addtocart = (ImageView) view.findViewById(R.id.addtocart);
+            //addtocart = (ImageView) view.findViewById(R.id.addtocart);
             productname = (TextView) view.findViewById(R.id.productname);
             price = (TextView) view.findViewById(R.id.price);
             quantity= (TextView) view.findViewById(R.id.quantity);
@@ -95,45 +95,51 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
         //holder.quantity.setText(products.get(position).quantity);
 
 
-       /* if(global.cartList.size()>0)
-        {
-            for(int i=0;i<global.cartList.size();i++)
-            {
-                if(global.cartList.get(i).getProductid().equalsIgnoreCase(products.get(position).getProductid()))
-                {
-                    products.get(i).setSelected(true);
-                   holder.addtocart.setImageResource(R.mipmap.add_buy_select);
-                   holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
-                    holder.quantity.setText(String.valueOf(global.cartList.get(i).getQuantity()));
-                    holder.price.setText(global.cartList.get(i).getTotalprice());
-                }
-            }
 
-
-
-        }
-*/
 
 
         if(global.cartList.size()>0)
         {
-            for(int i=0;i<global.cartList.size();i++)
+           /* for(int i=0;i<global.cartList.size();i++)
             {
                 if(global.cartList.get(i).getProductid().equalsIgnoreCase(products.get(position).getProductid()))
                 {
                     products.get(i).setSelected(true);
-                    holder.addtocart.setImageResource(R.mipmap.add_buy_select);
+                   // holder.addtocart.setImageResource(R.mipmap.add_buy_select);
                     holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
                     holder.quantity.setText(String.valueOf(global.cartList.get(i).getQuantity()));
                     holder.price.setText(global.cartList.get(i).getTotalprice());
                 }
+            }*/
+
+            ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
+            if(productAvailable.isProductAvailable)
+            {
+                products.get(position).setSelected(true);
+                // holder.addtocart.setImageResource(R.mipmap.add_buy_select);
+                holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
+                holder.quantity.setText(String.valueOf(global.cartList.get(productAvailable.indexofProduct).getQuantity()));
+                holder.price.setText(global.cartList.get(productAvailable.indexofProduct).getTotalprice());
+            }else
+            {
+                products.get(position).setSelected(false);
+                holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
+                holder.quantity.setText("1");
+                holder.price.setText(products.get(position).productprice);
+
+
+
+
+
+
             }
+
 
 
         }
 
 
-        holder.addtocart.setOnClickListener(new View.OnClickListener() {
+       /* holder.addtocart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -160,10 +166,39 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                 set.start();
 
             }
+        });*/
+
+
+        holder.productbg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
+                if(productAvailable.isProductAvailable)
+                {
+                    Toast.makeText(context,"Already Added Please increase the quantity",Toast.LENGTH_SHORT).show();
+                }else
+                {
+                    global.cartList.add(products.get(position));
+                    products.get(position).setSelected(true);
+                    //holder.addtocart.setImageResource(R.mipmap.add_buy_select);
+                    holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
+                    // notifyDataSetChanged();
+
+                }
+
+                int count=global.cartList.size();
+                String value= String.valueOf(count);
+                global.BadgeCount=value;
+                AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(context,R.animator.flip);
+                set.setTarget(DashBoard.cartcount);
+                DashBoard.cartcount.setText(global.BadgeCount);
+                set.start();
+
+
+            }
         });
 
-
-        holder.addtocart.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.productbg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
 
@@ -176,7 +211,6 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                     products.get(position).getProductprice();
                     holder.quantity.setText(String.valueOf(products.get(position).getQuantity()));
                     holder.price.setText(String.valueOf(products.get(position).getProductprice()));
-                    holder.addtocart.setImageResource(R.mipmap.add_buy_unselect);
                    holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
 
                     int count=global.cartList.size();
@@ -263,13 +297,11 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
         if(products.get(position).isSelected())
         {
-            holder.addtocart.setImageResource(R.mipmap.add_buy_select);
             holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
 
 
         }else
         {
-            holder.addtocart.setImageResource(R.mipmap.add_buy_unselect);
             holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
 
 

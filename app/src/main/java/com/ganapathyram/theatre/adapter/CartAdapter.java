@@ -176,8 +176,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 CartAdapter adapter=new CartAdapter(context,cartdialog);
                 DashBoard.cartview.setAdapter(adapter);
 
-                ProductListAdapter adapter1=new ProductListAdapter(context,DashBoard.productList);
-                DashBoard.productListView.setAdapter(adapter1);
+                DashBoard.adapter.notifyDataSetChanged();
 
 
                 DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()));

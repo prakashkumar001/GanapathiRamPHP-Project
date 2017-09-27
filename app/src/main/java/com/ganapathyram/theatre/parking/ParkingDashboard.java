@@ -33,8 +33,13 @@ public class ParkingDashboard extends AppCompatActivity {
         setContentView(R.layout.parking_dashboard);
         parkinglist = (RecyclerView) findViewById(R.id.parking);
         list=new ArrayList<>();
-        list.add(new Parking("CAR PARKING",R.mipmap.car_placeholder));
         list.add(new Parking("BIKE PARKING",R.mipmap.bike_placeholder));
+        list.add(new Parking("CAR PARKING",R.mipmap.car_placeholder));
+        list.add(new Parking("AUTO PARKING",R.mipmap.car_placeholder));
+        list.add(new Parking("HEAVY VEHICLE PARKING",R.mipmap.car_placeholder));
+        list.add(new Parking("CYCLE PARKING",R.mipmap.car_placeholder));
+
+
 
         adapter=new ParkingAdapter(ParkingDashboard.this,list);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());

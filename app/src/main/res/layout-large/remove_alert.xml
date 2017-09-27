@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/textSizemiddle"
+        android:background="@drawable/rounded_corner"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/marginsmall"
+            android:background="@drawable/rounded_corner_top"
+            >
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/close" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/marginsmall"
+                android:text="REMOVE ITEM"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:inputType="textEmailAddress"
+                android:text="Are you sure want to remove this item ?"
+                android:padding="@dimen/marginsmall"
+                android:background="@android:color/transparent" />
+
+
+        <Button
+            android:id="@+id/remove"
+            android:layout_width="@dimen/loginbuttonwidth"
+            android:layout_height="@dimen/loginbuttonheight"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/textSizemiddle"
+            android:background="@drawable/button_bg"
+            android:text="Remove"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</RelativeLayout>
