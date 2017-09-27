@@ -17,8 +17,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/marginsmall"
             android:background="@drawable/rounded_corner_top"
-            android:padding="@dimen/marginsmall">
+            >
 
             <ImageView
                 android:id="@+id/iv_close"

@@ -1,11 +1,19 @@
 package com.ganapathyram.theatre.parking;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.ganapathyram.theatre.R;
+import com.ganapathyram.theatre.activities.DashBoard;
+import com.ganapathyram.theatre.activities.Home;
+import com.ganapathyram.theatre.adapter.ParkingAdapter;
+import com.ganapathyram.theatre.adapter.ProductListAdapter;
 import com.ganapathyram.theatre.model.Parking;
 
 import java.util.ArrayList;
@@ -17,6 +25,7 @@ import java.util.ArrayList;
 public class ParkingDashboard extends AppCompatActivity {
     public RecyclerView parkinglist;
     ArrayList<Parking> list;
+    ParkingAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,6 +35,22 @@ public class ParkingDashboard extends AppCompatActivity {
         list=new ArrayList<>();
         list.add(new Parking("CAR PARKING",R.mipmap.car_placeholder));
         list.add(new Parking("BIKE PARKING",R.mipmap.bike_placeholder));
+
+        adapter=new ParkingAdapter(ParkingDashboard.this,list);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        parkinglist.setLayoutManager(layoutManager);
+        parkinglist.setItemAnimator(new DefaultItemAnimator());
+        parkinglist.setAdapter(adapter);
+        parkinglist.setNestedScrollingEnabled(false);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(ParkingDashboard.this, Home.class);
+        startActivity(i);
+        finish();
     }
 }
 

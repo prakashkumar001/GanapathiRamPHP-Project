@@ -11,6 +11,15 @@ public class Product {
     public int quantity;
     public int productimage;
     public String totalprice;
+    public boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getTotalprice() {
         return totalprice;
@@ -60,13 +69,14 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public Product(String productid, String productname, String productprice, int productimage, int quantity,String totalprice) {
+    public Product(String productid, String productname, String productprice, int productimage, int quantity,String totalprice,boolean isSelected) {
         this.productid = productid;
         this.productname = productname;
         this.productprice = productprice;
         this.productimage = productimage;
         this.quantity=quantity;
         this.totalprice=totalprice;
+        this.isSelected=isSelected;
     }
 }
 

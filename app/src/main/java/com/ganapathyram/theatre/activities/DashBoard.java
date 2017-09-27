@@ -28,9 +28,9 @@ import java.util.ArrayList;
  */
 
 public class DashBoard extends AppCompatActivity {
-    public  RecyclerView productListView;
-    public ProductListAdapter adapter;
-    ArrayList<Product> productList;
+    public static RecyclerView productListView;
+    public static ProductListAdapter adapter;
+    public static ArrayList<Product> productList;
     public static TextView cartcount,totalprice;
     RelativeLayout cartRelativeLayout;
     public static  RecyclerView cartview;
@@ -58,16 +58,16 @@ public class DashBoard extends AppCompatActivity {
 
         productList=new ArrayList<>();
 
-        productList.add(new Product("1","Pop Corn","45.00",R.mipmap.placeholder,1,"45.00"));
-        productList.add(new Product("2","Veg Puff","15.00",R.mipmap.veg_puff,1,"15.00"));
-        productList.add(new Product("3","Chicken Puff","25.00",R.mipmap.chicken_samosa,1,"25.00"));
-        productList.add(new Product("4","Chicken Samosa","30.00",R.mipmap.veg_puff,1,"30.00"));
-        productList.add(new Product("5","Egg Puff","26.00",R.mipmap.egg_puff,1,"26.00"));
-        productList.add(new Product("1","Pop Corn","45.00",R.mipmap.placeholder,1,"45.00"));
-        productList.add(new Product("2","Veg Puff","15.00",R.mipmap.veg_puff,1,"15.00"));
-        productList.add(new Product("3","Chicken Puff","25.00",R.mipmap.chicken_samosa,1,"25.00"));
-        productList.add(new Product("4","Chicken Samosa","30.00",R.mipmap.veg_puff,1,"30.00"));
-        productList.add(new Product("5","Egg Puff","26.00",R.mipmap.egg_puff,1,"26.00"));
+        productList.add(new Product("1","Pop Corn","45.00",R.mipmap.placeholder,1,"45.00",false));
+        productList.add(new Product("2","Veg Puff","15.00",R.mipmap.veg_puff,1,"15.00",false));
+        productList.add(new Product("3","Chicken Puff","25.00",R.mipmap.chicken_samosa,1,"25.00",false));
+        productList.add(new Product("4","Chicken Samosa","30.00",R.mipmap.veg_puff,1,"30.00",false));
+        productList.add(new Product("5","Egg Puff","26.00",R.mipmap.egg_puff,1,"26.00",false));
+        productList.add(new Product("6","Pop Corn","45.00",R.mipmap.placeholder,1,"45.00",false));
+        productList.add(new Product("7","Veg Puff","15.00",R.mipmap.veg_puff,1,"15.00",false));
+        productList.add(new Product("8","Chicken Puff","25.00",R.mipmap.chicken_samosa,1,"25.00",false));
+        productList.add(new Product("9","Chicken Samosa","30.00",R.mipmap.veg_puff,1,"30.00",false));
+        productList.add(new Product("10","Egg Puff","26.00",R.mipmap.egg_puff,1,"26.00",false));
 
 
 
@@ -105,8 +105,9 @@ public class DashBoard extends AppCompatActivity {
         iv_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter = new ProductListAdapter(getApplicationContext(), productList);
-                productListView.setAdapter(adapter);
+                //adapter = new ProductListAdapter(getApplicationContext(), productList);
+               // productListView.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
         });
@@ -127,4 +128,12 @@ public class DashBoard extends AppCompatActivity {
 
 
 }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(DashBoard.this, Home.class);
+        startActivity(i);
+        finish();
+    }
 }

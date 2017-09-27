@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_margin="10dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_weight="4"
 
         >
 
@@ -76,7 +76,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight=".5"
+        android:gravity="center"
         android:layout_marginBottom="10dp"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
@@ -111,13 +112,26 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@mipmap/proceed"
-            />
+
     </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight=".5"
+            android:gravity="center"
+            android:layout_height="0dp">
+
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/proceed"
+                />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

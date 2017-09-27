@@ -20,9 +20,11 @@ import com.ganapathyram.theatre.activities.DashBoard;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.model.Parking;
 import com.ganapathyram.theatre.model.Product;
+import com.ganapathyram.theatre.model.ProductAvailable;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Prakash on 9/21/2017.
@@ -38,6 +40,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     Context context;
     String rupee;
     Dialog cartdialog;
+    int indexpos=-1;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title,price;
         public ImageView icon,remove;
@@ -129,7 +132,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         Button remove=(Button)dialog.findViewById(R.id.remove);
-        ImageView close=(ImageView)dialog.findViewById(R.id.iv_close);
+        final ImageView close=(ImageView)dialog.findViewById(R.id.iv_close);
         TextView productcount=(TextView)dialog.findViewById(R.id.productcount);
 
 
@@ -154,13 +157,27 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             @Override
             public void onClick(View view) {
 
+                /*Product product=global.cartList.get(position);
+               String id= product.getProductid();
 
+                ProductAvailable productAvailable=containsProduct(DashBoard.productList,id);
+                if(productAvailable.isProductAvailable)
+                {
+                    product.setSelected(false);
+                    DashBoard.productList.set(indexpos,product);
+                    DashBoard.adapter.notifyDataSetChanged();
+                }*/
                 global.cartList.remove(position);
+
+
+
                 dialog.dismiss();
                 notifyDataSetChanged();
                 CartAdapter adapter=new CartAdapter(context,cartdialog);
                 DashBoard.cartview.setAdapter(adapter);
 
+                ProductListAdapter adapter1=new ProductListAdapter(context,DashBoard.productList);
+                DashBoard.productListView.setAdapter(adapter1);
 
 
                 DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()));
@@ -184,6 +201,19 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
 
 
+    }
+
+    ProductAvailable containsProduct(List<Product> list, String productid) {
+        for (Product item : list) {
+            if (item.productid.equals(productid)) {
+
+                indexpos=list.indexOf(item);
+                return new ProductAvailable(true,indexpos);
+
+            }
+        }
+
+        return new ProductAvailable(false,-1);
     }
 
 }
