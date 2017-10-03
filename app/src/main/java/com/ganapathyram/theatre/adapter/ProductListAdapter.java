@@ -85,7 +85,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
         final String ruppee=context.getResources().getString(R.string.Rupee_symbol);
         holder.productname.setText(products.get(position).productname);
-        holder.price.setText(ruppee+" "+products.get(position).productprice);
+        holder.price.setText(ruppee+" "+products.get(position).getTotalprice());
         holder.product_image.setImageResource(products.get(position).productimage);
         //holder.quantity.setText(products.get(position).quantity);
 
@@ -114,13 +114,13 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                 // holder.addtocart.setImageResource(R.mipmap.add_buy_select);
                 holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
                 holder.quantity.setText(String.valueOf(global.cartList.get(productAvailable.indexofProduct).getQuantity()));
-                holder.price.setText(global.cartList.get(productAvailable.indexofProduct).getTotalprice());
+                holder.price.setText(ruppee+" "+global.cartList.get(productAvailable.indexofProduct).getTotalprice());
             }else
             {
                 products.get(position).setSelected(false);
                 holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
                 holder.quantity.setText("1");
-                holder.price.setText(products.get(position).productprice);
+                holder.price.setText(ruppee+" "+products.get(position).getTotalprice());
 
 
 
@@ -206,15 +206,17 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
             @Override
             public boolean onLongClick(View view) {
 
-                if(containsProduct(global.cartList,products.get(position).productid).isProductAvailable)
+                ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
+
+                if(productAvailable.isProductAvailable)
                 {
 
-                    global.cartList.remove(products.get(position));
+                    global.cartList.remove(productAvailable.indexofProduct);
                     products.get(position).setSelected(false);
                     products.get(position).setQuantity(1);
-                    products.get(position).getProductprice();
+                    products.get(position).setTotalprice(products.get(position).getProductprice());
                     holder.quantity.setText(String.valueOf(products.get(position).getQuantity()));
-                    holder.price.setText(String.valueOf(products.get(position).getProductprice()));
+                    holder.price.setText(ruppee+" "+String.valueOf(products.get(position).getProductprice()));
                    holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
 
                     int count=global.cartList.size();

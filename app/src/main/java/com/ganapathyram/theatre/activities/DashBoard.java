@@ -22,8 +22,10 @@ import com.ganapathyram.theatre.adapter.CartAdapter;
 import com.ganapathyram.theatre.adapter.ProductListAdapter;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.model.Product;
+import com.ganapathyram.theatre.model.ProductAvailable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Prakash on 9/19/2017.
@@ -36,6 +38,7 @@ public class DashBoard extends AppCompatActivity {
     public static TextView cartcount,totalprice;
     RelativeLayout cartRelativeLayout;
     public static  RecyclerView cartview;
+    int indexpos=-1;
     GlobalClass global;
 
     @Override
@@ -126,10 +129,12 @@ public class DashBoard extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 
+
                 //finish();
                 global.cartList.clear();
-                DashBoard.adapter.notifyDataSetChanged();
-                DashBoard.cartcount.setText("0");
+                adapter=new ProductListAdapter(DashBoard.this,productList);
+                productListView.setAdapter(adapter);
+                cartcount.setText("0");
             }
         });
         final int columns = getResources().getInteger(R.integer.grid_column);
@@ -158,4 +163,18 @@ public class DashBoard extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+
+    ProductAvailable containsProduct(List<Product> list, String productid) {
+        for (Product item : list) {
+            if (item.productid.equals(productid)) {
+
+                indexpos=list.indexOf(item);
+                return new ProductAvailable(true,indexpos);
+
+            }
+        }
+
+        return new ProductAvailable(false,-1);
+    }
+
 }

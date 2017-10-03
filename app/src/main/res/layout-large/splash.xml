@@ -7,7 +7,8 @@
         android:id="@+id/splashimage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/splash"
+        android:scaleType="fitXY"
+        android:src="@mipmap/splash"
         />
 
 

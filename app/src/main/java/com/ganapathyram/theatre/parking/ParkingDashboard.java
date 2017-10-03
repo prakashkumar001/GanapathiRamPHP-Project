@@ -36,13 +36,14 @@ public class ParkingDashboard extends AppCompatActivity {
         list.add(new Parking("BIKE PARKING",R.mipmap.bike_icon));
         list.add(new Parking("CAR PARKING",R.mipmap.car_icon));
         list.add(new Parking("AUTO PARKING",R.mipmap.auto_icon));
-        list.add(new Parking("HEAVY VEHICLE PARKING",R.mipmap.truck_icon));
+        list.add(new Parking("HEAVY PARKING",R.mipmap.truck_icon));
         list.add(new Parking("CYCLE PARKING",R.mipmap.cycle_icon));
 
 
+        final int columns = getResources().getInteger(R.integer.grid_column);
 
         adapter=new ParkingAdapter(ParkingDashboard.this,list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),columns);
         parkinglist.setLayoutManager(layoutManager);
         parkinglist.setItemAnimator(new DefaultItemAnimator());
         parkinglist.setAdapter(adapter);

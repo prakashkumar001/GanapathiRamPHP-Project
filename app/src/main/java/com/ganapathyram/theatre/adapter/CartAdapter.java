@@ -204,17 +204,5 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     }
 
-    ProductAvailable containsProduct(List<Product> list, String productid) {
-        for (Product item : list) {
-            if (item.productid.equals(productid)) {
-
-                indexpos=list.indexOf(item);
-                return new ProductAvailable(true,indexpos);
-
-            }
-        }
-
-        return new ProductAvailable(false,-1);
-    }
 
 }
