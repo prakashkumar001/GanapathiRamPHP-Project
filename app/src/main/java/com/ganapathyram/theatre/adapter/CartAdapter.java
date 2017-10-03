@@ -59,6 +59,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
 
     public CartAdapter(Context context,Dialog cartdialog) {
+        //global=new GlobalClass();
         this.context=context;
         this.cartdialog=cartdialog;
         rupee = context.getResources().getString(R.string.Rupee_symbol);
@@ -167,6 +168,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     DashBoard.productList.set(indexpos,product);
                     DashBoard.adapter.notifyDataSetChanged();
                 }*/
+                global.cartList.get(position).setTotalprice(global.cartList.get(position).productprice);
                 global.cartList.remove(position);
 
 

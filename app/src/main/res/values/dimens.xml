@@ -18,4 +18,6 @@
     <dimen name="closebutton_margin">65dp</dimen>
     <dimen name="profileicon_padding">10dp</dimen>
     <dimen name="scoreboxsize">70dp</dimen>
+    <integer name="grid_column">2</integer>
+
 </resources>

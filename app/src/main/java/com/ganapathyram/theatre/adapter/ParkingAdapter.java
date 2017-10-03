@@ -48,6 +48,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
 
 
         list=parkinglist;
+        global=new GlobalClass();
 
     }
 

@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.parking.ParkingDashboard;
@@ -16,15 +17,15 @@ import com.ganapathyram.theatre.parking.ParkingDashboard;
  */
 
 public class Home extends AppCompatActivity {
-    ImageView parking,order_food;
+    LinearLayout order_food,parking;
     int backPressedCount = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
-        parking=(ImageView)findViewById(R.id.parking);
-        order_food=(ImageView)findViewById(R.id.orderfood);
+        parking=(LinearLayout)findViewById(R.id.parking);
+        order_food=(LinearLayout)findViewById(R.id.orderfood);
 
         parking.setOnClickListener(new View.OnClickListener() {
             @Override

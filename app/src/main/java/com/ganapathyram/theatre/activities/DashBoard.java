@@ -15,10 +15,12 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.adapter.CartAdapter;
 import com.ganapathyram.theatre.adapter.ProductListAdapter;
+import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.model.Product;
 
 import java.util.ArrayList;
@@ -34,11 +36,13 @@ public class DashBoard extends AppCompatActivity {
     public static TextView cartcount,totalprice;
     RelativeLayout cartRelativeLayout;
     public static  RecyclerView cartview;
+    GlobalClass global;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
+        global=new GlobalClass();
         productListView = (RecyclerView) findViewById(R.id.productList);
         cartcount=(TextView)findViewById(R.id.cartcount);
         cartRelativeLayout=(RelativeLayout)findViewById(R.id.cartRelativeLayout);
@@ -73,7 +77,9 @@ public class DashBoard extends AppCompatActivity {
 
 
         adapter = new ProductListAdapter(getApplicationContext(), productList);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        final int columns = getResources().getInteger(R.integer.grid_column);
+
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),columns);
         productListView.setLayoutManager(layoutManager);
         productListView.setItemAnimator(new DefaultItemAnimator());
         productListView.setAdapter(adapter);
@@ -112,8 +118,24 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
+        ImageView payment=(ImageView)dialog.findViewById(R.id.payment);
+        payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+                //finish();
+                global.cartList.clear();
+                DashBoard.adapter.notifyDataSetChanged();
+                DashBoard.cartcount.setText("0");
+            }
+        });
+        final int columns = getResources().getInteger(R.integer.grid_column);
+
         CartAdapter adapter=new CartAdapter(DashBoard.this,dialog);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), columns);
         cartview.setLayoutManager(layoutManager);
         cartview.setItemAnimator(new DefaultItemAnimator());
         cartview.setAdapter(adapter);

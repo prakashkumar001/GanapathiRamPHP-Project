@@ -68,10 +68,6 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
         this.context=context;
         this.products=productlist;
 
-
-
-
-
     }
 
     @Override
@@ -91,7 +87,6 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
         holder.productname.setText(products.get(position).productname);
         holder.price.setText(ruppee+" "+products.get(position).productprice);
         holder.product_image.setImageResource(products.get(position).productimage);
-        holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
         //holder.quantity.setText(products.get(position).quantity);
 
 
@@ -136,6 +131,10 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
 
 
+        }else {
+            products.get(position).setSelected(false);
+           // holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
+
         }
 
 
@@ -172,12 +171,17 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
         holder.productbg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
                 ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
                 if(productAvailable.isProductAvailable)
                 {
                     Toast.makeText(context,"Already Added Please increase the quantity",Toast.LENGTH_SHORT).show();
                 }else
                 {
+
+
                     global.cartList.add(products.get(position));
                     products.get(position).setSelected(true);
                     //holder.addtocart.setImageResource(R.mipmap.add_buy_select);
@@ -238,7 +242,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                 if(productAvailable.isProductAvailable)
                 {
                     int index=productAvailable.indexofProduct;
-                    double b;
+                    double b=0.0;
                     int values = Integer.parseInt(holder.quantity.getText().toString());
                     values = values + 1;
                     global.cartList.get(index).setQuantity(values);

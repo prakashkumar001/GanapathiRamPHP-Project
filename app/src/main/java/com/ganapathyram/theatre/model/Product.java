@@ -78,5 +78,8 @@ public class Product {
         this.totalprice=totalprice;
         this.isSelected=isSelected;
     }
+
+    public Product() {
+    }
 }
 
