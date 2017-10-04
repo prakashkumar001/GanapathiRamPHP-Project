@@ -145,14 +145,17 @@
             android:layout_gravity="end"
             android:layout_height="wrap_content">
 
+
             <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                >
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="50dp"
                 android:adjustViewBounds="true"
-                android:src="@mipmap/price_tags_icon"
+                android:background="@mipmap/price_tags_icon"
                 />
 
                 <TextView
