@@ -30,7 +30,6 @@
         android:layout_height="match_parent"
         android:background="@color/login_keypad_bg"
         android:layout_weight="1"
-        android:layout_marginLeft="20dp"
         android:orientation="vertical"
         >
 

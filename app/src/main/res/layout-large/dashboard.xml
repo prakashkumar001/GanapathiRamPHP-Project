@@ -77,11 +77,6 @@
     </FrameLayout>
 
 
-<HorizontalScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="none"
-    >
 
 
     <RadioGroup
@@ -96,8 +91,9 @@
 
         <RadioButton
             android:id="@+id/maincourse"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
             android:layout_margin="@dimen/marginsmall"
             android:background="@drawable/radio_selector_circle"
             android:button="@null"
@@ -105,71 +101,44 @@
             android:gravity="center"
             android:paddingBottom="@dimen/marginsmall"
             android:paddingTop="@dimen/marginsmall"
-            android:text="Main Course"
+            android:text="Snacks"
             android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="@dimen/categorytext" />
+            android:textSize="18dp" />
 
 
         <RadioButton
             android:id="@+id/appetize"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
             android:layout_margin="@dimen/marginsmall"
             android:background="@drawable/radio_selector_circle"
             android:button="@null"
             android:gravity="center"
             android:paddingBottom="@dimen/marginsmall"
             android:paddingTop="@dimen/marginsmall"
-            android:text="Appetizers"
+            android:text="Beverages"
             android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="@dimen/categorytext" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/deserts2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
             android:layout_margin="@dimen/marginsmall"
             android:background="@drawable/radio_selector_circle"
             android:button="@null"
             android:gravity="center"
             android:paddingBottom="@dimen/marginsmall"
             android:paddingTop="@dimen/marginsmall"
-            android:text="Deserts"
+            android:text="Combo"
             android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="@dimen/categorytext" />
-
-        <RadioButton
-            android:id="@+id/appetize2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginsmall"
-            android:background="@drawable/radio_selector_circle"
-            android:button="@null"
-            android:gravity="center"
-            android:paddingBottom="@dimen/marginsmall"
-            android:paddingTop="@dimen/marginsmall"
-            android:text="Appetizers"
-            android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="@dimen/categorytext" />
-
-        <RadioButton
-            android:id="@+id/deserts3"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginsmall"
-            android:background="@drawable/radio_selector_circle"
-            android:button="@null"
-            android:gravity="center"
-            android:paddingBottom="@dimen/marginsmall"
-            android:paddingTop="@dimen/marginsmall"
-            android:text="Deserts"
-            android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="@dimen/categorytext" />
+            android:textSize="18dp" />
 
 
     </RadioGroup>
 
-</HorizontalScrollView>
 
 <!--<LinearLayout
 android:layout_width="match_parent"
