@@ -2,6 +2,7 @@ package com.ganapathyram.theatre.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ganapathyram.theatre.R;
+import com.ganapathyram.theatre.bluetooth.utils.ESCPOSDriver;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.model.Parking;
 import com.ganapathyram.theatre.model.Product;
+import com.ganapathyram.theatre.parking.ParkingDashboard;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
@@ -28,6 +33,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
 
     GlobalClass global;
     ImageLoader loader;
+    Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
@@ -46,7 +52,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
 
     public ParkingAdapter(Context context, ArrayList<Parking> parkinglist) {
 
-
+        this.context=context;
         list=parkinglist;
         global=new GlobalClass();
 
@@ -70,6 +76,12 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
         holder.icon.setImageResource(list.get(position).icon);
 
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ParkingDashboard) context).onItemClick(position);
+            }
+        });
 
 
 

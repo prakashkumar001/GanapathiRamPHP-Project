@@ -20,6 +20,7 @@ public class GlobalClass extends Application{
     public static ArrayList<Product> cartList=new ArrayList<>();
     public static String BadgeCount="0";
 
+    public static String bluetoothStatus=null;
 
     public void onCreate() {
 
