@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">GanapathyRamTheatre</string>
     <string name="Rupee_symbol">\u20B9</string>
+
+
+
+
+    <string name="title_activity_main">" Citizen PSample 1 for POS Print SDK "</string>
+
+    <string name="title_wifi">Wi-Fi interface</string>
+    <string name="title_bluetooth">Bluetooth interface</string>
+    <string name="title_usb">USB interface</string>
+
+    <string name="button_printercheck">Printer Status</string>
+    <string name="button_sample01print">Sample Print 1</string>
+    <string name="button_sample02print">Sample Print 2</string>
+
+    <string name="label_address">Address:</string>
+    <string name="hint_address_wifi">IP Address</string>
+    <string name="hint_address_bluetooth">Bluetooth Address</string>
+    <string name="label_usbdevice">UsbDevice:</string>
+    <string name="hint_usbdevice">null (Automatic detection)</string>
 </resources>

@@ -48,6 +48,11 @@
 
 
             />
+        <activity android:name=".Test"
+            android:theme="@style/AppTheme.NoActionBar"
+
+
+            />
     </application>
 
 </manifest>

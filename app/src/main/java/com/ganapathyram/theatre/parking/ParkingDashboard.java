@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,7 +24,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.citizen.sdk.ESCPOSConst;
+import com.citizen.sdk.ESCPOSPrinter;
 import com.ganapathyram.theatre.R;
+import com.ganapathyram.theatre.Test;
 import com.ganapathyram.theatre.activities.DashBoard;
 import com.ganapathyram.theatre.activities.Home;
 import com.ganapathyram.theatre.adapter.ParkingAdapter;
@@ -182,7 +186,9 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
     public void onItemClick(int position) {
 
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        usbPrinter();
+
+       /* mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Toast.makeText(ParkingDashboard.this, "Message1", 2000).show();
         } else {
@@ -209,7 +215,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
             }
         }
-
+*/
 
         }
 
@@ -453,5 +459,59 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
                 && mBluetoothAdapter.STATE_CONNECTED==2;
     }
+
+    public void usbPrinter()
+    {
+        // Constructor
+        ESCPOSPrinter posPtr = new ESCPOSPrinter();
+
+        // Set context
+        posPtr.setContext( ParkingDashboard.this );
+
+        // Get Address
+        UsbDevice usbDevice = null;												// null (Automatic detection)
+        //
+        // Connect
+        int result = posPtr.connect( ESCPOSConst.CMP_PORT_USB, usbDevice );		// Android 3.1 ( API Level 12 ) or later
+        if ( ESCPOSConst.CMP_SUCCESS == result )
+        {
+            // Character set
+            posPtr.setEncoding( "ISO-8859-1" );		// Latin-1
+            //posPtr.setEncoding( "Shift_JIS" );	// Japanese 日本語を印字する場合は、この行を有効にしてください.
+
+            // Start Transaction ( Batch )
+            posPtr.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
+
+            // Print Text
+            posPtr.printText( getString( R.string.app_name ) + "\n\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
+            posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+            // Print QRcode
+            posPtr.printQRCode( "http://www.citizen-systems.co.jp/", 6, ESCPOSConst.CMP_QRCODE_EC_LEVEL_L, ESCPOSConst.CMP_ALIGNMENT_RIGHT );
+
+            // Partial Cut with Pre-Feed
+            posPtr.cutPaper( ESCPOSConst.CMP_CUT_PARTIAL_PREFEED );
+
+            // End Transaction ( Batch )
+            result = posPtr.transactionPrint( ESCPOSConst.CMP_TP_NORMAL );
+
+            // Disconnect
+            posPtr.disconnect();
+
+            if ( ESCPOSConst.CMP_SUCCESS != result )
+            {
+                // Transaction Error
+                Toast.makeText( ParkingDashboard.this, "Transaction Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+            }
+        }
+        else
+        {
+            // Connect Error
+            Toast.makeText( ParkingDashboard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+        }
+    }
+
+
 }
 
