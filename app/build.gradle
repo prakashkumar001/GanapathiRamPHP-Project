@@ -32,4 +32,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     testCompile 'junit:junit:4.12'
     compile files('libs/CSJPOSLib_Android.jar')
+    compile files('libs/common-lang3.jar')
 }

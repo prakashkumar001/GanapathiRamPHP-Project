@@ -41,6 +41,8 @@ import com.ganapathyram.theatre.bluetooth.utils.PrinterCommands;
 import com.ganapathyram.theatre.bluetooth.utils.Utils;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.model.Parking;
+import com.ganapathyram.theatre.model.Product;
+import com.ganapathyram.theatre.utils.TableBuilder;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -475,21 +477,38 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         int result = posPtr.connect( ESCPOSConst.CMP_PORT_USB, usbDevice );		// Android 3.1 ( API Level 12 ) or later
         if ( ESCPOSConst.CMP_SUCCESS == result )
         {
+            Bitmap bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.print_icon23);
             // Character set
             posPtr.setEncoding( "ISO-8859-1" );		// Latin-1
             //posPtr.setEncoding( "Shift_JIS" );	// Japanese 日本語を印字する場合は、この行を有効にしてください.
 
             // Start Transaction ( Batch )
             posPtr.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
+            posPtr.printBitmap(bitmap,100,100);
 
             // Print Text
-            posPtr.printText( getString( R.string.app_name ) + "\n\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
-            posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "Adyar ,Chennai-600096" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "Phone : 044-425962886" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-            // Print QRcode
+           // posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
+           // posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            TableBuilder data=new TableBuilder();
+            data.addRow("Qty.","Item","Price","Total");
+            data.addRow("-----", "----", "-----","-----");
+            for(int i=0;i<GlobalClass.cartList.size();i++)
+            {
+                Product product=GlobalClass.cartList.get(i);
+                data.addRow(String.valueOf(product.getQuantity()),product.getProductname(),product.getProductprice(),product.getTotalprice());
+
+            }
+
+            posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT )
+
+
+            /*// Print QRcode
             posPtr.printQRCode( "http://www.citizen-systems.co.jp/", 6, ESCPOSConst.CMP_QRCODE_EC_LEVEL_L, ESCPOSConst.CMP_ALIGNMENT_RIGHT );
-
+*/
             // Partial Cut with Pre-Feed
             posPtr.cutPaper( ESCPOSConst.CMP_CUT_PARTIAL_PREFEED );
 
