@@ -2,6 +2,9 @@ package com.ganapathyram.theatre.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,12 +21,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.citizen.sdk.ESCPOSConst;
+import com.citizen.sdk.ESCPOSPrinter;
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.adapter.CartAdapter;
 import com.ganapathyram.theatre.adapter.ProductListAdapter;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
+import com.ganapathyram.theatre.utils.TableBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +136,7 @@ public class DashBoard extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 
-
+                usbPrinter();
                 //finish();
                 global.cartList.clear();
                 adapter=new ProductListAdapter(DashBoard.this,productList);
@@ -177,5 +183,73 @@ public class DashBoard extends AppCompatActivity {
 
         return new ProductAvailable(false,-1);
     }
+    public void usbPrinter()
+    {
+        // Constructor
+        ESCPOSPrinter posPtr = new ESCPOSPrinter();
 
+        // Set context
+        posPtr.setContext( DashBoard.this );
+
+        // Get Address
+        UsbDevice usbDevice = null;												// null (Automatic detection)
+        //
+        // Connect
+        int result = posPtr.connect( ESCPOSConst.CMP_PORT_USB, usbDevice );		// Android 3.1 ( API Level 12 ) or later
+        if ( ESCPOSConst.CMP_SUCCESS == result )
+        {
+            Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.print_icon23);
+            // Character set
+            posPtr.setEncoding( "ISO-8859-1" );		// Latin-1
+            //posPtr.setEncoding( "Shift_JIS" );	// Japanese 日本語を印字する場合は、この行を有効にしてください.
+
+            // Start Transaction ( Batch )
+            posPtr.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
+            posPtr.printBitmap(bitmap, ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, 100 | 100);
+
+            // Print Text
+            posPtr.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "Adyar ,Chennai-600096" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "Phone : 044-425962886" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+            // posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
+            // posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            TableBuilder data=new TableBuilder();
+            data.addRow("Qty.","Item","Price","Total");
+            data.addRow("-----", "----", "-----","-----");
+            for(int i=0;i<GlobalClass.cartList.size();i++)
+            {
+                Product product=GlobalClass.cartList.get(i);
+                data.addRow(String.valueOf(product.getQuantity()),product.getProductname(),product.getProductprice(),product.getTotalprice());
+
+            }
+
+            posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+            posPtr.printText("Thank you for coming & we look"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText("forward to serve you again",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            /*// Print QRcode
+            posPtr.printQRCode( "http://www.citizen-systems.co.jp/", 6, ESCPOSConst.CMP_QRCODE_EC_LEVEL_L, ESCPOSConst.CMP_ALIGNMENT_RIGHT );
+*/
+            // Partial Cut with Pre-Feed
+            posPtr.cutPaper( ESCPOSConst.CMP_CUT_PARTIAL_PREFEED );
+
+            // End Transaction ( Batch )
+            result = posPtr.transactionPrint( ESCPOSConst.CMP_TP_NORMAL );
+
+            // Disconnect
+            posPtr.disconnect();
+
+            if ( ESCPOSConst.CMP_SUCCESS != result )
+            {
+                // Transaction Error
+                Toast.makeText( DashBoard.this, "Transaction Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+            }
+        }
+        else
+        {
+            // Connect Error
+            Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+        }
+    }
 }
