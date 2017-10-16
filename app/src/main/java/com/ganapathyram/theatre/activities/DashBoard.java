@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -140,7 +141,7 @@ public class DashBoard extends AppCompatActivity {
         final int columns = getResources().getInteger(R.integer.grid_column);
 
         CartAdapter adapter=new CartAdapter(DashBoard.this,dialog);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), columns);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         cartview.setLayoutManager(layoutManager);
         cartview.setItemAnimator(new DefaultItemAnimator());
         cartview.setAdapter(adapter);

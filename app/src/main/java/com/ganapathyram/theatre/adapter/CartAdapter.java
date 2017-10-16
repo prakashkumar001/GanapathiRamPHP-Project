@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.activities.DashBoard;
@@ -42,17 +43,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     Dialog cartdialog;
     int indexpos=-1;
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title,price;
-        public ImageView icon,remove;
+        public TextView title,price,quantity;
+        public ImageView remove,plus_icon,minus_icon;
 
 
         public MyViewHolder(View view) {
             super(view);
 
-            icon = (ImageView) view.findViewById(R.id.product_image);
+            //icon = (ImageView) view.findViewById(R.id.product_image);
+            quantity= (TextView) view.findViewById(R.id.quantity);
             title = (TextView) view.findViewById(R.id.title);
             price = (TextView) view.findViewById(R.id.amount);
             remove = (ImageView) view.findViewById(R.id.removeicon);
+            plus_icon = (ImageView) view.findViewById(R.id.plus_icon);
+            minus_icon = (ImageView) view.findViewById(R.id.minus_icon);
 
         }
     }
@@ -71,7 +75,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     public CartAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cart_item, parent, false);
+                .inflate(R.layout.cart_items, parent, false);
 
 
         return new CartAdapter.MyViewHolder(itemView);
@@ -80,21 +84,69 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(final CartAdapter.MyViewHolder holder, final int position) {
 
+        final String ruppee=context.getResources().getString(R.string.Rupee_symbol);
 
         holder.title.setText(global.cartList.get(position).getProductname());
-        holder.icon.setImageResource(global.cartList.get(position).getProductimage());
-        holder.price.setText(global.cartList.get(position).getTotalprice());
+        //holder.icon.setImageResource(global.cartList.get(position).getProductimage());
+        holder.price.setText(ruppee+" "+global.cartList.get(position).getTotalprice());
+
+        holder.quantity.setText(String.valueOf(global.cartList.get(position).getQuantity()));
 
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.remove.setImageResource(R.mipmap.remove_select);
+              //  holder.remove.setImageResource(R.mipmap.remove_select);
                 showRemoveDialog(position);
 
 
             }
         });
+        holder.plus_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+              Product product=global.cartList.get(position);
+                double b=0.0;
+                int values = Integer.parseInt(holder.quantity.getText().toString());
+                values = values + 1;
+                product.setQuantity(values);
+
+                holder.quantity.setText(String.valueOf(product.getQuantity()));
+                b = product.getQuantity() * Double.parseDouble(product.getProductprice());
+                product.setTotalprice(String.valueOf(b));
+
+                holder.price.setText(ruppee + String.valueOf(b));
+
+                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()));
+
+
+            }
+        });
+
+        holder.minus_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Product product=global.cartList.get(position);
+                double b;
+
+                int values = Integer.parseInt(holder.quantity.getText().toString());
+                if (values == 1) {
+
+                } else {
+                    values = values - 1;
+                }
+
+                product.setQuantity(values);
+
+                holder.quantity.setText(String.valueOf(product.getQuantity()));
+                b = product.getQuantity() * Double.parseDouble(product.getProductprice());
+                product.setTotalprice(String.valueOf(b));
+                holder.price.setText(ruppee + String.valueOf(b));
+
+                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()));
+            }
+        });
 
 
 

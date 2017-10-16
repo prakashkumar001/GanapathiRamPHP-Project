@@ -168,7 +168,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
         });*/
 
 
-        holder.productbg.setOnClickListener(new View.OnClickListener() {
+       /* holder.productbg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -177,7 +177,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                 ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
                 if(productAvailable.isProductAvailable)
                 {
-                    Toast.makeText(context,"Already Added Please increase the quantity",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context,"Already Added Please increase the quantity",Toast.LENGTH_SHORT).show();
                 }else
                 {
 
@@ -200,7 +200,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
 
             }
-        });
+        });*/
 
         holder.productbg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -258,7 +258,19 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
                 }else
                 {
-                    Toast.makeText(context,"Please Select the Product",Toast.LENGTH_SHORT).show();
+                    global.cartList.add(products.get(position));
+                    products.get(position).setSelected(true);
+                    //holder.addtocart.setImageResource(R.mipmap.add_buy_select);
+                    holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
+
+                    //Toast.makeText(context,"Please Select the Product",Toast.LENGTH_SHORT).show();
+                    int count=global.cartList.size();
+                    String value= String.valueOf(count);
+                    global.BadgeCount=value;
+                    AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(context,R.animator.flip);
+                    set.setTarget(DashBoard.cartcount);
+                    DashBoard.cartcount.setText(global.BadgeCount);
+                    set.start();
 
                 }
             }
