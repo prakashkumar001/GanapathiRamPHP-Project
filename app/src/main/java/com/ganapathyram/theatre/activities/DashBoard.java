@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,11 +27,13 @@ import com.citizen.sdk.ESCPOSPrinter;
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.adapter.CartAdapter;
 import com.ganapathyram.theatre.adapter.ProductListAdapter;
+import com.ganapathyram.theatre.bluetooth.printer.WoosimImage;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
 import com.ganapathyram.theatre.utils.TableBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,11 +45,15 @@ public class DashBoard extends AppCompatActivity {
     public static RecyclerView productListView;
     public static ProductListAdapter adapter;
     public static ArrayList<Product> productList;
-    public static TextView cartcount,totalprice;
+    public static TextView cartcount,totalprice,subtotal;
     RelativeLayout cartRelativeLayout;
     public static  RecyclerView cartview;
+
     int indexpos=-1;
     GlobalClass global;
+    double gst_amount;
+    String gstvalue;
+    String subtotals;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,6 +124,7 @@ public class DashBoard extends AppCompatActivity {
 
          cartview=(RecyclerView)dialog.findViewById(R.id.cartlist) ;
          totalprice=(TextView) dialog.findViewById(R.id.total_price) ;
+        subtotal=(TextView) dialog.findViewById(R.id.sub_total) ;
         ImageView iv_close=(ImageView)dialog.findViewById(R.id.iv_close);
         iv_close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +162,14 @@ public class DashBoard extends AppCompatActivity {
         cartview.setNestedScrollingEnabled(false);
         cartview.setAdapter(adapter);
 
-        totalprice.setText(rupee+" "+String.valueOf(adapter.totalvalue()));
+        subtotal.setText(rupee+" "+String.valueOf(adapter.totalvalue()));
+        subtotals=String.valueOf(adapter.totalvalue());
+
+         gst_amount = ( adapter.totalvalue() * 18 ) / 100;
+
+        double total=adapter.totalvalue()+gst_amount;
+        totalprice.setText(String.valueOf(total));
+
 
 
         dialog.show();
@@ -198,19 +213,28 @@ public class DashBoard extends AppCompatActivity {
         int result = posPtr.connect( ESCPOSConst.CMP_PORT_USB, usbDevice );		// Android 3.1 ( API Level 12 ) or later
         if ( ESCPOSConst.CMP_SUCCESS == result )
         {
-            Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.print_icon23);
+            Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.printer_logo);
             // Character set
             posPtr.setEncoding( "ISO-8859-1" );		// Latin-1
             //posPtr.setEncoding( "Shift_JIS" );	// Japanese 日本語を印字する場合は、この行を有効にしてください.
 
             // Start Transaction ( Batch )
             posPtr.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
-            posPtr.printBitmap(bitmap, ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, 100 | 100);
+            /*ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayBitmapStream);
+            byte[] b = byteArrayBitmapStream.toByteArray();
+            posPtr.printBitmap(b,150,150,);*/
+
+            posPtr.printBitmap(bitmap,300,100);
+
+            double gst=gst_amount/2;
+             gstvalue=String.format("%.2f", gst);
+
 
             // Print Text
             posPtr.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( "Adyar ,Chennai-600096" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( "Phone : 044-425962886" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "101, Lattice Bridge Road, Adyar, Baktavatsalm Nagar, Chennai, Tamil Nadu 600020" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "Phone: 044 2441 7424" + "\n\n\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             // posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
             // posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
@@ -226,8 +250,24 @@ public class DashBoard extends AppCompatActivity {
 
             posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
+            posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText("SUB TOTAL "+subtotals+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+            posPtr.printText("CGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText("SGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+
+            posPtr.printText("TOTAL "+totalprice.getText().toString()+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+
+
+
             posPtr.printText("Thank you for coming & we look"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText("forward to serve you again",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+
+
+
             /*// Print QRcode
             posPtr.printQRCode( "http://www.citizen-systems.co.jp/", 6, ESCPOSConst.CMP_QRCODE_EC_LEVEL_L, ESCPOSConst.CMP_ALIGNMENT_RIGHT );
 */
