@@ -3,7 +3,7 @@
     <string name="Rupee_symbol">\u20B9</string>
 
 
-
+    <string name="loading">Loading...</string>
 
     <string name="title_activity_main">" Citizen PSample 1 for POS Print SDK "</string>
 

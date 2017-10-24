@@ -21,6 +21,7 @@ public class GlobalClass extends Application{
     public static String BadgeCount="0";
 
     public static String bluetoothStatus=null;
+    public static String ApiBaseUrl="http://192.168.1.5:8080/services/";
 
     public void onCreate() {
 

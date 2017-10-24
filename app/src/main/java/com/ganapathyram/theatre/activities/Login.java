@@ -1,7 +1,9 @@
 package com.ganapathyram.theatre.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,13 @@ import android.widget.Toast;
 
 import com.ganapathyram.theatre.MainActivity;
 import com.ganapathyram.theatre.R;
+import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.utils.WSUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static android.R.attr.data;
 
 
 /**
@@ -24,15 +33,17 @@ public class Login extends AppCompatActivity {
 
     Button bOne, bTwo, bThree, bFour, bFive, bSix, bSeven, bEight, bNine, bZero, submit;
     ImageView iv_delete;
-    TextView one,two,three,four;
+    TextView one, two, three, four;
     Button login;
     String pinNumber;
+    GlobalClass global;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        global = (GlobalClass) getApplicationContext();
         initialize();
-
 
 
     }
@@ -55,13 +66,12 @@ public class Login extends AppCompatActivity {
         bNine = (Button) findViewById(R.id.btn_nine);
         bZero = (Button) findViewById(R.id.btn_zero);
 
-        login=(Button)findViewById(R.id.login);
+        login = (Button) findViewById(R.id.login);
 
         iv_delete = (ImageView) findViewById(R.id.iv_delete);
 
         TextView marque = (TextView) this.findViewById(R.id.marquee_text);
         marque.setSelected(true);
-
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -71,13 +81,10 @@ public class Login extends AppCompatActivity {
                         && !three.getText().toString().equals("*") && !four.getText().toString().equals("*")
                         ) {
                     String otp = one.getText().toString() + two.getText().toString() + three.getText().toString() +
-                            four.getText().toString() ;
+                            four.getText().toString();
 
-                    Intent intent = new Intent(
-                            Login.this,
-                            Home.class);
 
-                    Login.this.startActivity(intent);
+                    Login(otp);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Please Enter Correct PIN", Toast.LENGTH_SHORT).show();
@@ -320,6 +327,86 @@ public class Login extends AppCompatActivity {
         });
 
 
+    }
+
+
+    public void Login(final String pinNumber) {
+        class LoginServer extends AsyncTask<String, String, String> {
+            ProgressDialog dialog;
+            String response = "";
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = new ProgressDialog(Login.this);
+                dialog.setMessage(getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String[] params) {
+                try {
+
+
+                    String requestURL = global.ApiBaseUrl + "login";
+                    WSUtils utils = new WSUtils();
+
+                    JSONObject object = new JSONObject();
+                    JSONObject user = new JSONObject();
+                    user.put("userId", pinNumber);
+                    user.put("password", pinNumber);
+
+                    object.put("user", user);
+                    object.put("venueId", "gprtheatre");
+
+
+                    response = utils.responsedetailsfromserver(requestURL, object.toString());
+
+                    System.out.println("SERVER REPLIED:" + response);
+                    //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
+                    // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
+                } catch (Exception ex) {
+                    Log.i("ERROR", "ERROR" + ex.toString());
+                }
+
+                return response;
+            }
+
+
+            @Override
+            protected void onPostExecute(String o) {
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if (o != null || !o.equalsIgnoreCase("null")) {
+                    try {
+                        JSONObject object = new JSONObject(o);
+                        String payload = object.getString("payload");
+
+                        if (payload.equalsIgnoreCase("success")) {
+
+                            Intent intent = new Intent(
+                                    Login.this,
+                                    Home.class);
+
+                            Login.this.startActivity(intent);
+
+
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        }
+        new LoginServer().execute();
     }
 
 
