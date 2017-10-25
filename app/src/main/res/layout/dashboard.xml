@@ -89,7 +89,7 @@
         android:layout_marginTop="@dimen/categorytext"
         android:orientation="horizontal">
 
-        <RadioButton
+        <!--<RadioButton
             android:id="@+id/maincourse"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -136,7 +136,7 @@
             android:textColor="@drawable/rbtn_textcolor_selector"
             android:textSize="16dp" />
 
-
+-->
 
     </RadioGroup>
 

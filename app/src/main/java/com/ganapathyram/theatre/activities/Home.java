@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.model.Categories;
 import com.ganapathyram.theatre.model.Dashboard;
 import com.ganapathyram.theatre.parking.ParkingDashboard;
 import com.ganapathyram.theatre.utils.WSUtils;
@@ -43,7 +44,7 @@ public class Home extends AppCompatActivity {
         order_food=(LinearLayout)findViewById(R.id.orderfood);
 
 
-        getDashboard();
+       // getDashboard();
 
         parking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,9 +60,9 @@ public class Home extends AppCompatActivity {
         order_food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(Home.this, DashBoard.class);
-                startActivity(i);
-                finish();
+
+                getCategoryList();
+
             }
         });
     }
@@ -100,7 +101,7 @@ public class Home extends AppCompatActivity {
     }
 
     public void getDashboard() {
-        class LoginServer extends AsyncTask<String, String, String> {
+        class getDashboardServer extends AsyncTask<String, String, String> {
             ProgressDialog dialog;
             String response = "";
 
@@ -172,7 +173,85 @@ public class Home extends AppCompatActivity {
 
             }
         }
-        new LoginServer().execute();
+        new getDashboardServer().execute();
     }
 
+
+    public void getCategoryList() {
+        class CategoryServer extends AsyncTask<String, String, String> {
+            ProgressDialog dialog;
+            String response = "";
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = new ProgressDialog(Home.this);
+                dialog.setMessage(getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String[] params) {
+                try {
+
+
+                    String requestURL = global.ApiBaseUrl + "product/categories";
+                    WSUtils utils = new WSUtils();
+
+
+
+                    response = utils.getResultFromHttpRequest(requestURL, "GET",new HashMap<String, String>());
+
+                    System.out.println("SERVER REPLIED:" + response);
+                    //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
+                    // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
+                } catch (Exception ex) {
+                    Log.i("ERROR", "ERROR" + ex.toString());
+                }
+
+                return response;
+            }
+
+
+            @Override
+            protected void onPostExecute(String o) {
+
+                global.categoryList=new ArrayList<>();
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if (o != null || !o.equalsIgnoreCase("null")) {
+                    try {
+                        JSONObject object = new JSONObject(o);
+                        JSONArray array=object.getJSONArray("payload");
+
+                        for(int i=0;i<array.length();i++)
+                        {
+                            JSONObject data=array.getJSONObject(i);
+                            String categoryId=data.getString("categoryId");
+                            String categoryName=data.getString("categoryName");
+                            String categoryUid=data.getString("categoryUid");
+                            String active=data.getString("active");
+
+                            global.categoryList.add(new Categories(categoryId,categoryName,categoryUid,active));
+
+                        }
+
+                        Intent i=new Intent(Home.this, DashBoard.class);
+                        startActivity(i);
+                        finish();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        }
+        new CategoryServer().execute();
+    }
 }

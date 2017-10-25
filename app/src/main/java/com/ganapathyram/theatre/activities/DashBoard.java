@@ -8,6 +8,7 @@ import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +19,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +52,7 @@ public class DashBoard extends AppCompatActivity {
     public static TextView cartcount,totalprice,subtotal;
     RelativeLayout cartRelativeLayout;
     public static  RecyclerView cartview;
-
+    RadioGroup radioGroup;
     int indexpos=-1;
     GlobalClass global;
     double gst_amount;
@@ -63,6 +67,24 @@ public class DashBoard extends AppCompatActivity {
         productListView = (RecyclerView) findViewById(R.id.productList);
         cartcount=(TextView)findViewById(R.id.cartcount);
         cartRelativeLayout=(RelativeLayout)findViewById(R.id.cartRelativeLayout);
+        radioGroup= (RadioGroup) findViewById(R.id.rg_header);
+
+        RadioGroup.LayoutParams rprms;
+
+        for(int i=0;i<global.categoryList.size();i++){
+            RadioButton radioButton = new RadioButton(this);
+            radioButton.setText(global.categoryList.get(i).categoryName);
+            radioButton.setTextSize(16);
+            radioButton.setPadding(5,0,0,5);
+            radioButton.setChecked(i==0);
+            radioButton.setId(i);
+            radioButton.setGravity(Gravity.CENTER);
+            radioButton.setTextColor(getResources().getColorStateList(R.color.rbtn_textcolor_selector));
+            radioButton.setButtonDrawable(null);
+            radioButton.setBackgroundResource(R.drawable.radio_selector_circle);
+            rprms= new RadioGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+            radioGroup.addView(radioButton, rprms);
+        }
 
         cartRelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override

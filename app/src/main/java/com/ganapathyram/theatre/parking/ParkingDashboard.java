@@ -156,7 +156,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     printCustom("101, Lattice Bridge Road, Adyar, Baktavatsalm Nagar, Chennai, Tamil Nadu 600020",0,1);
                     printCustom("Phone: 044 2441 7424",0,1);
 
-                    printImageVehicle(drawable,type);
+                    //printImageVehicle(drawable,type);
                     printCustom(type,0,1);
 
 
