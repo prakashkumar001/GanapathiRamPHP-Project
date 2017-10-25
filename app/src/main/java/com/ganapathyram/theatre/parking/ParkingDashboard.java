@@ -138,7 +138,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         finish();
     }
 
-    public void printCheck()
+    public void printCheck(final int drawable, final String type)
     {
         Thread t = new Thread() {
             public void run() {
@@ -147,14 +147,17 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     OutputStream os = mBluetoothSocket
                             .getOutputStream();
                     outputStream=new BufferedOutputStream(os);
-                    printImage();
+                    printImage(R.drawable.printer_logo);
                     String dateTime[] = getDateTime();
                     printText(leftRightAlign(dateTime[0], dateTime[1]));
                     printNewLine();
                     // printCustom(dateTime[0]+"   "+dateTime[1],0,1);
-                    printCustom("Ganapathi Theatre,Chennai-600096",0,1);
-                    printCustom("Phone: +88000 000000",0,1);
-                    printNewLine();
+                    printCustom("Ganapathi Theatre",0,1);
+                    printCustom("101, Lattice Bridge Road, Adyar, Baktavatsalm Nagar, Chennai, Tamil Nadu 600020",0,1);
+                    printCustom("Phone: 044 2441 7424",0,1);
+
+                    printImageVehicle(drawable,type);
+                    printCustom(type,0,1);
 
 
 
@@ -204,7 +207,26 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                 if(bluetoothStatus!=null)
                 {
 
-                    printCheck();
+                    String name=list.get(position).name;
+                    if(name.equalsIgnoreCase("BIKE PARKING"))
+                    {
+                        printCheck(R.drawable.bike_bw,name);
+
+                    }else  if(name.equalsIgnoreCase("CAR PARKING"))
+                    {
+                        printCheck(R.drawable.car_bw,name);
+
+                    }else  if(name.equalsIgnoreCase("AUTO PARKING"))
+                    {
+                        printCheck(R.drawable.auto_bw,name);
+                    }else  if(name.equalsIgnoreCase("HEAVY PARKING"))
+                    {
+                        printCheck(R.drawable.bus_bw,name);
+                    }else  if(name.equalsIgnoreCase("CYCLE PARKING"))
+                    {
+                        printCheck(R.drawable.bike_bw,name);
+                    }
+
 
                 }else
                 {
@@ -422,11 +444,11 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
 
     //printphoto
-    public void printImage() {
+    public void printImage(int drawable) {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.print_icon23, options);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), drawable, options);
         if (bmp == null) {
             Log.e(TAG, "resource decoding is failed");
             return;
@@ -463,6 +485,24 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
 
 
+    void printImageVehicle(int drawable,String type)
+    {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), drawable, options);
+        if (bmp == null) {
+            Log.e(TAG, "resource decoding is failed");
+            return;
+        }
+        byte[] data = WoosimImage.printBitmap(250, 20, 200, 200, bmp);
+
+
+        bmp.recycle();
+
+        sendData(WoosimCmd.setPageMode());
+        sendData(data);
+        sendData(WoosimCmd.PM_setStdMode());
+    }
 
 }
 
