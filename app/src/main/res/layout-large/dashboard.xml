@@ -88,7 +88,7 @@
         android:layout_marginRight="@dimen/marginsmall"
         android:layout_marginTop="@dimen/categorytext"
         android:orientation="horizontal">
-
+<!--
         <RadioButton
             android:id="@+id/maincourse"
             android:layout_width="0dp"
@@ -134,7 +134,7 @@
             android:paddingTop="@dimen/marginsmall"
             android:text="Combo"
             android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="18dp" />
+            android:textSize="18dp" />-->
 
 
     </RadioGroup>
