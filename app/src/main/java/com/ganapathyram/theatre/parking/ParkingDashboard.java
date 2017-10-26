@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,9 +41,15 @@ import com.ganapathyram.theatre.bluetooth.utils.ESCPOSDriver;
 import com.ganapathyram.theatre.bluetooth.utils.PrinterCommands;
 import com.ganapathyram.theatre.bluetooth.utils.Utils;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.model.Categories;
 import com.ganapathyram.theatre.model.Parking;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.utils.TableBuilder;
+import com.ganapathyram.theatre.utils.WSUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -50,6 +57,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 
@@ -63,6 +71,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     public RecyclerView parkinglist;
     ArrayList<Parking> list;
     ParkingAdapter adapter;
+    GlobalClass global;
 
 
     //for bluetooth
@@ -82,7 +91,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parking_dashboard);
-
+        global=(GlobalClass)getApplicationContext();
         //for bluetooth
         if(bluetoothStatus!=null)
         {
@@ -138,7 +147,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         finish();
     }
 
-    public void printCheck(final int drawable, final String type)
+    public void printCheck(final Parking parking)
     {
         Thread t = new Thread() {
             public void run() {
@@ -153,22 +162,14 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     printNewLine();
                     // printCustom(dateTime[0]+"   "+dateTime[1],0,1);
                     printCustom("Ganapathi Theatre",0,1);
-                    printCustom("101, Lattice Bridge Road, Adyar, Baktavatsalm Nagar, Chennai, Tamil Nadu 600020",0,1);
+                    printCustom("101, Lattice Bridge Road, Adyar,",0,1);
+                    printCustom("Baktavatsalm Nagar, Chennai, Tamil Nadu 600020",0,1);
                     printCustom("Phone: 044 2441 7424",0,1);
 
                     //printImageVehicle(drawable,type);
-                    printCustom(type,0,1);
-
-
-
-
-
-
+                    printCustom(parking.name+" "+parking.chargesToBePaid,0,1);
+                    printNewLine();
                     printCustom(new String(new char[32]).replace("\0", "."),0,1);
-
-
-
-
                     printNewLine();
                     printCustom("Thank you for coming & we look",0,1);
                     printCustom("forward to serve you again",0,1);
@@ -208,16 +209,17 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                 {
 
                     String name=list.get(position).name;
-                    if(name.equalsIgnoreCase("BIKE PARKING"))
-                    {
-                        printCheck(R.drawable.bike_bw,name);
 
-                    }else  if(name.equalsIgnoreCase("CAR PARKING"))
+                        getParkingStatus(name);
+                       // printCheck(R.drawable.bike_bw,name);
+                    /*else  if(name.equalsIgnoreCase("CAR PARKING"))
                     {
+                        getParkingStatus(name);
                         printCheck(R.drawable.car_bw,name);
 
                     }else  if(name.equalsIgnoreCase("AUTO PARKING"))
                     {
+                        getParkingStatus(name);
                         printCheck(R.drawable.auto_bw,name);
                     }else  if(name.equalsIgnoreCase("HEAVY PARKING"))
                     {
@@ -225,7 +227,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     }else  if(name.equalsIgnoreCase("CYCLE PARKING"))
                     {
                         printCheck(R.drawable.bike_bw,name);
-                    }
+                    }*/
 
 
                 }else
@@ -453,7 +455,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
             Log.e(TAG, "resource decoding is failed");
             return;
         }
-        byte[] data = WoosimImage.printBitmap(250, 20, 300, 300, bmp);
+        byte[] data = WoosimImage.printBitmap(300, 0, 200, 200, bmp);
 
 
         bmp.recycle();
@@ -503,6 +505,100 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         sendData(data);
         sendData(WoosimCmd.PM_setStdMode());
     }
+    public void getParkingStatus(final String parkingType) {
+        class ParkingServer extends AsyncTask<String, String, String> {
+            ProgressDialog dialog;
+            String response = "";
 
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = new ProgressDialog(ParkingDashboard.this);
+                dialog.setMessage(getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String[] params) {
+                try {
+
+
+                    String requestURL = global.ApiBaseUrl + "parking/confirm";
+                    WSUtils utils = new WSUtils();
+                    JSONObject user = new JSONObject();
+                    user.put("userId", global.UserId);
+                    if(parkingType.equalsIgnoreCase("CAR PARKING"))
+                    {
+                        user.put("parkingType", "car");
+
+                    }else if(parkingType.equalsIgnoreCase("BIKE PARKING"))
+                    {
+                        user.put("parkingType", "bike");
+
+                    }
+                        else  if(parkingType.equalsIgnoreCase("AUTO PARKING"))
+                    {
+                        user.put("parkingType", "auto");
+
+                    }else  if(parkingType.equalsIgnoreCase("HEAVY PARKING"))
+                    {
+                        user.put("parkingType", "lmv");
+
+                    }else  if(parkingType.equalsIgnoreCase("CYCLE PARKING"))
+                    {
+                        user.put("parkingType", "cycle");
+
+                    }
+                    user.put("venueId", "gprtheatre");
+
+
+
+
+
+                    response = utils.responsedetailsfromserver(requestURL, user.toString());
+                    System.out.println("SERVER REPLIED:" + response);
+                    //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
+                    // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
+                } catch (Exception ex) {
+                    Log.i("ERROR", "ERROR" + ex.toString());
+                }
+
+                return response;
+            }
+
+
+            @Override
+            protected void onPostExecute(String o) {
+
+                Parking parking;
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if (o != null || !o.equalsIgnoreCase("null")) {
+
+                    try {
+                        JSONObject object=new JSONObject(o);
+                        JSONObject payload=object.getJSONObject("payload");
+
+                        String startTime=payload.getString("startTime");
+                        String chargesToBePaid=payload.getString("chargesToBePaid");
+                        String venueId=payload.getString("venueId");
+                        parking=new Parking(parkingType,startTime,chargesToBePaid,venueId);
+
+                        printCheck(parking);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+
+            }
+        }
+        new ParkingServer().execute();
+    }
 }
 

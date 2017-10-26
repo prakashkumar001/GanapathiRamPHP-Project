@@ -386,6 +386,7 @@ public class Login extends AppCompatActivity {
                         String payload = object.getString("payload");
 
                         if (payload.equalsIgnoreCase("success")) {
+                            global.UserId=pinNumber;
 
                             Intent intent = new Intent(
                                     Login.this,
