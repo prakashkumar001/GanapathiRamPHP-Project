@@ -70,7 +70,7 @@ public class DashBoard extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
-        global=new GlobalClass();
+        global=(GlobalClass)getApplicationContext();
         productListView = (RecyclerView) findViewById(R.id.productList);
         cartcount=(TextView)findViewById(R.id.cartcount);
         cartRelativeLayout=(RelativeLayout)findViewById(R.id.cartRelativeLayout);
@@ -93,6 +93,9 @@ public class DashBoard extends AppCompatActivity {
             radioGroup.addView(radioButton, rprms);
         }
 
+
+
+
         cartRelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,6 +106,12 @@ public class DashBoard extends AppCompatActivity {
 
             }
         });
+
+
+        if(global.cartList.size()>0)
+        {
+            cartcount.setText(String.valueOf(global.cartList.size()));
+        }
 
 
 
@@ -274,9 +283,9 @@ public class DashBoard extends AppCompatActivity {
             TableBuilder data=new TableBuilder();
             data.addRow("Qty.","Item","Price","Total");
             data.addRow("-----", "----", "-----","-----");
-            for(int i=0;i<GlobalClass.cartList.size();i++)
+            for(int i=0;i<global.cartList.size();i++)
             {
-                Product product=GlobalClass.cartList.get(i);
+                Product product=global.cartList.get(i);
                 data.addRow(String.valueOf(product.getQuantity()),product.getProductname(),product.getProductprice(),product.getTotalprice());
 
             }
@@ -324,6 +333,12 @@ public class DashBoard extends AppCompatActivity {
             // Connect Error
             Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
         }
+
+        global.cartList.clear();
+        adapter=new ProductListAdapter(DashBoard.this,productList);
+        productListView.setAdapter(adapter);
+        cartcount.setText("0");
+
     }
 
 
@@ -389,10 +404,6 @@ public class DashBoard extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
                             dialogs.dismiss();
                             //finish();
-                            global.cartList.clear();
-                            adapter=new ProductListAdapter(DashBoard.this,productList);
-                            productListView.setAdapter(adapter);
-                            cartcount.setText("0");
 
                             usbPrinter();
 
