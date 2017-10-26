@@ -1,10 +1,12 @@
 package com.ganapathyram.theatre.activities;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
@@ -15,6 +17,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -36,6 +39,10 @@ import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
 import com.ganapathyram.theatre.utils.TableBuilder;
+import com.ganapathyram.theatre.utils.WSUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -163,15 +170,19 @@ public class DashBoard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
+
+                Login(global.UserId,dialog);
+
+              /*  Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+
 
                 usbPrinter();
                 //finish();
                 global.cartList.clear();
                 adapter=new ProductListAdapter(DashBoard.this,productList);
                 productListView.setAdapter(adapter);
-                cartcount.setText("0");
+                cartcount.setText("0");*/
             }
         });
         final int columns = getResources().getInteger(R.integer.grid_column);
@@ -314,4 +325,91 @@ public class DashBoard extends AppCompatActivity {
             Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
         }
     }
+
+
+
+    public void Login(final String pinNumber,final Dialog dialogs) {
+        class LoginServer extends AsyncTask<String, String, String> {
+            ProgressDialog dialog;
+            String response = "";
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = new ProgressDialog(DashBoard.this);
+                dialog.setMessage(getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String[] params) {
+                try {
+
+
+                    String requestURL = global.ApiBaseUrl + "login";
+                    WSUtils utils = new WSUtils();
+
+                    JSONObject object = new JSONObject();
+                    JSONObject user = new JSONObject();
+                    user.put("userId", pinNumber);
+                    user.put("password", pinNumber);
+
+                    object.put("user", user);
+                    object.put("venueId", "gprtheatre");
+
+
+                    response = utils.responsedetailsfromserver(requestURL, object.toString());
+
+                    System.out.println("SERVER REPLIED:" + response);
+                    //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
+                    // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
+                } catch (Exception ex) {
+                    Log.i("ERROR", "ERROR" + ex.toString());
+                }
+
+                return response;
+            }
+
+
+            @Override
+            protected void onPostExecute(String o) {
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if (o != null || !o.equalsIgnoreCase("null")) {
+                    try {
+                        JSONObject object = new JSONObject(o);
+                        String payload = object.getString("payload");
+
+                        if (payload.equalsIgnoreCase("success")) {
+                            global.UserId=pinNumber;
+
+                            Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
+                            dialogs.dismiss();
+                            //finish();
+                            global.cartList.clear();
+                            adapter=new ProductListAdapter(DashBoard.this,productList);
+                            productListView.setAdapter(adapter);
+                            cartcount.setText("0");
+
+                            usbPrinter();
+
+
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        }
+        new LoginServer().execute();
+    }
+
 }

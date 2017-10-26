@@ -196,7 +196,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            Toast.makeText(ParkingDashboard.this, "Message1", 2000).show();
+            Toast.makeText(ParkingDashboard.this, "Bluetooth not connected", 2000).show();
         } else {
             if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(
@@ -275,7 +275,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                             DeviceListActivity.class);
                     startActivityForResult(connectIntent, REQUEST_CONNECT_DEVICE);
                 } else {
-                    Toast.makeText(ParkingDashboard.this, "Message", 2000).show();
+                    Toast.makeText(ParkingDashboard.this, "Bluetooth Cancelled", 2000).show();
                 }
                 break;
         }
