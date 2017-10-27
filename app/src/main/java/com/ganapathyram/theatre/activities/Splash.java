@@ -7,7 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ganapathyram.theatre.R;
+import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.utils.GifImageView;
+
+import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
 
 /**
@@ -17,11 +20,19 @@ import com.ganapathyram.theatre.utils.GifImageView;
 public class Splash extends AppCompatActivity {
     final int SPLASH_DISPLAY_TIME = 2000;
     GifImageView gifImageView;
+    GlobalClass global;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+        global=(GlobalClass)getApplicationContext();
+
+
+        if(getHelper().getLogin()!=null)
+        {
+            global.UserId=String.valueOf(getHelper().getLogin().pin);
+        }
 
           new Handler().postDelayed(new Runnable() {
             public void run() {

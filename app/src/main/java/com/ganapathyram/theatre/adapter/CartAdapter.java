@@ -2,6 +2,7 @@ package com.ganapathyram.theatre.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -86,7 +87,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
         final String ruppee=context.getResources().getString(R.string.Rupee_symbol);
 
-        holder.title.setText(global.cartList.get(position).getProductname());
+        holder.title.setText(global.cartList.get(position).getProductName());
         //holder.icon.setImageResource(global.cartList.get(position).getProductimage());
         holder.price.setText(ruppee+" "+global.cartList.get(position).getTotalprice());
 
@@ -105,19 +106,23 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             @Override
             public void onClick(View view) {
 
-              Product product=global.cartList.get(position);
+              com.ganapathyram.theatre.database.Product product=global.cartList.get(position);
                 double b=0.0;
                 int values = Integer.parseInt(holder.quantity.getText().toString());
+
+
+
                 values = values + 1;
                 product.setQuantity(values);
 
                 holder.quantity.setText(String.valueOf(product.getQuantity()));
-                b = product.getQuantity() * Double.parseDouble(product.getProductprice());
+                b = product.getQuantity() * Double.parseDouble(product.getPrice());
                 product.setTotalprice(String.valueOf(b));
 
                 holder.price.setText(ruppee + String.valueOf(b));
+                double gstAmount = (Double.parseDouble(product.totalprice) * Double.parseDouble((product.getTaxPercent()))/100);
 
-                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()));
+                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()+gstAmount));
 
 
             }
@@ -127,7 +132,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             @Override
             public void onClick(View view) {
 
-                Product product=global.cartList.get(position);
+                com.ganapathyram.theatre.database.Product product=global.cartList.get(position);
                 double b;
 
                 int values = Integer.parseInt(holder.quantity.getText().toString());
@@ -140,7 +145,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 product.setQuantity(values);
 
                 holder.quantity.setText(String.valueOf(product.getQuantity()));
-                b = product.getQuantity() * Double.parseDouble(product.getProductprice());
+                b = product.getQuantity() * Double.parseDouble(product.getPrice());
                 product.setTotalprice(String.valueOf(b));
                 holder.price.setText(ruppee + String.valueOf(b));
 
@@ -164,7 +169,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         double totalValue=0.0;
         for(int i=0;i<global.cartList.size();i++)
         {
-            String price=global.cartList.get(i).getProductprice();
+            String price=global.cartList.get(i).getPrice();
 
             double value= Double.parseDouble(price) * global.cartList.get(i).getQuantity();
             totalValue=totalValue + value;
@@ -220,7 +225,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     DashBoard.productList.set(indexpos,product);
                     DashBoard.adapter.notifyDataSetChanged();
                 }*/
-                global.cartList.get(position).setTotalprice(global.cartList.get(position).productprice);
+                global.cartList.get(position).setTotalprice(global.cartList.get(position).getPrice());
                 global.cartList.remove(position);
 
 

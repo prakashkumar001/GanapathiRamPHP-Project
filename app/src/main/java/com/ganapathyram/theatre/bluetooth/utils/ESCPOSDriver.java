@@ -12,7 +12,7 @@ public class ESCPOSDriver {
 
     private static String tag = ESCPOSDriver.class.getSimpleName();
 
-    private static final byte[] LINE_FEED = {0x0A};
+    public static final byte[] LINE_FEED = {0x0A};
     private static final byte[] PAPER_FEED = {27, 0x4A, (byte)0xFF};
     public static final byte[] PAPER_CUT = {0x1D, 0x56, 0x1};
     public static final byte[] ALIGN_LEFT = {0x1B, 0x61, 0};

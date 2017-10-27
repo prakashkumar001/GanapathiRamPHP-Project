@@ -9,12 +9,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
-import com.ganapathyram.theatre.model.Categories;
+import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.model.Dashboard;
 import com.ganapathyram.theatre.parking.ParkingDashboard;
 import com.ganapathyram.theatre.utils.WSUtils;
@@ -25,6 +24,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
 /**
  * Created by Prakash on 9/25/2017.
@@ -217,7 +218,7 @@ public class Home extends AppCompatActivity {
             @Override
             protected void onPostExecute(String o) {
 
-                global.categoryList=new ArrayList<>();
+
 
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
@@ -235,7 +236,13 @@ public class Home extends AppCompatActivity {
                             String categoryUid=data.getString("categoryUid");
                             String active=data.getString("active");
 
-                            global.categoryList.add(new Categories(categoryId,categoryName,categoryUid,active));
+                            Categories categories=new Categories();
+                            categories.categoryId=(Long.parseLong(categoryId));
+                            categories.categoryName=categoryName;
+                            categories.categoryUid=categoryUid;
+                            categories.active=active;
+
+                            getHelper().getDaoSession().insertOrReplace(categories);
 
                         }
 

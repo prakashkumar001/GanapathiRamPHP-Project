@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.usb.UsbDevice;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,37 +16,27 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.citizen.sdk.ESCPOSConst;
-import com.citizen.sdk.ESCPOSPrinter;
 import com.ganapathyram.theatre.R;
-import com.ganapathyram.theatre.Test;
-import com.ganapathyram.theatre.activities.DashBoard;
 import com.ganapathyram.theatre.activities.Home;
 import com.ganapathyram.theatre.adapter.ParkingAdapter;
-import com.ganapathyram.theatre.adapter.ProductListAdapter;
 import com.ganapathyram.theatre.bluetooth.DeviceListActivity;
 import com.ganapathyram.theatre.bluetooth.printer.WoosimCmd;
 import com.ganapathyram.theatre.bluetooth.printer.WoosimImage;
-import com.ganapathyram.theatre.bluetooth.printer.WoosimProtocolMode;
 import com.ganapathyram.theatre.bluetooth.utils.ESCPOSDriver;
 import com.ganapathyram.theatre.bluetooth.utils.PrinterCommands;
 import com.ganapathyram.theatre.bluetooth.utils.Utils;
 import com.ganapathyram.theatre.common.GlobalClass;
-import com.ganapathyram.theatre.model.Categories;
+import com.ganapathyram.theatre.database.Product;
 import com.ganapathyram.theatre.model.Parking;
-import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.utils.TableBuilder;
 import com.ganapathyram.theatre.utils.WSUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,7 +46,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -72,7 +61,8 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     ArrayList<Parking> list;
     ParkingAdapter adapter;
     GlobalClass global;
-
+    double gst_amount;
+    String gstvalue;
 
     //for bluetooth
     protected static final String TAG = "TAG";
@@ -162,9 +152,97 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     printNewLine();
                     // printCustom(dateTime[0]+"   "+dateTime[1],0,1);
                     printCustom("Ganapathi Theatre",0,1);
-                    printCustom("101, Lattice Bridge Road, Adyar,",0,1);
-                    printCustom("Baktavatsalm Nagar, Chennai, Tamil Nadu 600020",0,1);
+                    printCustom("101, LB Road, Adyar,",0,1);
+                    printCustom("Chennai, Tamil Nadu 600020",0,1);
                     printCustom("Phone: 044 2441 7424",0,1);
+
+
+
+                    ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
+                    ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
+                    for(int k=0;k<global.cartList.size();k++)
+                    {
+
+                        com.ganapathyram.theatre.database.Product product=global.cartList.get(k);
+                        if(product.categoryUid.equalsIgnoreCase("snacks"))
+                        {
+
+                            snacks.add(product);
+                        }else if(product.categoryUid.equalsIgnoreCase("beverage"))
+                        {
+                            beverages.add(product);
+                        }
+                    }
+
+
+                    // posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
+                    // posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                    TableBuilder data=new TableBuilder();
+                    data.addRow("Qty.","Item","Price","Total");
+                    data.addRow("-----", "----", "-----","-----");
+
+                    if(snacks.size()>0)
+                    {
+                        data.addRow("Snacks");
+                        for(int i=0;i<snacks.size();i++)
+                        {
+                            com.ganapathyram.theatre.database.Product product=snacks.get(i);
+
+                            data.addRow(String.valueOf(product.getQuantity()),product.getProductName(),product.getPrice(),product.getTotalprice());
+
+                        }
+                        double sub=subtotal(snacks);
+                        gst_amount = (sub * 18) / 100;
+
+                        double gst=gst_amount/2;
+                        gstvalue=String.format("%.2f", gst);
+
+
+                        escposDriver.printLineAlignCenter(outputStream,data.toString());
+
+                        escposDriver.printLineAlignCenter(outputStream,"-----------------------------------"+"\n" );
+                        escposDriver.printLineAlignCenter(outputStream,"SUB TOTAL "+sub+gst_amount+"\n" );
+
+                        escposDriver.printLineAlignCenter(outputStream,"CGST "+gst+ "\n" );
+                        escposDriver.printLineAlignCenter(outputStream,"SGST "+gst+ "\n" );
+                        escposDriver.printLineAlignCenter(outputStream,"------------"+"\n" );
+                        outputStream.write(ESCPOSDriver.LINE_FEED);
+                    }
+
+
+
+                    if(beverages.size()>0)
+                    {
+                        TableBuilder data2=new TableBuilder();
+                        data2.addRow("Beverages");
+                        for(int i=0;i<beverages.size();i++)
+                        {
+                            com.ganapathyram.theatre.database.Product product=beverages.get(i);
+                            data2.addRow(String.valueOf(product.getQuantity()),product.getProductName(),product.getPrice(),product.getTotalprice());
+
+                        }
+                        double sub=subtotal(beverages);
+                        gst_amount = (sub * 20) / 100;
+
+                        double gst=gst_amount/2;
+                        gstvalue=String.format("%.2f", gst);
+
+
+                        escposDriver.printLineAlignCenter(outputStream,data2.toString());
+
+                        escposDriver.printLineAlignCenter(outputStream,"-----------------------------------"+"\n" );
+                        escposDriver.printLineAlignCenter(outputStream,"SUB TOTAL "+sub+gst_amount+"\n" );
+
+                        escposDriver.printLineAlignCenter(outputStream,"CGST "+gst+ "\n" );
+                        escposDriver.printLineAlignCenter(outputStream,"SGST "+gst+ "\n" );
+                        escposDriver.printLineAlignCenter(outputStream,"------------"+"\n" );
+                        outputStream.write(ESCPOSDriver.LINE_FEED);
+
+
+                    }
+
+
+
 
                     //printImageVehicle(drawable,type);
                     printCustom(parking.name+" "+parking.chargesToBePaid,0,1);
@@ -599,6 +677,17 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
             }
         }
         new ParkingServer().execute();
+    }
+
+    public double subtotal(List<Product> data)
+    {
+        double subTotal=0.0;
+        for(com.ganapathyram.theatre.database.Product product:data)
+        {
+            subTotal=subTotal+Double.parseDouble(product.totalprice);
+        }
+
+        return subTotal;
     }
 }
 

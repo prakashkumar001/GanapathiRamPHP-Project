@@ -31,7 +31,7 @@ import java.util.List;
 public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter.MyViewHolder> {
 
 
-    ArrayList<Product> products = new ArrayList<>();
+    ArrayList<com.ganapathyram.theatre.database.Product> products = new ArrayList<>();
 
     GlobalClass global;
     Context context;
@@ -62,7 +62,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
     }
 
 
-    public ProductListAdapter(Context context, ArrayList<Product> productlist) {
+    public ProductListAdapter(Context context, ArrayList<com.ganapathyram.theatre.database.Product> productlist) {
 
         global=new GlobalClass();
         this.context=context;
@@ -84,9 +84,9 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         final String ruppee=context.getResources().getString(R.string.Rupee_symbol);
-        holder.productname.setText(products.get(position).productname);
+        holder.productname.setText(products.get(position).getProductName());
         holder.price.setText(ruppee+" "+products.get(position).getTotalprice());
-        holder.product_image.setImageResource(products.get(position).productimage);
+        holder.product_image.setImageResource(products.get(position).getProductimage());
         //holder.quantity.setText(products.get(position).quantity);
 
 
@@ -107,17 +107,17 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                 }
             }*/
 
-            ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
+            ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).getProductId());
             if(productAvailable.isProductAvailable)
             {
-                products.get(position).setSelected(true);
+                products.get(position).setIsSelected(true);
                 // holder.addtocart.setImageResource(R.mipmap.add_buy_select);
                 holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
                 holder.quantity.setText(String.valueOf(global.cartList.get(productAvailable.indexofProduct).getQuantity()));
                 holder.price.setText(ruppee+" "+global.cartList.get(productAvailable.indexofProduct).getTotalprice());
             }else
             {
-                products.get(position).setSelected(false);
+                products.get(position).setIsSelected(false);
                 holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
                 holder.quantity.setText("1");
                 holder.price.setText(ruppee+" "+products.get(position).getTotalprice());
@@ -132,7 +132,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
 
         }else {
-            products.get(position).setSelected(false);
+            products.get(position).setIsSelected(false);
            // holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
 
         }
@@ -206,17 +206,17 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
             @Override
             public boolean onLongClick(View view) {
 
-                ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
+                ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).getProductId());
 
                 if(productAvailable.isProductAvailable)
                 {
 
                     global.cartList.remove(productAvailable.indexofProduct);
-                    products.get(position).setSelected(false);
+                    products.get(position).setIsSelected(false);
                     products.get(position).setQuantity(1);
-                    products.get(position).setTotalprice(products.get(position).getProductprice());
+                    products.get(position).setTotalprice(products.get(position).getPrice());
                     holder.quantity.setText(String.valueOf(products.get(position).getQuantity()));
-                    holder.price.setText(ruppee+" "+String.valueOf(products.get(position).getProductprice()));
+                    holder.price.setText(ruppee+" "+String.valueOf(products.get(position).getPrice()));
                    holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
 
                     int count=global.cartList.size();
@@ -240,7 +240,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
             @Override
             public void onClick(View view) {
 
-                ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
+                ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).getProductId());
                 if(productAvailable.isProductAvailable)
                 {
                     int index=productAvailable.indexofProduct;
@@ -250,7 +250,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                     global.cartList.get(index).setQuantity(values);
 
                     holder.quantity.setText(String.valueOf(global.cartList.get(index).getQuantity()));
-                    b = global.cartList.get(index).getQuantity() * Double.parseDouble(global.cartList.get(index).getProductprice());
+                    b = global.cartList.get(index).getQuantity() * Double.parseDouble(global.cartList.get(index).getPrice());
                     global.cartList.get(index).setTotalprice(String.valueOf(b));
 
                     holder.price.setText(ruppee + String.valueOf(b));
@@ -259,7 +259,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                 }else
                 {
                     global.cartList.add(products.get(position));
-                    products.get(position).setSelected(true);
+                    products.get(position).setIsSelected(true);
                     //holder.addtocart.setImageResource(R.mipmap.add_buy_select);
                     holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
 
@@ -280,7 +280,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
             @Override
             public void onClick(View view) {
 
-                ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).productid);
+                ProductAvailable productAvailable=containsProduct(global.cartList,products.get(position).getProductId());
                 if(productAvailable.isProductAvailable)
                 {
                     int index=productAvailable.indexofProduct;
@@ -297,7 +297,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
                     global.cartList.get(index).setQuantity(values);
 
                     holder.quantity.setText(String.valueOf(global.cartList.get(index).getQuantity()));
-                    b = global.cartList.get(index).getQuantity() * Double.parseDouble(global.cartList.get(index).getProductprice());
+                    b = global.cartList.get(index).getQuantity() * Double.parseDouble(global.cartList.get(index).getPrice());
                     global.cartList.get(index).setTotalprice(String.valueOf(b));
                     holder.price.setText(ruppee + String.valueOf(b));
 
@@ -313,7 +313,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
 
 
-        if(products.get(position).isSelected())
+        if(products.get(position).getIsSelected())
         {
             holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
 
@@ -338,9 +338,9 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
 
 
-    ProductAvailable containsProduct(List<Product> list, String productid) {
-        for (Product item : list) {
-            if (item.productid.equals(productid)) {
+    ProductAvailable containsProduct(List<com.ganapathyram.theatre.database.Product> list, Long productid) {
+        for (com.ganapathyram.theatre.database.Product item : list) {
+            if (item.productId.equals(productid)) {
 
                 int index=list.indexOf(item);
                return new ProductAvailable(true,index);

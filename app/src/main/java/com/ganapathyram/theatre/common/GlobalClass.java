@@ -3,12 +3,16 @@ package com.ganapathyram.theatre.common;
 import android.app.Application;
 import android.content.Context;
 
-import com.ganapathyram.theatre.model.Categories;
+import com.ganapathyram.theatre.database.DaoMaster;
+import com.ganapathyram.theatre.database.DaoSession;
+import com.ganapathyram.theatre.helper.Helper;
 import com.ganapathyram.theatre.model.Product;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+
+import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
 
@@ -19,17 +23,23 @@ import java.util.ArrayList;
 public class GlobalClass extends Application{
 
     public static String UserId="";
-    public static ArrayList<Product> cartList=new ArrayList<>();
+    public static ArrayList<com.ganapathyram.theatre.database.Product> cartList=new ArrayList<>();
     public static String BadgeCount="0";
-    public static ArrayList<Categories> categoryList=new ArrayList<>();
     public static String bluetoothStatus=null;
-    public static String ApiBaseUrl="http://192.168.0.105:8080/services/";
-
+    public static String ApiBaseUrl="http://192.168.1.16:8080/services/";
+    Database db;
+    public DaoSession daoSession;
     public void onCreate() {
 
 
 
         super.onCreate();
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "grcinemas_db");
+
+        // db = helper.getWritableDb();
+        db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
+        new Helper(daoSession, this);
 
         initImageLoader(getApplicationContext());
 

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.view.GravityCompat;
@@ -35,18 +36,24 @@ import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.adapter.CartAdapter;
 import com.ganapathyram.theatre.adapter.ProductListAdapter;
 import com.ganapathyram.theatre.bluetooth.printer.WoosimImage;
+import com.ganapathyram.theatre.bluetooth.utils.ESCPOSDriver;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
 import com.ganapathyram.theatre.utils.TableBuilder;
 import com.ganapathyram.theatre.utils.WSUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
 /**
  * Created by Prakash on 9/19/2017.
@@ -55,7 +62,7 @@ import java.util.List;
 public class DashBoard extends AppCompatActivity {
     public static RecyclerView productListView;
     public static ProductListAdapter adapter;
-    public static ArrayList<Product> productList;
+    public static ArrayList<com.ganapathyram.theatre.database.Product> productList;
     public static TextView cartcount,totalprice,subtotal;
     RelativeLayout cartRelativeLayout;
     public static  RecyclerView cartview;
@@ -65,6 +72,7 @@ public class DashBoard extends AppCompatActivity {
     double gst_amount;
     String gstvalue;
     String subtotals;
+    List<Categories> categoriesList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,20 +86,45 @@ public class DashBoard extends AppCompatActivity {
 
         RadioGroup.LayoutParams rprms;
 
-        for(int i=0;i<global.categoryList.size();i++){
-            RadioButton radioButton = new RadioButton(this);
-            radioButton.setText(global.categoryList.get(i).categoryName);
-            radioButton.setTextSize(16);
-            radioButton.setPadding(5,0,0,5);
-            radioButton.setChecked(i==0);
-            radioButton.setId(i);
-            radioButton.setGravity(Gravity.CENTER);
-            radioButton.setTextColor(getResources().getColorStateList(R.color.rbtn_textcolor_selector));
-            radioButton.setButtonDrawable(null);
-            radioButton.setBackgroundResource(R.drawable.radio_selector_circle);
-            rprms= new RadioGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-            radioGroup.addView(radioButton, rprms);
+
+        if(getHelper().getCategoryItems()!=null)
+        {
+            categoriesList=new ArrayList<>();
+            categoriesList=getHelper().getCategoryItems();
+
+            for(int i = 0; i< categoriesList.size(); i++){
+                RadioButton radioButton = new RadioButton(this);
+                radioButton.setText(categoriesList.get(i).categoryName);
+                radioButton.setTextSize(16);
+                radioButton.setPadding(5,0,0,5);
+                radioButton.setChecked(i==0);
+                radioButton.setId(i);
+                radioButton.setGravity(Gravity.CENTER);
+                radioButton.setTextColor(getResources().getColorStateList(R.color.rbtn_textcolor_selector));
+                radioButton.setButtonDrawable(null);
+                radioButton.setBackgroundResource(R.drawable.radio_selector_circle);
+                rprms= new RadioGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+                radioGroup.addView(radioButton, rprms);
+
+
+
+            }
+
+            Products(categoriesList.get(0).categoryUid);
+
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+
+                    int id=i;
+
+                    Products(categoriesList.get(id).categoryUid);
+
+                }
+            });
         }
+
+
 
 
 
@@ -115,31 +148,7 @@ public class DashBoard extends AppCompatActivity {
 
 
 
-        productList=new ArrayList<>();
 
-        productList.add(new Product("1","Pop Corn","45.00",R.mipmap.placeholder,1,"45.00",false));
-        productList.add(new Product("2","Veg Puff","15.00",R.mipmap.veg_puff,1,"15.00",false));
-        productList.add(new Product("3","Chicken Puff","25.00",R.mipmap.chicken_samosa,1,"25.00",false));
-        productList.add(new Product("4","Chicken Samosa","30.00",R.mipmap.veg_puff,1,"30.00",false));
-        productList.add(new Product("5","Egg Puff","26.00",R.mipmap.egg_puff,1,"26.00",false));
-        productList.add(new Product("6","Pop Corn","45.00",R.mipmap.placeholder,1,"45.00",false));
-        productList.add(new Product("7","Veg Puff","15.00",R.mipmap.veg_puff,1,"15.00",false));
-        productList.add(new Product("8","Chicken Puff","25.00",R.mipmap.chicken_samosa,1,"25.00",false));
-        productList.add(new Product("9","Chicken Samosa","30.00",R.mipmap.veg_puff,1,"30.00",false));
-        productList.add(new Product("10","Egg Puff","26.00",R.mipmap.egg_puff,1,"26.00",false));
-
-
-
-
-        adapter = new ProductListAdapter(getApplicationContext(), productList);
-        final int columns = getResources().getInteger(R.integer.grid_column);
-
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),columns);
-        productListView.setLayoutManager(layoutManager);
-        productListView.setItemAnimator(new DefaultItemAnimator());
-        productListView.setAdapter(adapter);
-        productListView.setNestedScrollingEnabled(false);
-        adapter.notifyDataSetChanged();
 
     }
 
@@ -171,6 +180,7 @@ public class DashBoard extends AppCompatActivity {
                // productListView.setAdapter(adapter);
                 //adapter.notifyDataSetChanged();
                 dialog.dismiss();
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -180,7 +190,7 @@ public class DashBoard extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                Login(global.UserId,dialog);
+
 
               /*  Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -207,7 +217,7 @@ public class DashBoard extends AppCompatActivity {
         subtotal.setText(rupee+" "+String.valueOf(adapter.totalvalue()));
         subtotals=String.valueOf(adapter.totalvalue());
 
-         gst_amount = ( adapter.totalvalue() * 18 ) / 100;
+        // gst_amount = ( adapter.totalvalue() * 18 ) / 100;
 
         double total=adapter.totalvalue()+gst_amount;
         totalprice.setText(String.valueOf(total));
@@ -267,28 +277,102 @@ public class DashBoard extends AppCompatActivity {
             byte[] b = byteArrayBitmapStream.toByteArray();
             posPtr.printBitmap(b,150,150,);*/
 
-            posPtr.printBitmap(bitmap,300,100);
+            posPtr.printBitmap(bitmap,200,50);
 
-            double gst=gst_amount/2;
+          /*  double gst=gst_amount/2;
              gstvalue=String.format("%.2f", gst);
-
+*/
 
             // Print Text
             posPtr.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( "101, Lattice Bridge Road, Adyar, Baktavatsalm Nagar, Chennai, Tamil Nadu 600020" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( "Phone: 044 2441 7424" + "\n\n\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
+            ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
+            ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
+            for(int k=0;k<global.cartList.size();k++)
+            {
+
+                com.ganapathyram.theatre.database.Product product=global.cartList.get(k);
+                if(product.categoryUid.equalsIgnoreCase("snacks"))
+                {
+
+                    snacks.add(product);
+                }else if(product.categoryUid.equalsIgnoreCase("beverage"))
+                {
+                    beverages.add(product);
+                }
+            }
+
+
             // posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
             // posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             TableBuilder data=new TableBuilder();
             data.addRow("Qty.","Item","Price","Total");
             data.addRow("-----", "----", "-----","-----");
-            for(int i=0;i<global.cartList.size();i++)
-            {
-                Product product=global.cartList.get(i);
-                data.addRow(String.valueOf(product.getQuantity()),product.getProductname(),product.getProductprice(),product.getTotalprice());
 
+            if(snacks.size()>0)
+            {
+                data.addRow("Snacks");
+                for(int i=0;i<snacks.size();i++)
+                {
+                    com.ganapathyram.theatre.database.Product product=snacks.get(i);
+
+                    data.addRow(String.valueOf(product.getQuantity()),product.getProductName(),product.getPrice(),product.getTotalprice());
+
+                }
+                double sub=subtotal(snacks);
+                gst_amount = (sub * 18) / 100;
+
+                double gst=gst_amount/2;
+                gstvalue=String.format("%.2f", gst);
+
+
+                posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("SUB TOTAL "+subtotals+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                posPtr.printText("CGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("SGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.writeData(ESCPOSDriver.LINE_FEED);
             }
+
+
+
+            if(beverages.size()>0)
+            {
+                data.addRow("Beverages");
+                for(int i=0;i<beverages.size();i++)
+                {
+                    com.ganapathyram.theatre.database.Product product=beverages.get(i);
+                    data.addRow(String.valueOf(product.getQuantity()),product.getProductName(),product.getPrice(),product.getTotalprice());
+
+                }
+                double sub=subtotal(snacks);
+                gst_amount = (sub * 20) / 100;
+
+                double gst=gst_amount/2;
+                gstvalue=String.format("%.2f", gst);
+
+
+                posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("SUB TOTAL "+subtotals+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                posPtr.printText("CGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("SGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.writeData(ESCPOSDriver.LINE_FEED);
+            }
+           /* for(int i=0;i<global.cartList.size();i++)
+            {
+                com.ganapathyram.theatre.database.Product product=global.cartList.get(i);
+                data.addRow(String.valueOf(product.getQuantity()),product.getProductName(),product.getPrice(),product.getTotalprice());
+
+            }*/
 
             posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
@@ -343,8 +427,8 @@ public class DashBoard extends AppCompatActivity {
 
 
 
-    public void Login(final String pinNumber,final Dialog dialogs) {
-        class LoginServer extends AsyncTask<String, String, String> {
+    public void Products(final String CateroryId) {
+        class ProductFromServer extends AsyncTask<String, String, String> {
             ProgressDialog dialog;
             String response = "";
 
@@ -362,19 +446,12 @@ public class DashBoard extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "login";
+                    String requestURL = global.ApiBaseUrl + "product/details/"+CateroryId+"/"+global.UserId;
                     WSUtils utils = new WSUtils();
 
-                    JSONObject object = new JSONObject();
-                    JSONObject user = new JSONObject();
-                    user.put("userId", pinNumber);
-                    user.put("password", pinNumber);
-
-                    object.put("user", user);
-                    object.put("venueId", "gprtheatre");
 
 
-                    response = utils.responsedetailsfromserver(requestURL, object.toString());
+                    response = utils.getResultFromHttpRequest(requestURL,"GET", new HashMap<String, String>());
 
                     System.out.println("SERVER REPLIED:" + response);
                     //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
@@ -389,28 +466,61 @@ public class DashBoard extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String o) {
-
+                productList=new ArrayList<>();
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
 
                 if (o != null || !o.equalsIgnoreCase("null")) {
+
                     try {
-                        JSONObject object = new JSONObject(o);
-                        String payload = object.getString("payload");
+                        JSONObject object=new JSONObject(o);
+                        JSONArray array=object.getJSONArray("payload");
+                        for(int i=0;i<array.length();i++)
+                        {
+                            JSONObject data=array.getJSONObject(i);
+                            String productId=data.getString("productId");
+                            String productUid=data.getString("productUid");
+                            String productName=data.getString("productName");
+                            String categoryUid=data.getString("categoryUid");
+                            String price=data.getString("price");
+                            String description=data.getString("description");
+                            String taxPercent=data.getString("taxPercent");
+                            String active=data.getString("active");
 
-                        if (payload.equalsIgnoreCase("success")) {
-                            global.UserId=pinNumber;
 
-                            Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
-                            dialogs.dismiss();
-                            //finish();
+                            com.ganapathyram.theatre.database.Product product=new com.ganapathyram.theatre.database.Product();
+                            product.productId=Long.parseLong(productId);
+                            product.productUid=productUid;
+                            product.productName=productName;
+                            product.categoryUid=categoryUid;
+                            product.price=price;
+                            product.quantity=1;
+                            product.totalprice=price;
+                            product.description=description;
+                            product.taxPercent=taxPercent;
+                            product.active=active;
 
-                            usbPrinter();
-
+                            productList.add(product);
+                            getHelper().getDaoSession().insertOrReplace(product);
 
                         }
 
 
+
+
+
+
+
+
+                        adapter = new ProductListAdapter(getApplicationContext(), productList);
+                        final int columns = getResources().getInteger(R.integer.grid_column);
+
+                        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),columns);
+                        productListView.setLayoutManager(layoutManager);
+                        productListView.setItemAnimator(new DefaultItemAnimator());
+                        productListView.setAdapter(adapter);
+                        productListView.setNestedScrollingEnabled(false);
+                        adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -420,7 +530,18 @@ public class DashBoard extends AppCompatActivity {
 
             }
         }
-        new LoginServer().execute();
+        new ProductFromServer().execute();
+    }
+
+    public double subtotal(List<com.ganapathyram.theatre.database.Product> data)
+    {
+        double subTotal=0.0;
+        for(com.ganapathyram.theatre.database.Product product:data)
+        {
+            subTotal=subTotal+Double.parseDouble(product.totalprice);
+        }
+
+        return subTotal;
     }
 
 }

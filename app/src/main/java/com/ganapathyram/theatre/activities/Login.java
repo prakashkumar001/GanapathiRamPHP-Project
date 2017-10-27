@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static android.R.attr.data;
+import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
 
 /**
@@ -386,6 +387,11 @@ public class Login extends AppCompatActivity {
                         String payload = object.getString("payload");
 
                         if (payload.equalsIgnoreCase("success")) {
+
+                            com.ganapathyram.theatre.database.Login login=new  com.ganapathyram.theatre.database.Login();
+                            login.pin=Long.parseLong(pinNumber);
+                            login.status=payload;
+                            getHelper().getDaoSession().insertOrReplace(login);
                             global.UserId=pinNumber;
 
                             Intent intent = new Intent(
