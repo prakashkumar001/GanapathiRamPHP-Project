@@ -35,7 +35,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
 
     GlobalClass global;
     Context context;
-
+ImageLoader loader;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView price, productname;
         public ImageView product_image;
@@ -67,6 +67,7 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
         global=new GlobalClass();
         this.context=context;
         this.products=productlist;
+        loader=ImageLoader.getInstance();
 
     }
 
@@ -83,12 +84,30 @@ public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.app_icon) // resource or drawable
+                .showImageForEmptyUri(R.drawable.app_icon) // resource or drawable
+                .showImageOnFail(R.drawable.app_icon) // resource or drawable
+                .resetViewBeforeLoading(false)  // default
+                .delayBeforeLoading(100)
+                .cacheInMemory(true) // default
+                .cacheOnDisk(true) // default
+                .build();
+
+
         final String ruppee=context.getResources().getString(R.string.Rupee_symbol);
         holder.productname.setText(products.get(position).getProductName());
         holder.price.setText(ruppee+" "+products.get(position).getTotalprice());
-        holder.product_image.setImageResource(products.get(position).getProductimage());
+       // holder.product_image.setImageResource(products.get(position).getProductimage());
         //holder.quantity.setText(products.get(position).quantity);
+        try
+        {
+            loader.displayImage(global.ApiImageUrl+products.get(position).getProductimage(),holder.product_image,options);
 
+        }catch (Exception e)
+        {
+
+        }
 
 
 

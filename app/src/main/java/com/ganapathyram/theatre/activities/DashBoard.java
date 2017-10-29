@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -41,6 +42,7 @@ import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
+import com.ganapathyram.theatre.utils.InternetPermissions;
 import com.ganapathyram.theatre.utils.TableBuilder;
 import com.ganapathyram.theatre.utils.WSUtils;
 
@@ -73,6 +75,7 @@ public class DashBoard extends AppCompatActivity {
     String gstvalue;
     String subtotals;
     List<Categories> categoriesList;
+    LinearLayout layout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +86,7 @@ public class DashBoard extends AppCompatActivity {
         cartcount=(TextView)findViewById(R.id.cartcount);
         cartRelativeLayout=(RelativeLayout)findViewById(R.id.cartRelativeLayout);
         radioGroup= (RadioGroup) findViewById(R.id.rg_header);
+        layout=(LinearLayout)findViewById(R.id.layout);
 
         RadioGroup.LayoutParams rprms;
 
@@ -191,6 +195,7 @@ public class DashBoard extends AppCompatActivity {
 
 
 
+                Checkout();
 
               /*  Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -486,6 +491,7 @@ public class DashBoard extends AppCompatActivity {
                             String description=data.getString("description");
                             String taxPercent=data.getString("taxPercent");
                             String active=data.getString("active");
+                            String imageName=data.getString("imageName");
 
 
                             com.ganapathyram.theatre.database.Product product=new com.ganapathyram.theatre.database.Product();
@@ -498,6 +504,7 @@ public class DashBoard extends AppCompatActivity {
                             product.totalprice=price;
                             product.description=description;
                             product.taxPercent=taxPercent;
+                            product.productimage=imageName;
                             product.active=active;
 
                             productList.add(product);
@@ -543,5 +550,103 @@ public class DashBoard extends AppCompatActivity {
 
         return subTotal;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(!new InternetPermissions(DashBoard.this).isInternetOn())
+        {
+            Snackbar.make(layout, getString(R.string.no_internet_connection), Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            }).show();
+
+        }
+    }
+
+    public void Checkout() {
+        class CheckOutService extends AsyncTask<String, String, String> {
+            ProgressDialog dialog;
+            String response = "";
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = new ProgressDialog(DashBoard.this);
+                dialog.setMessage(getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String[] params) {
+                try {
+
+
+                    String requestURL = global.ApiBaseUrl + "cart/checkout";
+                    WSUtils utils = new WSUtils();
+
+                    JSONObject object;
+                    JSONArray cartList=new JSONArray();
+                    for(int i=0;i<global.cartList.size();i++)
+                    {
+                        com.ganapathyram.theatre.database.Product product=global.cartList.get(i);
+                        try {
+                            object=new JSONObject();
+                            object.put("type",product.categoryUid);
+                            object.put("productUid",product.productUid);
+                            object.put("quantity",product.quantity);
+                            object.put("unitPrice",product.price);
+                            object.put("taxPercent",product.taxPercent);
+                            object.put("taxAmt",product.taxPercent);
+                            object.put("totalAmt",product.totalprice);
+
+                            cartList.put(object);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    JSONObject result=new JSONObject();
+                    result.put("userId",global.UserId);
+                    result.put("cartItems",cartList);
+
+
+
+
+
+
+                    response = utils.responsedetailsfromserver(requestURL, result.toString());
+
+                    System.out.println("SERVER REPLIED:" + response);
+                    //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
+                    // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
+                } catch (Exception ex) {
+                    Log.i("ERROR", "ERROR" + ex.toString());
+                }
+
+                return response;
+            }
+
+
+            @Override
+            protected void onPostExecute(String o) {
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if (o != null || !o.equalsIgnoreCase("null")) {
+
+                }
+
+
+            }
+        }
+        new CheckOutService().execute();
+    }
+
 
 }

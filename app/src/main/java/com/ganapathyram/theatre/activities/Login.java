@@ -6,17 +6,20 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ganapathyram.theatre.MainActivity;
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.utils.InternetPermissions;
 import com.ganapathyram.theatre.utils.WSUtils;
 
 import org.json.JSONException;
@@ -38,6 +41,7 @@ public class Login extends AppCompatActivity {
     Button login;
     String pinNumber;
     GlobalClass global;
+    LinearLayout layout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +51,21 @@ public class Login extends AppCompatActivity {
         initialize();
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(!new InternetPermissions(Login.this).isInternetOn())
+        {
+            Snackbar.make(layout, getString(R.string.no_internet_connection), Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            }).show();
+
+        }
     }
 
     private void initialize() {
@@ -68,6 +87,7 @@ public class Login extends AppCompatActivity {
         bZero = (Button) findViewById(R.id.btn_zero);
 
         login = (Button) findViewById(R.id.login);
+        layout=(LinearLayout)findViewById(R.id.layout);
 
         iv_delete = (ImageView) findViewById(R.id.iv_delete);
 

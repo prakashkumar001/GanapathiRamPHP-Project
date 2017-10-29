@@ -21,14 +21,13 @@ public class Product {
     public String taxPercent;
     public String active;
     public int quantity;
-    public int productimage;
+    public String productimage;
     public String totalprice;
     public boolean isSelected;
-
-    @Generated(hash = 1055919603)
+    @Generated(hash = 2073978964)
     public Product(Long productId, String productUid, String productName,
             String categoryUid, String price, String description, String taxPercent,
-            String active, int quantity, int productimage, String totalprice,
+            String active, int quantity, String productimage, String totalprice,
             boolean isSelected) {
         this.productId = productId;
         this.productUid = productUid;
@@ -46,8 +45,6 @@ public class Product {
     @Generated(hash = 1890278724)
     public Product() {
     }
-
-
     public Long getProductId() {
         return this.productId;
     }
@@ -102,10 +99,10 @@ public class Product {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-    public int getProductimage() {
+    public String getProductimage() {
         return this.productimage;
     }
-    public void setProductimage(int productimage) {
+    public void setProductimage(String productimage) {
         this.productimage = productimage;
     }
     public String getTotalprice() {
@@ -120,6 +117,7 @@ public class Product {
     public void setIsSelected(boolean isSelected) {
         this.isSelected = isSelected;
     }
+
 
 
 

@@ -20,4 +20,8 @@
     <string name="hint_address_bluetooth">Bluetooth Address</string>
     <string name="label_usbdevice">UsbDevice:</string>
     <string name="hint_usbdevice">null (Automatic detection)</string>
+
+
+    <string name="no_internet_connection">No Internet Connection</string>
+
 </resources>
