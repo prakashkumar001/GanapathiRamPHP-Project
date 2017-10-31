@@ -120,9 +120,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 product.setTotalprice(String.valueOf(b));
 
                 holder.price.setText(ruppee + String.valueOf(b));
-                double gstAmount = (Double.parseDouble(product.totalprice) * Double.parseDouble((product.getTaxPercent()))/100);
+                double gst_amount = (Double.parseDouble(global.cartList.get(position).getTotalprice()) * Double.parseDouble( global.cartList.get(position).taxPercent)) / 100;
+                //double gst_amount = ((Double.parseDouble( global.cartList.get(index).getTotalprice()) ) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
+                global.cartList.get(position).setTaxAmount(String.format("%.2f", gst_amount));
 
-                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()+gstAmount));
+                DashBoard.subtotal.setText(String.valueOf(totalvalue()));
+                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()+totalTaxAmount()));
 
 
             }
@@ -149,7 +152,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 product.setTotalprice(String.valueOf(b));
                 holder.price.setText(ruppee + String.valueOf(b));
 
-                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()));
+                double gst_amount = (Double.parseDouble(global.cartList.get(position).getTotalprice()) * Double.parseDouble( global.cartList.get(position).taxPercent)) / 100;
+                //double gst_amount = ((Double.parseDouble( global.cartList.get(index).getTotalprice()) ) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
+                global.cartList.get(position).setTaxAmount(String.format("%.2f", gst_amount));
+
+                DashBoard.subtotal.setText(String.valueOf(totalvalue()));
+                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()+totalTaxAmount()));
+
             }
         });
 
@@ -172,6 +181,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             String price=global.cartList.get(i).getPrice();
 
             double value= Double.parseDouble(price) * global.cartList.get(i).getQuantity();
+            totalValue=totalValue + value;
+
+        }
+
+        return totalValue;
+    }
+
+    public double totalTaxAmount()
+    {
+        double totalValue=0.0;
+        for(int i=0;i<global.cartList.size();i++)
+        {
+            String price=global.cartList.get(i).getTaxAmount();
+
+            double value= Double.parseDouble(price);
             totalValue=totalValue + value;
 
         }
@@ -238,7 +262,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 DashBoard.adapter.notifyDataSetChanged();
 
 
-                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()));
+                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()+totalTaxAmount()));
+                DashBoard.subtotal.setText(String.valueOf(totalvalue()));
 
                 if(totalvalue()==0.0)
                 {
