@@ -22,13 +22,14 @@ public class Product {
     public String active;
     public int quantity;
     public String productimage;
+    public String taxAmount;
     public String totalprice;
     public boolean isSelected;
-    @Generated(hash = 2073978964)
+    @Generated(hash = 1985902205)
     public Product(Long productId, String productUid, String productName,
             String categoryUid, String price, String description, String taxPercent,
-            String active, int quantity, String productimage, String totalprice,
-            boolean isSelected) {
+            String active, int quantity, String productimage, String taxAmount,
+            String totalprice, boolean isSelected) {
         this.productId = productId;
         this.productUid = productUid;
         this.productName = productName;
@@ -39,6 +40,7 @@ public class Product {
         this.active = active;
         this.quantity = quantity;
         this.productimage = productimage;
+        this.taxAmount = taxAmount;
         this.totalprice = totalprice;
         this.isSelected = isSelected;
     }
@@ -116,6 +118,12 @@ public class Product {
     }
     public void setIsSelected(boolean isSelected) {
         this.isSelected = isSelected;
+    }
+    public String getTaxAmount() {
+        return this.taxAmount;
+    }
+    public void setTaxAmount(String taxAmount) {
+        this.taxAmount = taxAmount;
     }
 
 

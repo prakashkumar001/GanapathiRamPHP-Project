@@ -493,6 +493,8 @@ public class DashBoard extends AppCompatActivity {
                             String active=data.getString("active");
                             String imageName=data.getString("imageName");
 
+                            double gst_amount = (Double.parseDouble(price) * Double.parseDouble(taxPercent)) / 100;
+
 
                             com.ganapathyram.theatre.database.Product product=new com.ganapathyram.theatre.database.Product();
                             product.productId=Long.parseLong(productId);
@@ -505,6 +507,7 @@ public class DashBoard extends AppCompatActivity {
                             product.description=description;
                             product.taxPercent=taxPercent;
                             product.productimage=imageName;
+                            product.taxAmount=String.format("%.2f", gst_amount);
                             product.active=active;
 
                             productList.add(product);
@@ -600,7 +603,7 @@ public class DashBoard extends AppCompatActivity {
                             object.put("quantity",product.quantity);
                             object.put("unitPrice",product.price);
                             object.put("taxPercent",product.taxPercent);
-                            object.put("taxAmt",product.taxPercent);
+                            object.put("taxAmt",product.taxAmount);
                             object.put("totalAmt",product.totalprice);
 
                             cartList.put(object);

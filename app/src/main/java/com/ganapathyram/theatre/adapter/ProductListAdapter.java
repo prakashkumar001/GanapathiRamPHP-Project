@@ -236,7 +236,9 @@ ImageLoader loader;
                     products.get(position).setTotalprice(products.get(position).getPrice());
                     holder.quantity.setText(String.valueOf(products.get(position).getQuantity()));
                     holder.price.setText(ruppee+" "+String.valueOf(products.get(position).getPrice()));
-                   holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
+                    double gst_amount = (Double.parseDouble(products.get(position).getPrice()) * Double.parseDouble(products.get(position).taxAmount)) / 100;
+                     products.get(position).setTaxAmount(String.format("%.2f", gst_amount));
+                    holder.productbg.setBackgroundColor(context.getResources().getColor(android.R.color.white));
 
                     int count=global.cartList.size();
                     String value= String.valueOf(count);
@@ -270,7 +272,16 @@ ImageLoader loader;
 
                     holder.quantity.setText(String.valueOf(global.cartList.get(index).getQuantity()));
                     b = global.cartList.get(index).getQuantity() * Double.parseDouble(global.cartList.get(index).getPrice());
+
+
+
+
                     global.cartList.get(index).setTotalprice(String.valueOf(b));
+
+                    double gst_amount = (Double.parseDouble(global.cartList.get(index).getTotalprice()) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
+                    //double gst_amount = ((Double.parseDouble( global.cartList.get(index).getTotalprice()) ) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
+                    global.cartList.get(index).setTaxAmount(String.format("%.2f", gst_amount));
+
 
                     holder.price.setText(ruppee + String.valueOf(b));
 
@@ -317,7 +328,14 @@ ImageLoader loader;
 
                     holder.quantity.setText(String.valueOf(global.cartList.get(index).getQuantity()));
                     b = global.cartList.get(index).getQuantity() * Double.parseDouble(global.cartList.get(index).getPrice());
+
+
+
                     global.cartList.get(index).setTotalprice(String.valueOf(b));
+                    double gst_amount = (Double.parseDouble(global.cartList.get(index).getTotalprice()) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
+                    global.cartList.get(index).setTaxAmount(String.format("%.2f", gst_amount));
+
+
                     holder.price.setText(ruppee + String.valueOf(b));
 
 
