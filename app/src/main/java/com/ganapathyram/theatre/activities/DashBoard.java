@@ -8,11 +8,10 @@ import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -36,10 +35,10 @@ import com.citizen.sdk.ESCPOSPrinter;
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.adapter.CartAdapter;
 import com.ganapathyram.theatre.adapter.ProductListAdapter;
-import com.ganapathyram.theatre.bluetooth.printer.WoosimImage;
 import com.ganapathyram.theatre.bluetooth.utils.ESCPOSDriver;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.Categories;
+import com.ganapathyram.theatre.database.LocalSalesError;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
 import com.ganapathyram.theatre.utils.InternetPermissions;
@@ -50,7 +49,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -199,7 +202,7 @@ public class DashBoard extends AppCompatActivity {
 
 
 
-                Checkout();
+                Checkout(dialog);
 
               /*  Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -258,7 +261,7 @@ public class DashBoard extends AppCompatActivity {
 
         return new ProductAvailable(false,-1);
     }
-    public void usbPrinter()
+    public void usbPrinter(Dialog orderdialog)
     {
         // Constructor
         ESCPOSPrinter posPtr = new ESCPOSPrinter();
@@ -387,23 +390,6 @@ public class DashBoard extends AppCompatActivity {
                 posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.writeData(ESCPOSDriver.LINE_FEED);
             }
-           /* for(int i=0;i<global.cartList.size();i++)
-            {
-                com.ganapathyram.theatre.database.Product product=global.cartList.get(i);
-                data.addRow(String.valueOf(product.getQuantity()),product.getProductName(),product.getPrice(),product.getTotalprice());
-
-            }*/
-
-           // posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-/*
-
-            posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText("SUB TOTAL "+subtotals+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-
-            posPtr.printText("CGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText("SGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
-*/
 
             posPtr.printText("TOTAL "+String.valueOf(totalvalue()+totalTaxAmount())+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
@@ -411,14 +397,6 @@ public class DashBoard extends AppCompatActivity {
 
 
             posPtr.printText("Thank you for coming"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            //posPtr.printText("forward to serve you again",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-
-
-
-
-            /*// Print QRcode
-            posPtr.printQRCode( "http://www.citizen-systems.co.jp/", 6, ESCPOSConst.CMP_QRCODE_EC_LEVEL_L, ESCPOSConst.CMP_ALIGNMENT_RIGHT );
-*/
             // Partial Cut with Pre-Feed
             posPtr.cutPaper( ESCPOSConst.CMP_CUT_PARTIAL_PREFEED );
 
@@ -436,14 +414,40 @@ public class DashBoard extends AppCompatActivity {
         }
         else
         {
+
+            for(int k=0;k<global.cartList.size();k++)
+            {
+                com.ganapathyram.theatre.database.Product product=global.cartList.get(k);
+                LocalSalesError salesError=new LocalSalesError();
+                salesError.productUid=product.getProductUid();
+                salesError.productName=product.getProductName();
+                salesError.categoryUid=product.categoryUid;
+                salesError.price=product.getPrice();
+                salesError.quantity=product.getQuantity();
+                salesError.totalprice=product.getTotalprice();
+                salesError.description=product.getDescription();
+                salesError.taxPercent=product.getTaxPercent();
+                salesError.productimage=product.getProductimage();
+                salesError.taxAmount=product.getTaxAmount();
+                salesError.active=product.getActive();
+                getHelper().getDaoSession().insertOrReplace(salesError);
+
+
+            }
             // Connect Error
             Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+
+            copydatabasetosd();
         }
+
+
 
         global.cartList.clear();
         adapter=new ProductListAdapter(DashBoard.this,productList);
         productListView.setAdapter(adapter);
+        orderdialog.dismiss();
         cartcount.setText("0");
+
 
     }
 
@@ -586,7 +590,7 @@ public class DashBoard extends AppCompatActivity {
         }
     }
 
-    public void Checkout() {
+    public void Checkout(final Dialog orderdialog) {
         class CheckOutService extends AsyncTask<String, String, String> {
             ProgressDialog dialog;
             String response = "";
@@ -670,6 +674,20 @@ public class DashBoard extends AppCompatActivity {
 
                 if (o != null || !o.equalsIgnoreCase("null")) {
 
+                    try {
+                        JSONObject object=new JSONObject(o);
+                        JSONObject result=object.getJSONObject("payload");
+                        String orderStatus=result.getString("orderStatus");
+
+                        if(orderStatus.equalsIgnoreCase("COMPLETED"))
+                        {
+                            usbPrinter(orderdialog);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
 
 
@@ -722,4 +740,28 @@ public class DashBoard extends AppCompatActivity {
         return totalValue;
     }
 
+
+    void copydatabasetosd()
+    {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+
+            if (sd.canWrite()) {
+                String currentDBPath = "/data/data/" + getPackageName() + "/databases/grcinemas_db";
+                String backupDBPath = "grcinemas_db.db";
+                File currentDB = new File(currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+    }
 }
