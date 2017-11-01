@@ -70,7 +70,7 @@ import static com.ganapathyram.theatre.helper.Helper.getHelper;
 public class DashBoard extends AppCompatActivity {
     public static RecyclerView productListView;
     public static ProductListAdapter adapter;
-    public static ArrayList<com.ganapathyram.theatre.database.Product> productList;
+    public static List<com.ganapathyram.theatre.database.Product> productList;
     public static TextView cartcount,totalprice,subtotal;
     RelativeLayout cartRelativeLayout;
     public static  RecyclerView cartview;
@@ -126,10 +126,27 @@ public class DashBoard extends AppCompatActivity {
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-
                     int id=i;
 
-                    Products(categoriesList.get(id).categoryUid);
+                    if(new InternetPermissions(getApplicationContext()).isInternetOn())
+                    {
+
+                        Products(categoriesList.get(id).categoryUid);
+                    }else
+                    {
+                        productList=getHelper().getProductItems(categoriesList.get(id).categoryUid);
+                        adapter = new ProductListAdapter(getApplicationContext(), productList);
+                        final int columns = getResources().getInteger(R.integer.grid_column);
+
+                        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),columns);
+                        productListView.setLayoutManager(layoutManager);
+                        productListView.setItemAnimator(new DefaultItemAnimator());
+                        productListView.setAdapter(adapter);
+                        productListView.setNestedScrollingEnabled(false);
+                        adapter.notifyDataSetChanged();
+
+                    }
+
 
                 }
             });
@@ -764,4 +781,6 @@ public class DashBoard extends AppCompatActivity {
 
         }
     }
+
+
 }

@@ -31,7 +31,7 @@ import java.util.List;
 public class ProductListAdapter  extends RecyclerView.Adapter<ProductListAdapter.MyViewHolder> {
 
 
-    ArrayList<com.ganapathyram.theatre.database.Product> products = new ArrayList<>();
+    List<com.ganapathyram.theatre.database.Product> products = new ArrayList<>();
 
     GlobalClass global;
     Context context;
@@ -62,7 +62,7 @@ ImageLoader loader;
     }
 
 
-    public ProductListAdapter(Context context, ArrayList<com.ganapathyram.theatre.database.Product> productlist) {
+    public ProductListAdapter(Context context, List<com.ganapathyram.theatre.database.Product> productlist) {
 
         global=new GlobalClass();
         this.context=context;

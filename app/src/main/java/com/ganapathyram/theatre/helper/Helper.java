@@ -6,6 +6,8 @@ import android.content.Context;
 import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.database.DaoSession;
 import com.ganapathyram.theatre.database.Login;
+import com.ganapathyram.theatre.database.Product;
+import com.ganapathyram.theatre.database.ProductDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -48,6 +50,16 @@ public class Helper {
     }
 
     //getMenuItems
+    public List<Product> getProductItems(String categoryId) {
+
+        QueryBuilder<Product> qb = daoSession.queryBuilder(Product.class);
+        qb.where(ProductDao.Properties.CategoryUid.eq(categoryId));
+
+        return qb.list();
+
+    }
+
+    //getLogin
     public Login getLogin() {
 
         QueryBuilder<Login> qb = daoSession.queryBuilder(Login.class);
