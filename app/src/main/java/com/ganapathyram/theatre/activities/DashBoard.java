@@ -221,6 +221,8 @@ public class DashBoard extends AppCompatActivity {
 
                 Checkout(dialog);
 
+                //dummyprint();
+
               /*  Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 
@@ -278,7 +280,7 @@ public class DashBoard extends AppCompatActivity {
 
         return new ProductAvailable(false,-1);
     }
-    public void usbPrinter(Dialog orderdialog)
+    public void usbPrinter(Dialog orderdialog,String orderUId)
     {
         // Constructor
         ESCPOSPrinter posPtr = new ESCPOSPrinter();
@@ -314,12 +316,13 @@ public class DashBoard extends AppCompatActivity {
              gstvalue=String.format("%.2f", gst);
 */
 
-            // Print Text
+            // Print Text 33AAJFGO516A1Z7
             posPtr.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( "101, LB Road, Adyar Chennai, 600020" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( "Phone: 044 2441 7424" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-            posPtr.printText( "Billno: ORD_NO_0001" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "Bill.no: "+orderUId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( leftRightAlign("Name  : Prakash",getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
@@ -359,6 +362,8 @@ public class DashBoard extends AppCompatActivity {
 
                double gst_amount = (sub * 18) / 100;
 
+                String gstpercent=String.valueOf(18/2);
+
                 double gst=gst_amount/2;
                 String gstvalue=String.format("%.2f", gst);
 
@@ -368,8 +373,8 @@ public class DashBoard extends AppCompatActivity {
                 posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.printText("SUB TOTAL "+subtotal+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("CGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.printText("SGST "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("CGST "+gstpercent+"% "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("SGST "+gstpercent+"% "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.writeData(ESCPOSDriver.LINE_FEED);
             }
@@ -391,19 +396,19 @@ public class DashBoard extends AppCompatActivity {
                 }
                 double sub=subtotal(beverages);
                 String subtotal2=String.valueOf(sub);
-                double gst_amount = (sub * 20) / 100;
+                double gst_amount = (sub * 28) / 100;
 
                 double gst=gst_amount/2;
                String gstvalue2=String.format("%.2f", gst);
 
-
+                String gstpercent=String.valueOf(28/2);
                 posPtr.printText(data2.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
                 posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.printText("SUB TOTAL "+subtotal2+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("CGST "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.printText("SGST "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("CGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("SGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.writeData(ESCPOSDriver.LINE_FEED);
             }
@@ -460,8 +465,11 @@ public class DashBoard extends AppCompatActivity {
 
 
         global.cartList.clear();
-        adapter=new ProductListAdapter(DashBoard.this,productList);
-        productListView.setAdapter(adapter);
+
+        Products(categoriesList.get(0).categoryUid);
+        radioGroup.check(0);
+        //adapter=new ProductListAdapter(DashBoard.this,productList);
+        //productListView.setAdapter(adapter);
         orderdialog.dismiss();
         cartcount.setText("0");
 
@@ -586,7 +594,7 @@ public class DashBoard extends AppCompatActivity {
         double subTotal=0.0;
         for(com.ganapathyram.theatre.database.Product product:data)
         {
-            subTotal=subTotal+Double.parseDouble(product.totalprice);
+            subTotal=subTotal+Double.parseDouble(product.getTotalprice());
         }
 
         return subTotal;
@@ -695,10 +703,11 @@ public class DashBoard extends AppCompatActivity {
                         JSONObject object=new JSONObject(o);
                         JSONObject result=object.getJSONObject("payload");
                         String orderStatus=result.getString("orderStatus");
+                        String orderUId=result.getString("orderUId");
 
                         if(orderStatus.equalsIgnoreCase("COMPLETED"))
                         {
-                            usbPrinter(orderdialog);
+                            usbPrinter(orderdialog,orderUId);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -713,7 +722,7 @@ public class DashBoard extends AppCompatActivity {
         new CheckOutService().execute();
     }
     private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy HH:mm:aa");
         Date date = new Date();
         return dateFormat.format(date);
     }
@@ -783,4 +792,198 @@ public class DashBoard extends AppCompatActivity {
     }
 
 
-}
+    public void dummyprint()
+    {
+
+            // Constructor
+            ESCPOSPrinter posPtr = new ESCPOSPrinter();
+
+            // Set context
+            posPtr.setContext( DashBoard.this );
+
+            // Get Address
+            UsbDevice usbDevice = null;												// null (Automatic detection)
+            //
+            // Connect
+            int result = posPtr.connect( ESCPOSConst.CMP_PORT_USB, usbDevice );		// Android 3.1 ( API Level 12 ) or later
+            if ( ESCPOSConst.CMP_SUCCESS == result )
+            {
+                Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.printer_logo);
+                // Character set
+                posPtr.setEncoding( "ISO-8859-1" );		// Latin-1
+                //posPtr.setEncoding( "Shift_JIS" );	// Japanese 日本語を印字する場合は、この行を有効にしてください.
+
+                // Start Transaction ( Batch )
+                posPtr.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
+            /*ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayBitmapStream);
+            byte[] b = byteArrayBitmapStream.toByteArray();
+            posPtr.printBitmap(b,150,150,);*/
+
+                // posPtr.printBitmap(bitmap,100,200);
+                posPtr.printBitmap(bitmap,
+                        150,
+                        ESCPOSConst.CMP_ALIGNMENT_CENTER);
+
+          /*  double gst=gst_amount/2;
+             gstvalue=String.format("%.2f", gst);
+*/
+
+                // Print Text
+                posPtr.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText( "101, LB Road, Adyar Chennai, 600020" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText( "Phone: 044 2441 7424" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText( "Bill.no: 00017346" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText( leftRightAlign("Name  : Sreenivasan","19/10/2017 8:25 pm "+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
+                ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
+                for(int k=0;k<global.cartList.size();k++)
+                {
+
+                    com.ganapathyram.theatre.database.Product product=global.cartList.get(k);
+                    if(product.categoryUid.equalsIgnoreCase("snacks") || product.categoryUid.equalsIgnoreCase("combo"))
+                    {
+
+                        snacks.add(product);
+                    }else if(product.categoryUid.equalsIgnoreCase("beverage"))
+                    {
+                        beverages.add(product);
+                    }
+                }
+
+
+                // posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
+                // posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                TableBuilder data=new TableBuilder();
+                data.addRow("Snacks");
+                data.addRow("S.no.","Item","Qty.","Price","Total");
+                data.addRow("-----", "----", "-----","-----","-----");
+
+                if(snacks.size()>0)
+                {
+                    for(int i=0;i<snacks.size();i++)
+                    {
+                        com.ganapathyram.theatre.database.Product product=snacks.get(i);
+
+                        data.addRow(String.valueOf(i+1),product.getProductName(),String.valueOf(product.getQuantity()),"42.30","84.60");
+                    }
+                    double sub=subtotal(snacks);
+                    String subtotal=String.valueOf(sub);
+
+                    double gst_amount = (sub * 18) / 100;
+
+                    double gst=gst_amount/2;
+                    String gstvalue=String.format("%.2f", gst);
+
+
+                    posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                    posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                    posPtr.printText("SUB TOTAL "+"84.60"+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                    posPtr.printText("CGST 9% "+"7.61"+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                    posPtr.printText("SGST 9% "+"7.61"+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                    posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                    posPtr.writeData(ESCPOSDriver.LINE_FEED);
+                }
+
+
+                TableBuilder data2=new TableBuilder();
+                data2.addRow("Beverages");
+                data2.addRow("S.no.","Item","Qty.","Price","Total");
+                data2.addRow("-----", "----", "-----","-----","-----");
+
+                if(beverages.size()>0)
+                {
+
+                    for(int i=0;i<beverages.size();i++)
+                    {
+                        com.ganapathyram.theatre.database.Product product=beverages.get(i);
+                        data2.addRow(String.valueOf(i+1),product.getProductName(),String.valueOf(product.getQuantity()),product.getPrice(),product.getTotalprice());
+
+                    }
+                    double sub=subtotal(beverages);
+                    String subtotal2=String.valueOf(sub);
+                    double gst_amount = (sub * 28) / 100;
+
+                    double gst=gst_amount/2;
+                    String gstvalue2=String.format("%.2f", gst);
+
+
+                    posPtr.printText(data2.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                    posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                    posPtr.printText("SUB TOTAL "+subtotal2+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                    posPtr.printText("CGST "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                    posPtr.printText("SGST "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                    posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                    posPtr.writeData(ESCPOSDriver.LINE_FEED);
+                }
+
+                posPtr.printText("TOTAL "+String.valueOf("99.82")+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+
+
+
+                posPtr.printText("Thank you for coming"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                // Partial Cut with Pre-Feed
+                posPtr.cutPaper( ESCPOSConst.CMP_CUT_PARTIAL_PREFEED );
+
+                // End Transaction ( Batch )
+                result = posPtr.transactionPrint( ESCPOSConst.CMP_TP_NORMAL );
+
+                // Disconnect
+                posPtr.disconnect();
+
+                if ( ESCPOSConst.CMP_SUCCESS != result )
+                {
+                    // Transaction Error
+                    Toast.makeText( DashBoard.this, "Transaction Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+                }
+            }
+            else
+            {
+
+                for(int k=0;k<global.cartList.size();k++)
+                {
+                    com.ganapathyram.theatre.database.Product product=global.cartList.get(k);
+                    LocalSalesError salesError=new LocalSalesError();
+                    salesError.productUid=product.getProductUid();
+                    salesError.productName=product.getProductName();
+                    salesError.categoryUid=product.categoryUid;
+                    salesError.price=product.getPrice();
+                    salesError.quantity=product.getQuantity();
+                    salesError.totalprice=product.getTotalprice();
+                    salesError.description=product.getDescription();
+                    salesError.taxPercent=product.getTaxPercent();
+                    salesError.productimage=product.getProductimage();
+                    salesError.taxAmount=product.getTaxAmount();
+                    salesError.active=product.getActive();
+                    getHelper().getDaoSession().insertOrReplace(salesError);
+
+
+                }
+                // Connect Error
+                Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+
+                copydatabasetosd();
+            }
+
+
+
+            global.cartList.clear();
+
+            Products(categoriesList.get(0).categoryUid);
+            radioGroup.check(0);
+            //adapter=new ProductListAdapter(DashBoard.this,productList);
+            //productListView.setAdapter(adapter);
+            cartcount.setText("0");
+
+
+        }
+    }
+
+
