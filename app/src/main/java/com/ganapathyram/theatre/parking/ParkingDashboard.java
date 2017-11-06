@@ -147,18 +147,18 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                             .getOutputStream();
                     outputStream=new BufferedOutputStream(os);
                     printImage(R.drawable.printer_logo);
+
                     String dateTime[] = getDateTime();
                     printText(leftRightAlign(dateTime[0], dateTime[1]));
                     printNewLine();
                     // printCustom(dateTime[0]+"   "+dateTime[1],0,1);
                     printCustom("Ganapathi Theatre",0,1);
-                    printCustom("101, LB Road, Adyar,",0,1);
-                    printCustom("Chennai, Tamil Nadu 600020",0,1);
+                    printCustom("LB Road, Adyar,Chennai-20",0,1);
                     printCustom("Phone: 044 2441 7424",0,1);
+                    printCustom("GST.no : 33AAJFGO516A1Z7",0,1);
+                    printNewLine();
 
-
-
-                    ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
+          /*          ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
                     ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
                     for(int k=0;k<global.cartList.size();k++)
                     {
@@ -239,23 +239,18 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                         outputStream.write(ESCPOSDriver.LINE_FEED);
 
 
-                    }
+                    }*/
 
 
 
 
                     //printImageVehicle(drawable,type);
                     printCustom(parking.name+" "+parking.chargesToBePaid,0,1);
-                    printNewLine();
                     printCustom(new String(new char[32]).replace("\0", "."),0,1);
                     printNewLine();
-                    printCustom("Thank you for coming & we look",0,1);
-                    printCustom("forward to serve you again",0,1);
+                    printCustom("Thank you for coming",0,1);
                     printUnicode();
-                    printNewLine();
-                    printNewLine();
                     outputStream.write(escposDriver.PAPER_CUT);
-                    printNewLine();
                     printNewLine();
 
 
@@ -526,7 +521,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     //printphoto
     public void printImage(int drawable) {
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
+       /* BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), drawable, options);
         if (bmp == null) {
@@ -540,9 +535,28 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
         sendData(WoosimCmd.setPageMode());
         sendData(data);
-        sendData(WoosimCmd.PM_setStdMode());
-    }
+        sendData(WoosimCmd.PM_setStdMode());*/
 
+        printPhoto(R.drawable.gr);
+
+    }
+    //print photo
+    public void printPhoto(int img) {
+        try {
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(),
+                    img);
+            if(bmp!=null){
+                byte[] command = Utils.decodeBitmap(bmp);
+                outputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                printText(command);
+            }else{
+                Log.e("Print Photo error", "the file isn't exists");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("PrintTools", "the file isn't exists");
+        }
+    }
 
 
     private void sendData(byte[] data) {

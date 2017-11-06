@@ -24,8 +24,8 @@ public class Utils {
             "1100", "1101", "1110", "1111" };
 
     public static byte[] decodeBitmap(Bitmap bmp){
-        int bmpWidth = 100;
-        int bmpHeight = 100;
+        int bmpWidth = bmp.getWidth();
+        int bmpHeight = bmp.getHeight();
 
         List<String> list = new ArrayList<String>(); //binaryString list
         StringBuffer sb;

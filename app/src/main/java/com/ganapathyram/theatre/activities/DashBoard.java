@@ -323,7 +323,7 @@ public class DashBoard extends AppCompatActivity {
 
             posPtr.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( "Bill.no: "+orderUId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( leftRightAlign("Name  : Prakash",getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( leftRightAlign("Name  :"+global.UserId,getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();

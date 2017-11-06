@@ -59,12 +59,12 @@ public class Helper {
 
     }
 
-    //getLogin
+    /*//getLogin
     public Login getLogin() {
 
         QueryBuilder<Login> qb = daoSession.queryBuilder(Login.class);
         return qb.unique();
 
-    }
+    }*/
 
 }

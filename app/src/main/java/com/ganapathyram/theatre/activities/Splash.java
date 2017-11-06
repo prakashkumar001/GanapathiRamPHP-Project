@@ -37,11 +37,11 @@ public class Splash extends AppCompatActivity implements NetworkConnection {
 
 
 
-        if(getHelper().getLogin()!=null)
+        /*if(getHelper().getLogin()!=null)
         {
             global.UserId=String.valueOf(getHelper().getLogin().pin);
         }
-
+*/
           new Handler().postDelayed(new Runnable() {
             public void run() {
 
