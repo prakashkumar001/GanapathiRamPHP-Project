@@ -33,6 +33,7 @@ import com.ganapathyram.theatre.bluetooth.utils.PrinterCommands;
 import com.ganapathyram.theatre.bluetooth.utils.Utils;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.Product;
+import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.model.Parking;
 import com.ganapathyram.theatre.utils.TableBuilder;
 import com.ganapathyram.theatre.utils.WSUtils;
@@ -51,6 +52,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.ganapathyram.theatre.common.GlobalClass.bluetoothStatus;
+import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
 /**
  * Created by Prakash on 9/21/2017.
@@ -83,7 +85,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         setContentView(R.layout.parking_dashboard);
         global=(GlobalClass)getApplicationContext();
         //for bluetooth
-        if(bluetoothStatus!=null)
+        /*if(bluetoothStatus!=null)
         {
             if(isBluetoothConnected())
             {
@@ -102,6 +104,27 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
             }
 
 
+
+        }*/
+
+
+        if(getHelper().getAddress()!=null)
+        {
+            bluetoothStatus=getHelper().getAddress().getBluetoothAddress();
+            if(isBluetoothConnected())
+            {
+                mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                mBluetoothDevice = mBluetoothAdapter
+                        .getRemoteDevice(bluetoothStatus);
+                Thread mBlutoothConnectThread = new Thread(this);
+                mBlutoothConnectThread.start();
+
+
+            }
+        }else
+        {
+
+            bluetoothStatus=null;
 
         }
 
@@ -395,7 +418,22 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
             {
                 mBluetoothConnectProgressDialog.dismiss();
             }
-            //
+
+            if(getHelper().getAddress()==null)
+            {
+                Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
+                address.setBluetoothAddress(mBluetoothDevice.getAddress());
+                getHelper().getDaoSession().insert(address);
+
+            }else
+            {
+                Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
+                address.setId(Long.parseLong("1"));
+                address.setBluetoothAddress(mBluetoothDevice.getAddress());
+                getHelper().getDaoSession().update(address);
+
+            }
+             //
             //bluetoothStatus="Connected";
             Toast.makeText(ParkingDashboard.this, "DeviceConnected", 5000).show();
         }

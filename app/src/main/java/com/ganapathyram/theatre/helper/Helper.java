@@ -8,6 +8,8 @@ import com.ganapathyram.theatre.database.DaoSession;
 import com.ganapathyram.theatre.database.Login;
 import com.ganapathyram.theatre.database.Product;
 import com.ganapathyram.theatre.database.ProductDao;
+import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
+import com.ganapathyram.theatre.database.Wifi_BluetoothAddressDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -59,12 +61,16 @@ public class Helper {
 
     }
 
-    /*//getLogin
-    public Login getLogin() {
+    //getLogin
+    public Wifi_BluetoothAddress getAddress() {
 
-        QueryBuilder<Login> qb = daoSession.queryBuilder(Login.class);
-        return qb.unique();
+        QueryBuilder<Wifi_BluetoothAddress> qb = daoSession.queryBuilder(Wifi_BluetoothAddress.class);
 
-    }*/
+
+
+        return  qb.unique();
+
+
+    }
 
 }

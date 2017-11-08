@@ -10,9 +10,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,8 @@ import com.ganapathyram.theatre.utils.WSUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import static android.R.attr.data;
 import static com.ganapathyram.theatre.helper.Helper.getHelper;
@@ -42,6 +46,7 @@ public class Login extends AppCompatActivity {
     String pinNumber;
     GlobalClass global;
     LinearLayout layout;
+    Spinner select_class;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,9 +95,16 @@ public class Login extends AppCompatActivity {
         layout=(LinearLayout)findViewById(R.id.layout);
 
         iv_delete = (ImageView) findViewById(R.id.iv_delete);
+        select_class=(Spinner)findViewById(R.id.select_class);
 
         TextView marque = (TextView) this.findViewById(R.id.marquee_text);
         marque.setSelected(true);
+
+        ArrayList<String> classes=new ArrayList<>();
+        classes.add("First Class");
+        classes.add("Balcony");
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(Login.this,android.R.layout.simple_list_item_1,classes);
+        select_class.setAdapter(adapter);
 
 
         login.setOnClickListener(new View.OnClickListener() {

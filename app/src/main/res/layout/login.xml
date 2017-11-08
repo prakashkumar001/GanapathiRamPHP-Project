@@ -69,20 +69,23 @@
             </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="#F1BB3A"
-                android:text="Welcome !!! User"
-                />
+
+
+
+                <Spinner
+                    android:id="@+id/select_class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
 
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
                 android:layout_weight="1"
+                android:layout_height="0dp"
                 android:gravity="center"
                 android:text="Enter your code"
                 />
