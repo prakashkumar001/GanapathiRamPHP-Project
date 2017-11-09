@@ -1,6 +1,7 @@
 package com.ganapathyram.theatre.activities;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import com.ganapathyram.theatre.MainActivity;
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.utils.InternetPermissions;
 import com.ganapathyram.theatre.utils.WSUtils;
 
@@ -30,6 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static android.R.attr.data;
+import static com.ganapathyram.theatre.common.GlobalClass.bluetoothStatus;
 import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
 
@@ -47,6 +51,7 @@ public class Login extends AppCompatActivity {
     GlobalClass global;
     LinearLayout layout;
     Spinner select_class;
+    String snack_floor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,6 +110,19 @@ public class Login extends AppCompatActivity {
         classes.add("Balcony");
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(Login.this,android.R.layout.simple_list_item_1,classes);
         select_class.setAdapter(adapter);
+
+        select_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                snack_floor=adapterView.getItemAtPosition(i).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -425,6 +443,46 @@ public class Login extends AppCompatActivity {
                             login.status=payload;
                             getHelper().getDaoSession().insertOrReplace(login);
                             global.UserId=pinNumber;
+
+
+                            if(getHelper().getAddress()!=null)
+                            {
+
+                                Wifi_BluetoothAddress address=getHelper().getAddress();
+
+                                if(snack_floor.equalsIgnoreCase("First Class"))
+                                {
+                                    address.setSnack_floor(snack_floor);
+                                    address.setWifiAddress("192.168.1.10");
+
+                                }else
+                                {
+                                    address.setSnack_floor(snack_floor);
+                                    address.setWifiAddress("192.168.1.12");
+
+                                }
+                                getHelper().getDaoSession().update(address);
+
+
+                            }else
+                            {
+                                Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
+                                address.setId(Long.parseLong("1"));
+                                if(snack_floor.equalsIgnoreCase("First Class"))
+                                {
+                                    address.setSnack_floor(snack_floor);
+                                    address.setWifiAddress("192.168.1.10");
+
+                                }else
+                                {
+                                    address.setSnack_floor(snack_floor);
+                                    address.setWifiAddress("192.168.1.12");
+
+                                }
+                                getHelper().getDaoSession().insert(address);
+                            }
+
+
 
                             Intent intent = new Intent(
                                     Login.this,

@@ -14,12 +14,14 @@ public class Wifi_BluetoothAddress {
     Long id;
     public String bluetoothAddress;
     public String wifiAddress;
-    @Generated(hash = 1327390957)
+    public String snack_floor;
+    @Generated(hash = 1224458321)
     public Wifi_BluetoothAddress(Long id, String bluetoothAddress,
-            String wifiAddress) {
+            String wifiAddress, String snack_floor) {
         this.id = id;
         this.bluetoothAddress = bluetoothAddress;
         this.wifiAddress = wifiAddress;
+        this.snack_floor = snack_floor;
     }
     @Generated(hash = 2050988964)
     public Wifi_BluetoothAddress() {
@@ -42,5 +44,12 @@ public class Wifi_BluetoothAddress {
     public void setWifiAddress(String wifiAddress) {
         this.wifiAddress = wifiAddress;
     }
+    public String getSnack_floor() {
+        return this.snack_floor;
+    }
+    public void setSnack_floor(String snack_floor) {
+        this.snack_floor = snack_floor;
+    }
+
 
 }

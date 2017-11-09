@@ -61,7 +61,7 @@ public class Helper {
 
     }
 
-    //getLogin
+    //getAddress
     public Wifi_BluetoothAddress getAddress() {
 
         QueryBuilder<Wifi_BluetoothAddress> qb = daoSession.queryBuilder(Wifi_BluetoothAddress.class);
@@ -72,5 +72,6 @@ public class Helper {
 
 
     }
+
 
 }
