@@ -39,6 +39,7 @@ import com.ganapathyram.theatre.bluetooth.utils.ESCPOSDriver;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.database.LocalSalesError;
+import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
 import com.ganapathyram.theatre.utils.InternetPermissions;
@@ -281,6 +282,12 @@ public class DashBoard extends AppCompatActivity {
     }
     public void usbPrinter(Dialog orderdialog,String orderUId,Dialog serverDialog)
     {
+
+
+
+        String  address=getHelper().getAddress().getWifiAddress();
+
+
         // Constructor
         ESCPOSPrinter posPtr = new ESCPOSPrinter();
 
@@ -291,7 +298,7 @@ public class DashBoard extends AppCompatActivity {
        // UsbDevice usbDevice = null;												// null (Automatic detection)
         //
         // Connect
-        int result = posPtr.connect( ESCPOSConst.CMP_PORT_WiFi, "192.168.0.13" );		// Android 3.1 ( API Level 12 ) or later
+        int result = posPtr.connect( ESCPOSConst.CMP_PORT_WiFi, address );		// Android 3.1 ( API Level 12 ) or later
         if ( ESCPOSConst.CMP_SUCCESS == result )
         {
             Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.printer_logo);
