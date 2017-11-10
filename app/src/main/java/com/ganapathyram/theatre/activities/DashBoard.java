@@ -128,11 +128,10 @@ public class DashBoard extends AppCompatActivity {
                 public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
                     int id=i;
 
-                    if(new InternetPermissions(getApplicationContext()).isInternetOn())
-                    {
+
 
                         Products(categoriesList.get(id).categoryUid);
-                    }else
+                   /* }else
                     {
                         productList=getHelper().getProductItems(categoriesList.get(id).categoryUid);
                         adapter = new ProductListAdapter(getApplicationContext(), productList);
@@ -146,7 +145,7 @@ public class DashBoard extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
 
                     }
-
+*/
 
                 }
             });
@@ -217,7 +216,7 @@ public class DashBoard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
+                //wifi();
 
                 Checkout(dialog);
 
@@ -280,7 +279,7 @@ public class DashBoard extends AppCompatActivity {
 
         return new ProductAvailable(false,-1);
     }
-    public void usbPrinter(Dialog orderdialog,String orderUId)
+    public void usbPrinter(Dialog orderdialog,String orderUId,Dialog serverDialog)
     {
         // Constructor
         ESCPOSPrinter posPtr = new ESCPOSPrinter();
@@ -289,10 +288,10 @@ public class DashBoard extends AppCompatActivity {
         posPtr.setContext( DashBoard.this );
 
         // Get Address
-        UsbDevice usbDevice = null;												// null (Automatic detection)
+       // UsbDevice usbDevice = null;												// null (Automatic detection)
         //
         // Connect
-        int result = posPtr.connect( ESCPOSConst.CMP_PORT_USB, usbDevice );		// Android 3.1 ( API Level 12 ) or later
+        int result = posPtr.connect( ESCPOSConst.CMP_PORT_WiFi, "192.168.0.13" );		// Android 3.1 ( API Level 12 ) or later
         if ( ESCPOSConst.CMP_SUCCESS == result )
         {
             Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.printer_logo);
@@ -427,6 +426,8 @@ public class DashBoard extends AppCompatActivity {
 
             // Disconnect
             posPtr.disconnect();
+
+            serverDialog.dismiss();
 
             if ( ESCPOSConst.CMP_SUCCESS != result )
             {
@@ -604,7 +605,7 @@ public class DashBoard extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if(!new InternetPermissions(DashBoard.this).isInternetOn())
+        /*if(!new InternetPermissions(DashBoard.this).isInternetOn())
         {
             Snackbar.make(layout, getString(R.string.no_internet_connection), Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
                 @Override
@@ -612,7 +613,7 @@ public class DashBoard extends AppCompatActivity {
                 }
             }).show();
 
-        }
+        }*/
     }
 
     public void Checkout(final Dialog orderdialog) {
@@ -695,7 +696,7 @@ public class DashBoard extends AppCompatActivity {
             protected void onPostExecute(String o) {
 
                 if (dialog != null && dialog.isShowing())
-                    dialog.dismiss();
+
 
                 if (o != null || !o.equalsIgnoreCase("null")) {
 
@@ -707,7 +708,12 @@ public class DashBoard extends AppCompatActivity {
 
                         if(orderStatus.equalsIgnoreCase("COMPLETED"))
                         {
-                            usbPrinter(orderdialog,orderUId);
+                            usbPrinter(orderdialog,orderUId,dialog);
+                        }else if(orderStatus.equalsIgnoreCase("INCOMPLETED"))
+                        {
+                            JSONObject tags=object.getJSONObject("tags");
+                            JSONObject shortageDetails=tags.getJSONObject("shortageDetails");
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -984,6 +990,83 @@ public class DashBoard extends AppCompatActivity {
 
 
         }
+
+
+       void wifi()
+       {
+           // Constructor
+           ESCPOSPrinter posPtr = new ESCPOSPrinter();
+
+           // Get Address
+
+           // Connect
+           int result = posPtr.connect( ESCPOSConst.CMP_PORT_WiFi, "192.168.0.12" );
+           if ( ESCPOSConst.CMP_SUCCESS == result )
+           {
+               // Character set
+               posPtr.setEncoding( "ISO-8859-1" );		// Latin-1
+               //posPtr.setEncoding( "Shift_JIS" );	// Japanese 日本語を印字する場合は、この行を有効にしてください.
+
+               // Max page mode area
+               Log.d( "Max. Page area",  "( x,y ) : " + posPtr.getPageModeArea() );
+
+               // Start Transaction ( Batch )
+               posPtr.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
+
+               // Print Normal
+               posPtr.printText( getString( R.string.app_name ) + "\n\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+               posPtr.printNormal( "\u001b|2vC\u001b|cA- Sample Print 2 -\n" );
+               posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+               // Start Page mode
+               posPtr.pageModePrint( ESCPOSConst.CMP_PM_PAGE_MODE );
+
+               // Position set
+               posPtr.setPageModeVerticalPosition( 0 );
+               posPtr.setPageModeHorizontalPosition( 0 );
+
+               // Direction set
+               posPtr.setPageModePrintDirection( ESCPOSConst.CMP_PD_TOP_TO_BOTTOM );
+
+               // Print data output
+               posPtr.setPageModePrintArea( "500,0,76,800" );
+               posPtr.printNormal( "\u001b|4C- Receipt -\n" );
+               posPtr.setPageModePrintArea( "260,0,120,800" );
+               posPtr.printText( "   $ 299.99-  \n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_UNDERLINE | ESCPOSConst.CMP_FNT_BOLD, ESCPOSConst.CMP_TXT_4WIDTH | ESCPOSConst.CMP_TXT_4HEIGHT );
+               posPtr.setPageModePrintArea( "88,0,88,560" );
+               posPtr.printText( "CITIZEN SYSTEMS\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_2WIDTH | ESCPOSConst.CMP_TXT_3HEIGHT );
+               posPtr.setPageModePrintArea( "0,0,88,480" );
+               posPtr.printBarCode( "123456789012", ESCPOSConst.CMP_BCS_UPCA, 64, 4, ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_HRI_TEXT_BELOW );
+               posPtr.setPageModePrintArea( "0,600,192,192" );
+               posPtr.printQRCode( "http://www.citizen-systems.co.jp/", 5, ESCPOSConst.CMP_QRCODE_EC_LEVEL_L, ESCPOSConst.CMP_ALIGNMENT_LEFT );
+
+               // End Page mode
+               posPtr.pageModePrint( ESCPOSConst.CMP_PM_NORMAL );
+
+               // Partial Cut with Pre-Feed
+               posPtr.cutPaper( ESCPOSConst.CMP_CUT_PARTIAL_PREFEED );
+
+               // End Transaction ( Batch )
+               result = posPtr.transactionPrint( ESCPOSConst.CMP_TP_NORMAL );
+
+               Toast.makeText( DashBoard.this, "Transaction OK : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+
+               // Disconnect
+               posPtr.disconnect();
+
+               if ( ESCPOSConst.CMP_SUCCESS != result )
+               {
+                   // Transaction Error
+                   Toast.makeText( DashBoard.this, "Transaction Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+               }
+           }
+           else
+           {
+               // Connect Error
+               Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+           }
+           //saveAddress( ESCPOSConst.CMP_PORT_WiFi, addr );
+       }
     }
 
 

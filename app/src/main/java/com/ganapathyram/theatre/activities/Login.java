@@ -62,7 +62,7 @@ public class Login extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if(!new InternetPermissions(Login.this).isInternetOn())
+       /* if(!new InternetPermissions(Login.this).isInternetOn())
         {
             Snackbar.make(layout, getString(R.string.no_internet_connection), Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
                 @Override
@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity {
                 }
             }).show();
 
-        }
+        }*/
     }
 
     private void initialize() {
@@ -105,6 +105,8 @@ public class Login extends AppCompatActivity {
         classes.add("Balcony");
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(Login.this,android.R.layout.simple_list_item_1,classes);
         select_class.setAdapter(adapter);
+
+
 
 
         login.setOnClickListener(new View.OnClickListener() {
