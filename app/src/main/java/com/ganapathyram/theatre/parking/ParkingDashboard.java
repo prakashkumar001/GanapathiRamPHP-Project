@@ -108,11 +108,10 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         }*/
 
 
-        if(getHelper().getAddress()!=null)
+        if(getHelper().getAddress().getBluetoothAddress()!=null)
         {
             bluetoothStatus=getHelper().getAddress().getBluetoothAddress();
-            if(isBluetoothConnected())
-            {
+
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 mBluetoothDevice = mBluetoothAdapter
                         .getRemoteDevice(bluetoothStatus);
@@ -120,7 +119,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                 mBlutoothConnectThread.start();
 
 
-            }
+
         }else
         {
 
