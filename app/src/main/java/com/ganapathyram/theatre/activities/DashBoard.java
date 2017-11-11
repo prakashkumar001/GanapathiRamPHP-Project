@@ -2,6 +2,7 @@ package com.ganapathyram.theatre.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.os.Environment;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -329,7 +331,7 @@ public class DashBoard extends AppCompatActivity {
 
             posPtr.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( "Bill.no: "+orderUId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( leftRightAlign("Name  :"+global.UserId,getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( leftRightAlign("Name  :"+global.UserName,getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
@@ -671,6 +673,8 @@ public class DashBoard extends AppCompatActivity {
                         }
                     }
 
+                    JSONArray arraydetails=new JSONArray();
+
                     JSONObject result=new JSONObject();
                     result.put("userId",global.UserId);
                     result.put("cartItems",cartList);
@@ -679,6 +683,8 @@ public class DashBoard extends AppCompatActivity {
                     result.put("totalCartAmt",totalamount);
                     result.put("venueUid","gprtheatre");
 
+                    arraydetails.put(result);
+
 
 
                     //usbPrinter();
@@ -686,7 +692,7 @@ public class DashBoard extends AppCompatActivity {
 
 
 
-                    response = utils.responsedetailsfromserver(requestURL, result.toString());
+                    response = utils.responsedetailsfromserver(requestURL, arraydetails.toString());
 
                     System.out.println("SERVER REPLIED:" + response);
                     //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
@@ -723,6 +729,33 @@ public class DashBoard extends AppCompatActivity {
 
                         }
                     } catch (JSONException e) {
+
+                        try {
+                            JSONObject jsonObject=new JSONObject(o);
+                            String payload=jsonObject.getString("payload");
+                            if(payload.equalsIgnoreCase("null") || payload==null)
+                            {
+                                JSONObject object=jsonObject.getJSONObject("tags");
+                                JSONArray array=object.getJSONArray("shortageDetails");
+                                String lowstock="";
+                                for(int k=0;k<array.length();k++)
+                                {
+                                    JSONObject ob=array.getJSONObject(k);
+                                    String name=ob.getString("productUid");
+
+                                    lowstock=lowstock+name+",";
+
+                                }
+
+                                dialog.dismiss();
+                                lowStockDialog(lowstock);
+
+
+                            }
+
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
                         e.printStackTrace();
                     }
 
@@ -1074,6 +1107,41 @@ public class DashBoard extends AppCompatActivity {
            }
            //saveAddress( ESCPOSConst.CMP_PORT_WiFi, addr );
        }
+
+
+       public void lowStockDialog(String message)
+       {
+           String msg=removeLastChar(message);
+           AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                   DashBoard.this);
+
+           // set title
+           alertDialogBuilder.setTitle("Your have Low Stock");
+
+           // set dialog message
+           alertDialogBuilder
+                   .setMessage("Please decrease the products of "+msg)
+                   .setCancelable(false)
+                   .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog,int id) {
+                           // if this button is clicked, close
+                           // current activity
+                           dialog.dismiss();
+                       }
+                   });
+
+
+           // create alert dialog
+           AlertDialog alertDialog = alertDialogBuilder.create();
+
+           // show it
+           alertDialog.show();
+
+       }
+
+    private static String removeLastChar(String str) {
+        return str.substring(0, str.length() - 1);
+    }
     }
 
 

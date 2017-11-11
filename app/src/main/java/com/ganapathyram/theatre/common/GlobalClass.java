@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class GlobalClass extends Application{
 
     public static String UserId="";
+    public static String UserName="";
     public static ArrayList<com.ganapathyram.theatre.database.Product> cartList=new ArrayList<>();
     public static String BadgeCount="0";
     public static String bluetoothStatus=null;

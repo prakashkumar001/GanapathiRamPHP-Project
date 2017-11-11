@@ -436,13 +436,17 @@ public class Login extends AppCompatActivity {
                 if (o != null || !o.equalsIgnoreCase("null")) {
                     try {
                         JSONObject object = new JSONObject(o);
-                        String payload = object.getString("payload");
+                        JSONObject payload = object.getJSONObject("payload");
 
-                        if (payload.equalsIgnoreCase("success")) {
+                        String loginStatus=payload.getString("loginStatus");
+                        String userName=payload.getString("userName");
+
+                        if (loginStatus.equalsIgnoreCase("success")) {
+                            global.UserName=userName;
 
                             com.ganapathyram.theatre.database.Login login=new  com.ganapathyram.theatre.database.Login();
                             login.pin=Long.parseLong(pinNumber);
-                            login.status=payload;
+                            login.status=loginStatus;
                             getHelper().getDaoSession().insertOrReplace(login);
                             global.UserId=pinNumber;
 
