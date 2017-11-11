@@ -715,18 +715,14 @@ public class DashBoard extends AppCompatActivity {
 
                     try {
                         JSONObject object=new JSONObject(o);
-                        JSONObject result=object.getJSONObject("payload");
-                        String orderStatus=result.getString("orderStatus");
-                        String orderUId=result.getString("orderUId");
+                        JSONArray result=object.getJSONArray("payload");
+                        JSONObject object1=result.getJSONObject(0);
+                        String orderStatus=object1.getString("orderStatus");
+                        String orderUId=object1.getString("orderUId");
 
                         if(orderStatus.equalsIgnoreCase("COMPLETED"))
                         {
                             usbPrinter(orderdialog,orderUId,dialog);
-                        }else if(orderStatus.equalsIgnoreCase("INCOMPLETED"))
-                        {
-                            JSONObject tags=object.getJSONObject("tags");
-                            JSONObject shortageDetails=tags.getJSONObject("shortageDetails");
-
                         }
                     } catch (JSONException e) {
 
