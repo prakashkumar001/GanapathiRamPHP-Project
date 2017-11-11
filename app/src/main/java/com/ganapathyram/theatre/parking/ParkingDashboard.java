@@ -266,8 +266,8 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
 
 
-                    //printImageVehicle(drawable,type);
-                    printCustom(parking.name+" "+parking.chargesToBePaid,0,1);
+
+                    printCustom(parking.name+" "+parking.chargesToBePaid,1,1);
                     printCustom(new String(new char[32]).replace("\0", "."),0,1);
                     printNewLine();
                     printCustom("Thank you for coming",0,1);
@@ -486,6 +486,13 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     }
 
 
+
+
+
+
+
+
+
     //print unicode
     public void printUnicode(){
         try {
@@ -574,7 +581,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         sendData(data);
         sendData(WoosimCmd.PM_setStdMode());*/
 
-        printPhoto(R.drawable.gr);
+        printPhoto(R.drawable.gr_new);
 
     }
     //print photo
