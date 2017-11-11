@@ -477,12 +477,12 @@ public class Login extends AppCompatActivity {
                                 if(snack_floor.equalsIgnoreCase("First Class"))
                                 {
                                     address.setSnack_floor(snack_floor);
-                                    address.setWifiAddress("192.168.1.13");
+                                    address.setWifiAddress("192.168.0.13");
 
                                 }else
                                 {
                                     address.setSnack_floor(snack_floor);
-                                    address.setWifiAddress("192.168.1.14");
+                                    address.setWifiAddress("192.168.0.14");
 
                                 }
                                 getHelper().getDaoSession().insert(address);

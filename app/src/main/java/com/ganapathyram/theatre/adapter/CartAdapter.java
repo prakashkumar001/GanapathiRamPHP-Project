@@ -117,15 +117,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
                 holder.quantity.setText(String.valueOf(product.getQuantity()));
                 b = product.getQuantity() * Double.parseDouble(product.getPrice());
-                product.setTotalprice(String.valueOf(b));
+                product.setTotalprice(String.format("%.2f",b));
 
-                holder.price.setText(ruppee + String.valueOf(b));
+                holder.price.setText(ruppee + String.format("%.2f",b));
                 double gst_amount = (Double.parseDouble(global.cartList.get(position).getTotalprice()) * Double.parseDouble( global.cartList.get(position).taxPercent)) / 100;
                 //double gst_amount = ((Double.parseDouble( global.cartList.get(index).getTotalprice()) ) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
                 global.cartList.get(position).setTaxAmount(String.format("%.2f", gst_amount));
 
-                DashBoard.subtotal.setText(String.valueOf(totalvalue()));
-                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()+totalTaxAmount()));
+                DashBoard.subtotal.setText(String.format("%.2f",totalvalue()));
+                DashBoard.totalprice.setText(rupee+" "+String.format("%.2f",totalvalue()+totalTaxAmount()));
 
 
             }
@@ -150,14 +150,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 holder.quantity.setText(String.valueOf(product.getQuantity()));
                 b = product.getQuantity() * Double.parseDouble(product.getPrice());
                 product.setTotalprice(String.valueOf(b));
-                holder.price.setText(ruppee + String.valueOf(b));
+                holder.price.setText(ruppee + String.format("%.2f",b));
 
                 double gst_amount = (Double.parseDouble(global.cartList.get(position).getTotalprice()) * Double.parseDouble( global.cartList.get(position).taxPercent)) / 100;
                 //double gst_amount = ((Double.parseDouble( global.cartList.get(index).getTotalprice()) ) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
                 global.cartList.get(position).setTaxAmount(String.format("%.2f", gst_amount));
 
                 DashBoard.subtotal.setText(String.valueOf(totalvalue()));
-                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()+totalTaxAmount()));
+                DashBoard.totalprice.setText(rupee+" "+String.format("%.2f",totalvalue()+totalTaxAmount()));
 
             }
         });

@@ -276,14 +276,14 @@ ImageLoader loader;
 
 
 
-                    global.cartList.get(index).setTotalprice(String.valueOf(b));
+                    global.cartList.get(index).setTotalprice(String.format("%.2f",b));
 
                     double gst_amount = (Double.parseDouble(global.cartList.get(index).getTotalprice()) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
                     //double gst_amount = ((Double.parseDouble( global.cartList.get(index).getTotalprice()) ) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
                     global.cartList.get(index).setTaxAmount(String.format("%.2f", gst_amount));
 
 
-                    holder.price.setText(ruppee + String.valueOf(b));
+                    holder.price.setText(ruppee + String.format("%.2f",b));
 
 
                 }else
@@ -331,12 +331,12 @@ ImageLoader loader;
 
 
 
-                    global.cartList.get(index).setTotalprice(String.valueOf(b));
+                    global.cartList.get(index).setTotalprice(String.format("%.2f",b));
                     double gst_amount = (Double.parseDouble(global.cartList.get(index).getTotalprice()) * Double.parseDouble( global.cartList.get(index).taxPercent)) / 100;
                     global.cartList.get(index).setTaxAmount(String.format("%.2f", gst_amount));
 
 
-                    holder.price.setText(ruppee + String.valueOf(b));
+                    holder.price.setText(ruppee + String.format("%.2f",b));
 
 
 

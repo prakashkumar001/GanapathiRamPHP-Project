@@ -167,6 +167,7 @@
                     android:layout_alignParentRight="true"
                     android:gravity="center"
                     android:textSize="10dp"
+                    android:maxLength="7"
                     android:textColor="@android:color/white"
                     android:layout_gravity="center"
                     android:text="\u20B9 40"
