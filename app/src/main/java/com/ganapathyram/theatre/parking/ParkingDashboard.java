@@ -177,7 +177,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     printText(leftRightAlign(dateTime[0], dateTime[1]));
                     printNewLine();
                     // printCustom(dateTime[0]+"   "+dateTime[1],0,1);
-                    printCustom("GANAPATHIRAM THEATRE",1,1);
+                    printCustom("GANAPATHIRAM THEATRE",0,1);
                     printCustom("LB Road, Adyar,Ch-20,Ph: 044 2441 7424",0,1);
                     printCustom("GST.no : 33AAJFGO516A1Z7",0,1);
                     printNewLine();
