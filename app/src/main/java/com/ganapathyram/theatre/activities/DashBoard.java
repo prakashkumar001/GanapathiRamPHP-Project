@@ -335,6 +335,7 @@ public class DashBoard extends AppCompatActivity {
 
             ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
+            ArrayList<com.ganapathyram.theatre.database.Product> water=new ArrayList<>();
             for(int k=0;k<global.cartList.size();k++)
             {
 
@@ -346,19 +347,23 @@ public class DashBoard extends AppCompatActivity {
                 }else if(product.categoryUid.equalsIgnoreCase("beverage"))
                 {
                     beverages.add(product);
+                }else if(product.categoryUid.equalsIgnoreCase("water"))
+                {
+                    water.add(product);
                 }
             }
 
 
             // posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
             // posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            TableBuilder data=new TableBuilder();
-            data.addRow("Snacks");
-            data.addRow("S.no.","Item","Qty.","Price","Total");
-            data.addRow("-----", "----", "-----","-----","-----");
 
             if(snacks.size()>0)
             {
+                TableBuilder data=new TableBuilder();
+                data.addRow("Snacks");
+                data.addRow("S.no.","Item","Qty.","Price","Total");
+                data.addRow("-----", "----", "-----","-----","-----");
+
                 for(int i=0;i<snacks.size();i++)
                 {
                     com.ganapathyram.theatre.database.Product product=snacks.get(i);
@@ -369,9 +374,9 @@ public class DashBoard extends AppCompatActivity {
                 double tax=taxsubTotal(snacks);
                 String subtotal=String.valueOf(sub+tax);
 
-               double gst_amount = (sub * 18) / 100;
+               double gst_amount = (sub * Double.parseDouble(snacks.get(0).getTaxPercent())) / 100;
 
-                String gstpercent=String.valueOf(18/2);
+                String gstpercent=String.format("%.2f",Double.parseDouble(snacks.get(0).getTaxPercent())/2);
 
                 double gst=gst_amount/2;
                 String gstvalue=String.format("%.2f", gst);
@@ -384,7 +389,7 @@ public class DashBoard extends AppCompatActivity {
                 posPtr.printText("CGST "+gstpercent+"% "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.printText("SGST "+gstpercent+"% "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
                
-				posPtr.printText("TOTAL "+String.format("%.2f",subtotal)+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+				posPtr.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
 				
 				posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
@@ -392,13 +397,13 @@ public class DashBoard extends AppCompatActivity {
             }
 
 
-            TableBuilder data2=new TableBuilder();
-            data2.addRow("Beverages");
-            data2.addRow("S.no.","Item","Qty.","Price","Total");
-            data2.addRow("-----", "----", "-----","-----","-----");
 
             if(beverages.size()>0)
             {
+                TableBuilder data2=new TableBuilder();
+                data2.addRow("Beverages");
+                data2.addRow("S.no.","Item","Qty.","Price","Total");
+                data2.addRow("-----", "----", "-----","-----","-----");
 
                 for(int i=0;i<beverages.size();i++)
                 {
@@ -412,24 +417,77 @@ public class DashBoard extends AppCompatActivity {
                 String subtotal2=String.valueOf(sub+taxs);
 
                // String subtotal2=String.valueOf(sub);
-                double gst_amount = (sub * 28) / 100;
+                double gst_amount = (sub * Double.parseDouble(beverages.get(0).getTaxPercent())) / 100;
 
                 double gst=gst_amount/2;
                String gstvalue2=String.format("%.2f", gst);
 
-                String gstpercent=String.valueOf(28/2);
+                String gstpercent=String.format("%.2f",Double.parseDouble(beverages.get(0).getTaxPercent())/2);
                 posPtr.printText(data2.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
                 posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
 
                 posPtr.printText("CGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.printText("SGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.printText("TOTAL "+String.format("%.2f",subtotal2)+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal2))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
 				
 				posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
                 posPtr.writeData(ESCPOSDriver.LINE_FEED);
             }
+
+
+
+
+            if(water.size()>0)
+            {
+                TableBuilder data3=new TableBuilder();
+                data3.addRow("Water");
+                data3.addRow("S.no.","Item","Qty.","Price","Total");
+                data3.addRow("-----", "----", "-----","-----","-----");
+
+                for(int i=0;i<water.size();i++)
+                {
+                    com.ganapathyram.theatre.database.Product product=water.get(i);
+                    data3.addRow(String.valueOf(i+1),product.getProductName(),String.valueOf(product.getQuantity()),product.getPrice(),product.getTotalprice());
+
+                }
+                double sub=subtotal(water);
+
+                double taxs=taxsubTotal(water);
+                String subtotal2=String.valueOf(sub+taxs);
+
+                // String subtotal2=String.valueOf(sub);
+                double gst_amount = (sub * Double.parseDouble(water.get(0).getTaxPercent())) / 100;
+
+                double gst=gst_amount/2;
+                String gstvalue2=String.format("%.2f", gst);
+
+                String gstpercent=String.format("%.2f",Double.parseDouble(water.get(0).getTaxPercent())/2);
+                posPtr.printText(data3.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+
+                posPtr.printText("CGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("SGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal2))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+
+                posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.writeData(ESCPOSDriver.LINE_FEED);
+            }
+
+
+
+
+
+
+
+
+
+
+
+
 
             posPtr.printText("GRAND TOTAL "+String.format("%.2f",totalvalue()+totalTaxAmount())+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 

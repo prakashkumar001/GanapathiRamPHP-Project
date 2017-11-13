@@ -45,8 +45,11 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -132,11 +135,11 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
         parkinglist = (RecyclerView) findViewById(R.id.parking);
         list=new ArrayList<>();
-        list.add(new Parking("BIKE PARKING",R.mipmap.bike_icon));
-        list.add(new Parking("CAR PARKING",R.mipmap.car_icon));
-        list.add(new Parking("AUTO PARKING",R.mipmap.auto_icon));
-        list.add(new Parking("HEAVY PARKING",R.mipmap.truck_icon));
-        list.add(new Parking("CYCLE PARKING",R.mipmap.cycle_icon));
+        list.add(new Parking("BIKE",R.mipmap.bike_icon));
+        list.add(new Parking("CAR",R.mipmap.car_icon));
+        list.add(new Parking("AUTO",R.mipmap.auto_icon));
+        list.add(new Parking("HEAVY",R.mipmap.truck_icon));
+        list.add(new Parking("CYCLE",R.mipmap.cycle_icon));
 
 
         final int columns = getResources().getInteger(R.integer.grid_column);
@@ -170,13 +173,12 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     outputStream=new BufferedOutputStream(os);
                     printImage(R.drawable.printer_logo);
 
-                    String dateTime[] = getDateTime();
+                    String dateTime[] = getDateTime().split("");
                     printText(leftRightAlign(dateTime[0], dateTime[1]));
                     printNewLine();
                     // printCustom(dateTime[0]+"   "+dateTime[1],0,1);
-                    printCustom("Ganapathi Theatre",0,1);
-                    printCustom("LB Road, Adyar,Chennai-20",0,1);
-                    printCustom("Phone: 044 2441 7424",0,1);
+                    printCustom("GANAPATHIRAM THEATRE",1,1);
+                    printCustom("LB Road, Adyar,Ch-20,Ph: 044 2441 7424",0,1);
                     printCustom("GST.no : 33AAJFGO516A1Z7",0,1);
                     printNewLine();
 
@@ -267,7 +269,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
 
 
-                    printCustom(parking.name+" "+parking.chargesToBePaid,1,1);
+                    printCustom(parking.name+" "+parking.chargesToBePaid,2,1);
                     printCustom(new String(new char[32]).replace("\0", "."),0,1);
                     printNewLine();
                     printCustom("Thank you for coming",0,1);
@@ -553,13 +555,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     }
 
 
-    private String[] getDateTime() {
-        final Calendar c = Calendar.getInstance();
-        String dateTime [] = new String[2];
-        dateTime[0] = c.get(Calendar.DAY_OF_MONTH) +"/"+ c.get(Calendar.MONTH) +"/"+ c.get(Calendar.YEAR);
-        dateTime[1] = c.get(Calendar.HOUR_OF_DAY) +":"+ c.get(Calendar.MINUTE);
-        return dateTime;
-    }
+
 
 
     //printphoto
@@ -746,6 +742,12 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         }
 
         return subTotal;
+    }
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy HH:mm:aa");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }
 
