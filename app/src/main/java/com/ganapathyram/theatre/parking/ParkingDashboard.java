@@ -173,13 +173,14 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     outputStream=new BufferedOutputStream(os);
                     printImage(R.drawable.printer_logo);
 
-                    String dateTime[] = getDateTime().split("");
-                    printText(leftRightAlign(dateTime[0], dateTime[1]));
-                    printNewLine();
+                   /// String dateTime[] = getDateTime().split(" ");
+                   // printText(leftRightAlign(dateTime[0], dateTime[1]));
                     // printCustom(dateTime[0]+"   "+dateTime[1],0,1);
                     printCustom("GANAPATHIRAM THEATRE",0,1);
                     printCustom("LB Road, Adyar,Ch-20,Ph: 044 2441 7424",0,1);
-                    printCustom("GST.no : 33AAJFGO516A1Z7",0,1);
+                    escposDriver.printLineAlignCenter(outputStream,getDateTime());
+
+                    // printCustom("GST.no : 33AAJFGO516A1Z7",0,1);
                     printNewLine();
 
           /*          ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
@@ -274,6 +275,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     printNewLine();
                     printCustom("Thank you for coming",0,1);
                     printUnicode();
+                    printNewLine();
                     outputStream.write(escposDriver.PAPER_CUT);
                     printNewLine();
 
@@ -660,24 +662,24 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     WSUtils utils = new WSUtils();
                     JSONObject user = new JSONObject();
                     user.put("userId", global.UserId);
-                    if(parkingType.equalsIgnoreCase("CAR PARKING"))
+                    if(parkingType.equalsIgnoreCase("CAR"))
                     {
                         user.put("parkingType", "car");
 
-                    }else if(parkingType.equalsIgnoreCase("BIKE PARKING"))
+                    }else if(parkingType.equalsIgnoreCase("BIKE"))
                     {
                         user.put("parkingType", "bike");
 
                     }
-                        else  if(parkingType.equalsIgnoreCase("AUTO PARKING"))
+                        else  if(parkingType.equalsIgnoreCase("AUTO"))
                     {
                         user.put("parkingType", "auto");
 
-                    }else  if(parkingType.equalsIgnoreCase("HEAVY PARKING"))
+                    }else  if(parkingType.equalsIgnoreCase("HEAVY"))
                     {
-                        user.put("parkingType", "lmv");
+                        user.put("parkingType", "hmv");
 
-                    }else  if(parkingType.equalsIgnoreCase("CYCLE PARKING"))
+                    }else  if(parkingType.equalsIgnoreCase("CYCLE"))
                     {
                         user.put("parkingType", "cycle");
 
@@ -745,7 +747,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     }
 
     private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy HH:mm:aa");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy hh:mm:aa");
         Date date = new Date();
         return dateFormat.format(date);
     }

@@ -488,8 +488,10 @@ public class DashBoard extends AppCompatActivity {
 
 
 
+            double grand=totalvalue()+totalTaxAmount();
+            double grTotal=Math.round(grand);
 
-            posPtr.printText("GRAND TOTAL "+String.format("%.2f",totalvalue()+totalTaxAmount())+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText("GRAND TOTAL "+String.format("%.2f",grTotal)+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
 
 
