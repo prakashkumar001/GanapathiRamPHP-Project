@@ -27,6 +27,15 @@
                 android:text="Parking"
                 />
 
+            <ImageView
+                android:id="@+id/logout"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/logout"
+                />
+
         </LinearLayout>
         <ImageView
             android:layout_width="80dp"

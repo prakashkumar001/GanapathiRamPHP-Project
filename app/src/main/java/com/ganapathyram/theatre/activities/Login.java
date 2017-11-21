@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.ganapathyram.theatre.MainActivity;
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.utils.InternetPermissions;
 import com.ganapathyram.theatre.utils.WSUtils;
@@ -30,9 +31,13 @@ import com.ganapathyram.theatre.utils.WSUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static android.R.attr.data;
+import static com.ganapathyram.theatre.common.GlobalClass.UserName;
 import static com.ganapathyram.theatre.common.GlobalClass.bluetoothStatus;
 import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
@@ -50,8 +55,8 @@ public class Login extends AppCompatActivity {
     String pinNumber;
     GlobalClass global;
     LinearLayout layout;
-    Spinner select_class;
-    String snack_floor;
+    //Spinner select_class;
+    String snack_floor="First Class";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,9 +105,9 @@ public class Login extends AppCompatActivity {
         layout=(LinearLayout)findViewById(R.id.layout);
 
         iv_delete = (ImageView) findViewById(R.id.iv_delete);
-        select_class=(Spinner)findViewById(R.id.select_class);
+        //select_class=(Spinner)findViewById(R.id.select_class);
 
-        TextView marque = (TextView) this.findViewById(R.id.marquee_text);
+       /* TextView marque = (TextView) this.findViewById(R.id.marquee_text);
         marque.setSelected(true);
 
         ArrayList<String> classes=new ArrayList<>();
@@ -123,7 +128,7 @@ public class Login extends AppCompatActivity {
 
             }
         });
-
+*/
 
 
 
@@ -451,6 +456,32 @@ public class Login extends AppCompatActivity {
                             global.UserId=pinNumber;
 
 
+                            if(getHelper().getSession().getEndtime()!=null)
+                            {
+
+
+                                UserSession userSession=getHelper().getSession();
+                                userSession.setEndtime(getDateTime());
+                                getHelper().getDaoSession().update(userSession);
+
+
+                                UserSession userSessions=new UserSession();
+                                userSessions.setStartTime(getDateTime());
+                                getHelper().getDaoSession().insert(userSessions);
+
+
+                            }else
+                            {
+
+                                UserSession userSession=new UserSession();
+                                userSession.setStartTime(getDateTime());
+                                getHelper().getDaoSession().insert(userSession);
+
+                            }
+
+
+
+
                             if(getHelper().getAddress()!=null)
                             {
 
@@ -512,5 +543,9 @@ public class Login extends AppCompatActivity {
         new LoginServer().execute();
     }
 
-
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy hh:mm:aa");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 }

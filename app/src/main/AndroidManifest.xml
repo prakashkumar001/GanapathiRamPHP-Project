@@ -19,6 +19,8 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activities.Splash"
             android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"
+
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +32,8 @@
 
         <activity android:name=".activities.Login"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+
             >
 
 
@@ -41,29 +45,42 @@
             </activity>
         <activity android:name=".activities.DashBoard"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+
 
             />
 
         <activity android:name=".parking.ParkingDashboard"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
 
             />
 
         <activity android:name=".activities.Home"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+
 
 
             />
 
         <activity android:name=".bluetooth.DeviceListActivity"
             android:theme="@style/ThemeDialogCustom"
+            android:screenOrientation="portrait"
+
 
 
             />
         <activity android:name=".Test"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
 
 
+
+            />
+        <activity android:name=".activities.Reports"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             />
     </application>
 

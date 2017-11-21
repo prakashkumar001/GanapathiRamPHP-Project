@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,17 +14,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.citizen.sdk.ESCPOSConst;
 import com.ganapathyram.theatre.R;
+import com.ganapathyram.theatre.activities.DashBoard;
 import com.ganapathyram.theatre.activities.Home;
+import com.ganapathyram.theatre.activities.Login;
 import com.ganapathyram.theatre.adapter.ParkingAdapter;
 import com.ganapathyram.theatre.bluetooth.DeviceListActivity;
 import com.ganapathyram.theatre.bluetooth.printer.WoosimCmd;
@@ -33,6 +40,7 @@ import com.ganapathyram.theatre.bluetooth.utils.PrinterCommands;
 import com.ganapathyram.theatre.bluetooth.utils.Utils;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.Product;
+import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.model.Parking;
 import com.ganapathyram.theatre.utils.TableBuilder;
@@ -81,7 +89,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     private BluetoothSocket mBluetoothSocket;
     BluetoothDevice mBluetoothDevice;
     public BufferedOutputStream outputStream;
-
+    ImageView logout;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,6 +142,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
 
         parkinglist = (RecyclerView) findViewById(R.id.parking);
+        logout=(ImageView) findViewById(R.id.logout);
         list=new ArrayList<>();
         list.add(new Parking("BIKE",R.mipmap.bike_icon));
         list.add(new Parking("CAR",R.mipmap.car_icon));
@@ -151,6 +160,13 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         parkinglist.setAdapter(adapter);
         parkinglist.setNestedScrollingEnabled(false);
 
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LogoutDialog();
+            }
+        });
 
     }
 
@@ -750,6 +766,55 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy hh:mm:aa");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    void LogoutDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                ParkingDashboard.this);
+
+        // set title
+        alertDialogBuilder.setTitle("Alert");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage("Are you sure want to exit ?")
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, close
+                        // current activity
+
+                        if(getHelper().getSession().getEndtime()==null)
+                        {
+                            UserSession session=getHelper().getSession();
+                            session.setEndtime(getDateTime());
+                            getHelper().getDaoSession().update(session);
+
+
+                        }
+                        Intent i=new Intent(ParkingDashboard.this,Login.class);
+                        startActivity(i);
+                        ActivityCompat.finishAffinity(ParkingDashboard.this);
+
+                        dialog.dismiss();
+                    }
+                })
+
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        dialogInterface.dismiss();
+
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
     }
 }
 

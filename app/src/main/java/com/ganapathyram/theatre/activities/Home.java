@@ -32,7 +32,7 @@ import static com.ganapathyram.theatre.helper.Helper.getHelper;
  */
 
 public class Home extends AppCompatActivity {
-    LinearLayout order_food,parking;
+    LinearLayout order_food,parking,reports;
     int backPressedCount = 0;
     GlobalClass global;
 
@@ -43,7 +43,7 @@ public class Home extends AppCompatActivity {
         global=(GlobalClass)getApplicationContext();
         parking=(LinearLayout)findViewById(R.id.parking);
         order_food=(LinearLayout)findViewById(R.id.orderfood);
-
+        reports=(LinearLayout)findViewById(R.id.reports);
 
        // getDashboard();
 
@@ -64,6 +64,15 @@ public class Home extends AppCompatActivity {
 
                 getCategoryList();
 
+            }
+        });
+
+        reports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(Home.this, Reports.class);
+                startActivity(i);
+                finish();
             }
         });
     }
