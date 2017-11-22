@@ -1,5 +1,6 @@
 package com.ganapathyram.theatre.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.os.Environment;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -41,6 +43,7 @@ import com.ganapathyram.theatre.bluetooth.utils.ESCPOSDriver;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.database.LocalSalesError;
+import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
@@ -86,6 +89,7 @@ public class DashBoard extends AppCompatActivity {
     List<Categories> categoriesList;
     LinearLayout layout;
     CartAdapter cartadapter;
+    ImageView logout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +101,7 @@ public class DashBoard extends AppCompatActivity {
         cartRelativeLayout=(RelativeLayout)findViewById(R.id.cartRelativeLayout);
         radioGroup= (RadioGroup) findViewById(R.id.rg_header);
         layout=(LinearLayout)findViewById(R.id.layout);
-
+        logout=(ImageView) findViewById(R.id.logout);
         RadioGroup.LayoutParams rprms;
 
 
@@ -167,6 +171,13 @@ public class DashBoard extends AppCompatActivity {
                 startActivity(i);*/
                 showOrderDialog();
 
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LogoutDialog();
             }
         });
 
@@ -1224,6 +1235,58 @@ public class DashBoard extends AppCompatActivity {
     private static String removeLastChar(String str) {
         return str.substring(0, str.length() - 1);
     }
+
+
+    void LogoutDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                DashBoard.this);
+
+        // set title
+        alertDialogBuilder.setTitle("Alert");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage("Are you sure want to exit ?")
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, close
+                        // current activity
+
+                        if(getHelper().getSession().getEndtime()==null)
+                        {
+                            UserSession session=getHelper().getSession();
+                             session.setEndtime(getDateTime());
+                             getHelper().getDaoSession().update(session);
+
+
+                        }
+
+                        Intent i=new Intent(DashBoard.this,Login.class);
+                        startActivity(i);
+                        ActivityCompat.finishAffinity(DashBoard.this);
+
+                        dialog.dismiss();
+                    }
+                })
+
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                dialogInterface.dismiss();
+
+            }
+        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
     }
+
+}
 
 

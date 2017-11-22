@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="50dp">
+
+    <TextView
+        android:id="@+id/sno"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="S.no"
+        />
+
+
+    <TextView
+        android:id="@+id/timein"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="Time in"
+        android:gravity="center"
+
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:id="@+id/timeout"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="Time out"
+        android:gravity="center"
+
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

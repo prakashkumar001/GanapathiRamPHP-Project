@@ -6,8 +6,11 @@ import android.content.Context;
 import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.database.DaoSession;
 import com.ganapathyram.theatre.database.Login;
+import com.ganapathyram.theatre.database.ParkingDao;
 import com.ganapathyram.theatre.database.Product;
 import com.ganapathyram.theatre.database.ProductDao;
+import com.ganapathyram.theatre.database.UserSession;
+import com.ganapathyram.theatre.database.UserSessionDao;
 import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.database.Wifi_BluetoothAddressDao;
 
@@ -73,5 +76,24 @@ public class Helper {
 
     }
 
+    //getAddress
+    public UserSession getSession() {
 
+        QueryBuilder<UserSession> qb = daoSession.queryBuilder(UserSession.class);
+        qb.orderDesc(UserSessionDao.Properties.Id).limit(1);
+
+
+        return  qb.unique();
+
+
+    }
+
+    //getAddress
+    public List<UserSession> getSessionList() {
+
+        QueryBuilder<UserSession> qb = daoSession.queryBuilder(UserSession.class);
+        return  qb.list();
+
+
+    }
 }
