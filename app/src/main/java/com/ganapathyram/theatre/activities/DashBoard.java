@@ -861,7 +861,7 @@ public class DashBoard extends AppCompatActivity {
         new CheckOutService().execute();
     }
     private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy HH:mm:aa");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy hh:mm:aa");
         Date date = new Date();
         return dateFormat.format(date);
     }

@@ -1,6 +1,7 @@
 package com.ganapathyram.theatre.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +75,14 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHold
         holder.timein.setText(list.get(position).getStartTime());
         holder.timeout.setText(list.get(position).getEndtime());
 
-
+        if(position%2 == 0)
+        {
+            holder.itemView.setBackgroundColor(Color.parseColor("#FEF7E5"));
+        }
+        else
+        {
+            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }
 
 
 

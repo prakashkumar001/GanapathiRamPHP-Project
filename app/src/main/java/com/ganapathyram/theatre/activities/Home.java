@@ -1,19 +1,29 @@
 package com.ganapathyram.theatre.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.Categories;
+import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.model.Dashboard;
 import com.ganapathyram.theatre.parking.ParkingDashboard;
 import com.ganapathyram.theatre.utils.WSUtils;
@@ -46,7 +56,7 @@ public class Home extends AppCompatActivity {
         reports=(LinearLayout)findViewById(R.id.reports);
 
        // getDashboard();
-
+        getCategoryList();
         parking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +72,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                getCategoryList();
+               showDialogClass();
 
             }
         });
@@ -255,9 +265,7 @@ public class Home extends AppCompatActivity {
 
                         }
 
-                        Intent i=new Intent(Home.this, DashBoard.class);
-                        startActivity(i);
-                        finish();
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -270,4 +278,106 @@ public class Home extends AppCompatActivity {
         }
         new CategoryServer().execute();
     }
+
+    public void showDialogClass()
+    {
+
+        // custom dialog
+        final Dialog dialog = new Dialog(Home.this, R.style.ThemeDialogCustom);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bookingfloor);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        dialog.show();
+        dialog.getWindow().setLayout((8 * width) / 10, (8 * height) / 10);
+
+        RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radiogroup);
+        RadioButton firstclass = (RadioButton) dialog.findViewById(R.id.firstclass);
+        RadioButton balcony = (RadioButton) dialog.findViewById(R.id.balcony);
+
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                switch(i)
+                {
+                    case R.id.firstclass:
+                        // TODO Something
+                        if(getHelper().getAddress()!=null)
+                        {
+
+                            Wifi_BluetoothAddress address=getHelper().getAddress();
+
+
+                                address.setSnack_floor("First Class");
+                                address.setWifiAddress("192.168.0.13");
+
+
+                            getHelper().getDaoSession().update(address);
+
+
+                        }else
+                        {
+                            Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
+                            address.setId(Long.parseLong("1"));
+
+                                address.setSnack_floor("First Class");
+                                address.setWifiAddress("192.168.0.13");
+
+
+                            getHelper().getDaoSession().insert(address);
+                        }
+
+                        Intent intent=new Intent(Home.this, DashBoard.class);
+                        startActivity(intent);
+                        finish();
+                        dialog.dismiss();
+                        break;
+                    case R.id.balcony:
+                        // TODO Something
+                        if(getHelper().getAddress()!=null)
+                        {
+
+                            Wifi_BluetoothAddress address=getHelper().getAddress();
+
+
+                            address.setSnack_floor("Balcony");
+                            address.setWifiAddress("192.168.0.14");
+
+
+                            getHelper().getDaoSession().update(address);
+
+
+                        }else
+                        {
+                            Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
+                            address.setId(Long.parseLong("1"));
+
+                            address.setSnack_floor("Balcony");
+                            address.setWifiAddress("192.168.0.14");
+
+
+                            getHelper().getDaoSession().insert(address);
+                        }
+
+                        Intent intents=new Intent(Home.this, DashBoard.class);
+                        startActivity(intents);
+                        finish();
+                        dialog.dismiss();
+                        break;
+
+                }
+            }
+        });
+
+        dialog.show();
+
+
+
+    }
+
 }

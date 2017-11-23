@@ -27,8 +27,9 @@ public class GlobalClass extends Application{
     public static ArrayList<com.ganapathyram.theatre.database.Product> cartList=new ArrayList<>();
     public static String BadgeCount="0";
     public static String bluetoothStatus=null;
-    public static String ApiBaseUrl="http://192.168.0.110:8080/services/";    //192.168.0.102
+    public static String ApiBaseUrl="http://192.168.0.110:8080/services/";    //192.168.0.110
     public static String ApiImageUrl="http://192.168.0.110:8080/images/";
+
     Database db;
     public DaoSession daoSession;
     public void onCreate() {

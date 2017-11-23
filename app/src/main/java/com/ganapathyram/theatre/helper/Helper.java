@@ -16,6 +16,9 @@ import com.ganapathyram.theatre.database.Wifi_BluetoothAddressDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -92,8 +95,16 @@ public class Helper {
     public List<UserSession> getSessionList() {
 
         QueryBuilder<UserSession> qb = daoSession.queryBuilder(UserSession.class);
+        qb.orderDesc(UserSessionDao.Properties.Id);
+        qb.where(UserSessionDao.Properties.StartTime.ge(getDateTime()));
         return  qb.list();
 
 
+    }
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy hh:mm:aa");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }

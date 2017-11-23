@@ -47,38 +47,8 @@
                 android:background="@color/colorPrimary"
                 android:layout_height="30dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginLeft="100dp"
-                android:background="@mipmap/marquee_bg"
-                android:paddingLeft="70dp"
-                >
+             </LinearLayout>
 
-                <TextView
-                    android:id="@+id/marquee_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:ellipsize="marquee"
-                    android:scrollHorizontally="true"
-                    android:text="9.00 am Magalir mattum ,12.30 vivegam, 1.00 Billa  9.00 am Magalir mattum ,12.30 vivegam, 1.00 Billa 9.00 am Magalir mattum ,12.30 vivegam, "
-                    />
-
-
-            </LinearLayout>
-            </LinearLayout>
-
-            <Spinner
-                android:id="@+id/select_class"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center"
-                />
 
 
             <TextView

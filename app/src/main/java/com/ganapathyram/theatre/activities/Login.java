@@ -456,26 +456,30 @@ public class Login extends AppCompatActivity {
                             global.UserId=pinNumber;
 
 
-                            if(getHelper().getSession().getEndtime()!=null)
-                            {
-
-
-                                UserSession userSession=getHelper().getSession();
-                                userSession.setEndtime(getDateTime());
-                                getHelper().getDaoSession().update(userSession);
-
-
-                                UserSession userSessions=new UserSession();
-                                userSessions.setStartTime(getDateTime());
-                                getHelper().getDaoSession().insert(userSessions);
-
-
-                            }else
+                            if(getHelper().getSession()==null)
                             {
 
                                 UserSession userSession=new UserSession();
                                 userSession.setStartTime(getDateTime());
                                 getHelper().getDaoSession().insert(userSession);
+
+
+
+                            }else
+                            {
+
+                                if(getHelper().getSession().getEndtime()==null)
+                                {
+                                    UserSession userSession=getHelper().getSession();
+                                    userSession.setEndtime(getDateTime());
+                                    getHelper().getDaoSession().update(userSession);
+
+                                }
+
+
+                                UserSession userSessions=new UserSession();
+                                userSessions.setStartTime(getDateTime());
+                                getHelper().getDaoSession().insert(userSessions);
 
                             }
 
@@ -548,4 +552,5 @@ public class Login extends AppCompatActivity {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
 }

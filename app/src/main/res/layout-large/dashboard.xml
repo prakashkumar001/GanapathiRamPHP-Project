@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/layout"
     android:layout_height="match_parent">
 
     <FrameLayout
@@ -26,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_weight="2"
             android:gravity="center"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textColor="@android:color/white"
             android:layout_height="match_parent"
             android:text="Select Food Items"
@@ -38,16 +39,16 @@
             android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/cartRelativeLayout"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_margin="10dp"
             android:clickable="true"
             android:paddingRight="3dip">
 
             <ImageView
                 android:id="@+id/carticon"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_centerVertical="true"
                 android:background="@null"
                 android:clickable="false"
@@ -55,8 +56,8 @@
 
             <TextView
                 android:id="@+id/cartcount"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:background="@drawable/notification_circle"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="16dp"
@@ -64,8 +65,18 @@
                 android:text="0"
                 android:textStyle="bold"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
+
         </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/logout"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/logout"
+                />
+
         </LinearLayout>
         </LinearLayout>
         <ImageView
@@ -88,12 +99,12 @@
         android:layout_marginRight="@dimen/marginsmall"
         android:layout_marginTop="@dimen/categorytext"
         android:orientation="horizontal">
-<!--
-        <RadioButton
+
+        <!--<RadioButton
             android:id="@+id/maincourse"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginsmall"
             android:background="@drawable/radio_selector_circle"
             android:button="@null"
@@ -103,14 +114,14 @@
             android:paddingTop="@dimen/marginsmall"
             android:text="Snacks"
             android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
 
         <RadioButton
             android:id="@+id/appetize"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginsmall"
             android:background="@drawable/radio_selector_circle"
             android:button="@null"
@@ -119,13 +130,13 @@
             android:paddingTop="@dimen/marginsmall"
             android:text="Beverages"
             android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
         <RadioButton
             android:id="@+id/deserts2"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginsmall"
             android:background="@drawable/radio_selector_circle"
             android:button="@null"
@@ -134,11 +145,11 @@
             android:paddingTop="@dimen/marginsmall"
             android:text="Combo"
             android:textColor="@drawable/rbtn_textcolor_selector"
-            android:textSize="18dp" />-->
+            android:textSize="16dp" />
 
+-->
 
     </RadioGroup>
-
 
 <!--<LinearLayout
 android:layout_width="match_parent"
