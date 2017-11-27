@@ -49,11 +49,24 @@ public class Splash extends AppCompatActivity implements NetworkConnection {
                 overridePendingTransition(R.anim.fadeinact,
                         R.anim.fadeoutact);
 
-                Intent mainIntent = new Intent(
-                        Splash.this,
-                        Login.class);
+                if(getHelper().getSession()!=null)
+                {
+                    Intent mainIntent = new Intent(
+                            Splash.this,
+                            Home.class);
 
-                Splash.this.startActivity(mainIntent);
+                    Splash.this.startActivity(mainIntent);
+
+                }else
+                {
+                    Intent mainIntent = new Intent(
+                            Splash.this,
+                            Login.class);
+
+                    Splash.this.startActivity(mainIntent);
+
+                }
+
 
 
 

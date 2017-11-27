@@ -677,7 +677,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     String requestURL = global.ApiBaseUrl + "parking/confirm";
                     WSUtils utils = new WSUtils();
                     JSONObject user = new JSONObject();
-                    user.put("userId", global.UserId);
+                    user.put("userId", getHelper().getSession().getUserId());
                     if(parkingType.equalsIgnoreCase("CAR"))
                     {
                         user.put("parkingType", "car");
@@ -784,17 +784,8 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                         // if this button is clicked, close
                         // current activity
 
-                        if(getHelper().getSession().getEndtime()==null)
-                        {
-                            UserSession session=getHelper().getSession();
-                            session.setEndtime(getDateTime());
-                            getHelper().getDaoSession().update(session);
+                        logout();
 
-
-                        }
-                        Intent i=new Intent(ParkingDashboard.this,Login.class);
-                        startActivity(i);
-                        ActivityCompat.finishAffinity(ParkingDashboard.this);
 
                         dialog.dismiss();
                     }
@@ -816,5 +807,87 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         alertDialog.show();
 
     }
+
+    void logout()
+    {
+        class LogOutServer extends AsyncTask<String, String, String> {
+            ProgressDialog dialog;
+            String response = "";
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = new ProgressDialog(ParkingDashboard.this);
+                dialog.setMessage(getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String[] params) {
+                try {
+
+
+                    String requestURL = global.ApiBaseUrl + "user/logout";
+                    WSUtils utils = new WSUtils();
+
+                    // JSONObject object = new JSONObject();
+                    JSONObject user = new JSONObject();
+                    user.put("userId", getHelper().getSession().getUserId());
+                    user.put("sessionId", getHelper().getSession().getSessionId());
+
+               /* object.put("user", user);
+                object.put("venueId", "gprtheatre");
+
+*/
+                    response = utils.responsedetailsfromserver(requestURL, user.toString());
+
+                    System.out.println("SERVER REPLIED:" + response);
+                    //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
+                    // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
+                } catch (Exception ex) {
+                    Log.i("ERROR", "ERROR" + ex.toString());
+                }
+
+                return response;
+            }
+
+
+            @Override
+            protected void onPostExecute(String o) {
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if (o != null || !o.equalsIgnoreCase("null")) {
+                    try {
+                        JSONObject object = new JSONObject(o);
+
+                        String payload=object.getString("payload");
+                        if(payload.equalsIgnoreCase("success"))
+                        {
+                            getHelper().getDaoSession().deleteAll(UserSession.class);
+
+                            Intent i=new Intent(ParkingDashboard.this,Login.class);
+                            startActivity(i);
+                            ActivityCompat.finishAffinity(ParkingDashboard.this);
+
+                        }
+
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        }
+        new LogOutServer().execute();
+    }
+
 }
 

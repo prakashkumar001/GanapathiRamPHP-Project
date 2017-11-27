@@ -14,11 +14,16 @@ public class UserSession {
     Long id;
     public String startTime;
     public String endtime;
-    @Generated(hash = 1773628469)
-    public UserSession(Long id, String startTime, String endtime) {
+    public String sessionId;
+    public String userId;
+    @Generated(hash = 63632947)
+    public UserSession(Long id, String startTime, String endtime, String sessionId,
+            String userId) {
         this.id = id;
         this.startTime = startTime;
         this.endtime = endtime;
+        this.sessionId = sessionId;
+        this.userId = userId;
     }
     @Generated(hash = 875065627)
     public UserSession() {
@@ -40,5 +45,17 @@ public class UserSession {
     }
     public void setEndtime(String endtime) {
         this.endtime = endtime;
+    }
+    public String getSessionId() {
+        return this.sessionId;
+    }
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+    public String getUserId() {
+        return this.userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

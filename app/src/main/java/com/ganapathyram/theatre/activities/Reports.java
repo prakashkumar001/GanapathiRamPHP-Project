@@ -1,7 +1,9 @@
 package com.ganapathyram.theatre.activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -10,13 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.adapter.ReportAdapter;
+import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.parking.ParkingDashboard;
+import com.ganapathyram.theatre.utils.WSUtils;
+
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,10 +39,12 @@ public class Reports extends AppCompatActivity {
     ImageView logout;
     RecyclerView list;
     ReportAdapter adapter;
+    GlobalClass global;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reports);
+        global=(GlobalClass)getApplicationContext();
         logout=(ImageView)findViewById(R.id.logout);
         list=(RecyclerView)findViewById(R.id.report_list);
 
@@ -85,18 +94,8 @@ public class Reports extends AppCompatActivity {
                         // if this button is clicked, close
                         // current activity
 
-                        if(getHelper().getSession().getEndtime()==null)
-                        {
-                            UserSession session=getHelper().getSession();
-                            session.setEndtime(getDateTime());
-                            getHelper().getDaoSession().update(session);
+                        logout();
 
-
-                        }
-
-                        Intent i=new Intent(Reports.this,Login.class);
-                        startActivity(i);
-                        ActivityCompat.finishAffinity(Reports.this);
 
                         dialog.dismiss();
                     }
@@ -118,4 +117,86 @@ public class Reports extends AppCompatActivity {
         alertDialog.show();
 
     }
+
+    void logout()
+    {
+        class LogOutServer extends AsyncTask<String, String, String> {
+            ProgressDialog dialog;
+            String response = "";
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = new ProgressDialog(Reports.this);
+                dialog.setMessage(getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String[] params) {
+                try {
+
+
+                    String requestURL = global.ApiBaseUrl + "user/logout";
+                    WSUtils utils = new WSUtils();
+
+                    // JSONObject object = new JSONObject();
+                    JSONObject user = new JSONObject();
+                    user.put("userId", getHelper().getSession().getUserId());
+                    user.put("sessionId", getHelper().getSession().getSessionId());
+
+               /* object.put("user", user);
+                object.put("venueId", "gprtheatre");
+
+*/
+                    response = utils.responsedetailsfromserver(requestURL, user.toString());
+
+                    System.out.println("SERVER REPLIED:" + response);
+                    //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
+                    // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
+                } catch (Exception ex) {
+                    Log.i("ERROR", "ERROR" + ex.toString());
+                }
+
+                return response;
+            }
+
+
+            @Override
+            protected void onPostExecute(String o) {
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if (o != null || !o.equalsIgnoreCase("null")) {
+                    try {
+                        JSONObject object = new JSONObject(o);
+
+                        String payload=object.getString("payload");
+                        if(payload.equalsIgnoreCase("success"))
+                        {
+                            getHelper().getDaoSession().deleteAll(UserSession.class);
+
+                            Intent i=new Intent(Reports.this,Login.class);
+                            startActivity(i);
+                            ActivityCompat.finishAffinity(Reports.this);
+
+                        }
+
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        }
+        new LogOutServer().execute();
+    }
+
 }

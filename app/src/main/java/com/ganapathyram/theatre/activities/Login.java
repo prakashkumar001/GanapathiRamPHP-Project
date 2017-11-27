@@ -407,7 +407,7 @@ public class Login extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "login";
+                    String requestURL = global.ApiBaseUrl + "user/login";
                     WSUtils utils = new WSUtils();
 
                     JSONObject object = new JSONObject();
@@ -446,8 +446,13 @@ public class Login extends AppCompatActivity {
                         String loginStatus=payload.getString("loginStatus");
                         String userName=payload.getString("userName");
 
+
                         if (loginStatus.equalsIgnoreCase("success")) {
                             global.UserName=userName;
+                            JSONObject session=payload.getJSONObject("session");
+                            String sessionId=session.getString("sessionId");
+                            String login_time=session.getString("loggedInTime");
+
 
                             com.ganapathyram.theatre.database.Login login=new  com.ganapathyram.theatre.database.Login();
                             login.pin=Long.parseLong(pinNumber);
@@ -460,12 +465,14 @@ public class Login extends AppCompatActivity {
                             {
 
                                 UserSession userSession=new UserSession();
-                                userSession.setStartTime(getDateTime());
+                                userSession.setStartTime(login_time);
+                                userSession.setSessionId(sessionId);
+                                userSession.setUserId(pinNumber);
                                 getHelper().getDaoSession().insert(userSession);
 
 
 
-                            }else
+                            }/*else
                             {
 
                                 if(getHelper().getSession().getEndtime()==null)
@@ -481,12 +488,12 @@ public class Login extends AppCompatActivity {
                                 userSessions.setStartTime(getDateTime());
                                 getHelper().getDaoSession().insert(userSessions);
 
-                            }
+                            }*/
 
 
 
 
-                            if(getHelper().getAddress()!=null)
+                           /* if(getHelper().getAddress()!=null)
                             {
 
                                 Wifi_BluetoothAddress address=getHelper().getAddress();
@@ -523,7 +530,7 @@ public class Login extends AppCompatActivity {
                                 getHelper().getDaoSession().insert(address);
                             }
 
-
+*/
 
                             Intent intent = new Intent(
                                     Login.this,
