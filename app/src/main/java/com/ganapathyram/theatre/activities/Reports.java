@@ -47,7 +47,7 @@ public class Reports extends AppCompatActivity {
         global=(GlobalClass)getApplicationContext();
         logout=(ImageView)findViewById(R.id.logout);
         list=(RecyclerView)findViewById(R.id.report_list);
-
+        getTranscation();
 
         adapter=new ReportAdapter(Reports.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -74,7 +74,7 @@ public class Reports extends AppCompatActivity {
         finish();
     }
     private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy hh:mm:aa");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy hh:mm:ss aa");
         Date date = new Date();
         return dateFormat.format(date);
     }
@@ -199,4 +199,91 @@ public class Reports extends AppCompatActivity {
         new LogOutServer().execute();
     }
 
+
+
+    void getTranscation()
+    {
+        class getTranscationfromServer extends AsyncTask<String, String, String> {
+            ProgressDialog dialog;
+            String response = "";
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = new ProgressDialog(Reports.this);
+                dialog.setMessage(getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String[] params) {
+                try {
+
+
+                    String requestURL = global.ApiBaseUrl + "product/transcations/";
+                    WSUtils utils = new WSUtils();
+
+                    // JSONObject object = new JSONObject();
+                    JSONObject user = new JSONObject();
+                    user.put("userId", getHelper().getSession().getUserId());
+
+                    String[] dates=getDateTime().split(" ");
+                    String[] dmy=dates[0].split("/");
+                    String month=dmy[1];
+                    String year=dmy[2];
+
+                    user.put("startDate", "01/"+month+"/"+year+ " 12:00:00 AM");
+                    user.put("endDate", getDateTime());
+                    user.put("venueId", "gprtheatre");
+
+
+                    response = utils.responsedetailsfromserver(requestURL, user.toString());
+
+                    System.out.println("SERVER REPLIED:" + response);
+                    //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
+                    // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
+                } catch (Exception ex) {
+                    Log.i("ERROR", "ERROR" + ex.toString());
+                }
+
+                return response;
+            }
+
+
+            @Override
+            protected void onPostExecute(String o) {
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if (o != null || !o.equalsIgnoreCase("null")) {
+                    try {
+                        JSONObject object = new JSONObject(o);
+
+                        String payload=object.getString("payload");
+                        if(payload.equalsIgnoreCase("success"))
+                        {
+                            getHelper().getDaoSession().deleteAll(UserSession.class);
+
+                            Intent i=new Intent(Reports.this,Login.class);
+                            startActivity(i);
+                            ActivityCompat.finishAffinity(Reports.this);
+
+                        }
+
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        }
+        new getTranscationfromServer().execute();
+    }
 }

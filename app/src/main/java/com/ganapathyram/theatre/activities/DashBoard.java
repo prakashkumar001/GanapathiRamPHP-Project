@@ -779,6 +779,7 @@ public class DashBoard extends AppCompatActivity {
                     result.put("orderAmt",orderamount);
                     result.put("totalCartAmt",totalamount);
                     result.put("venueUid","gprtheatre");
+                    result.put("classId",getHelper().getAddress().getSnack_floor());
 
                     arraydetails.put(result);
 

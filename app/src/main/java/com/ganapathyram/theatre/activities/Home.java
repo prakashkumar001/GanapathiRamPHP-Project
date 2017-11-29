@@ -313,7 +313,7 @@ public class Home extends AppCompatActivity {
                             Wifi_BluetoothAddress address=getHelper().getAddress();
 
 
-                                address.setSnack_floor("First Class");
+                                address.setSnack_floor("firstclass");
                                 address.setWifiAddress("192.168.0.13");
 
 
@@ -325,7 +325,7 @@ public class Home extends AppCompatActivity {
                             Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
                             address.setId(Long.parseLong("1"));
 
-                                address.setSnack_floor("First Class");
+                                address.setSnack_floor("firstclass");
                                 address.setWifiAddress("192.168.0.13");
 
 
@@ -345,7 +345,7 @@ public class Home extends AppCompatActivity {
                             Wifi_BluetoothAddress address=getHelper().getAddress();
 
 
-                            address.setSnack_floor("Balcony");
+                            address.setSnack_floor("balcony");
                             address.setWifiAddress("192.168.0.14");
 
 
@@ -357,7 +357,7 @@ public class Home extends AppCompatActivity {
                             Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
                             address.setId(Long.parseLong("1"));
 
-                            address.setSnack_floor("Balcony");
+                            address.setSnack_floor("balcony");
                             address.setWifiAddress("192.168.0.14");
 
 
