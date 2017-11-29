@@ -13,6 +13,7 @@ import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.model.Parking;
+import com.ganapathyram.theatre.model.Report;
 import com.ganapathyram.theatre.parking.ParkingDashboard;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -28,31 +29,32 @@ import static com.ganapathyram.theatre.helper.Helper.getHelper;
 public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHolder> {
 
 
-    List<UserSession> list = new ArrayList<>();
+    ArrayList<Report> list = new ArrayList<>();
 
     GlobalClass global;
     ImageLoader loader;
     Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView sno,timein,timeout;
+        public TextView sno,txn_date,txn_count,amount;
 
 
         public MyViewHolder(View view) {
             super(view);
 
             sno = (TextView) view.findViewById(R.id.sno);
-            timein = (TextView) view.findViewById(R.id.timein);
-            timeout = (TextView) view.findViewById(R.id.timeout);
+            txn_date = (TextView) view.findViewById(R.id.txn_date);
+            txn_count = (TextView) view.findViewById(R.id.txn_count);
+            amount = (TextView) view.findViewById(R.id.amount);
 
         }
     }
 
 
-    public ReportAdapter(Context context) {
+    public ReportAdapter(Context context, ArrayList<Report> list) {
 
         this.context=context;
-        list=getHelper().getSessionList();
+        this.list=list;
         global=new GlobalClass();
 
     }
@@ -71,9 +73,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHold
     public void onBindViewHolder(final ReportAdapter.MyViewHolder holder, final int position) {
 
 
-        holder.sno.setText(String.valueOf(list.get(position).getId()));
-        holder.timein.setText(list.get(position).getStartTime());
-        holder.timeout.setText(list.get(position).getEndtime());
+        holder.sno.setText(String.valueOf(position+1));
+        holder.txn_date.setText(list.get(position).txnDate);
+        holder.txn_count.setText(list.get(position).txnCount);
+        holder.amount.setText(list.get(position).amount);
 
         if(position%2 == 0)
         {

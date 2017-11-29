@@ -20,13 +20,16 @@ import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.adapter.ReportAdapter;
 import com.ganapathyram.theatre.common.GlobalClass;
 import com.ganapathyram.theatre.database.UserSession;
+import com.ganapathyram.theatre.model.Report;
 import com.ganapathyram.theatre.parking.ParkingDashboard;
 import com.ganapathyram.theatre.utils.WSUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.ganapathyram.theatre.helper.Helper.getHelper;
@@ -48,13 +51,6 @@ public class Reports extends AppCompatActivity {
         logout=(ImageView)findViewById(R.id.logout);
         list=(RecyclerView)findViewById(R.id.report_list);
         getTranscation();
-
-        adapter=new ReportAdapter(Reports.this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        list.setLayoutManager(layoutManager);
-        list.setItemAnimator(new DefaultItemAnimator());
-        list.setAdapter(adapter);
-        list.setNestedScrollingEnabled(false);
 
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +217,7 @@ public class Reports extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "product/transcations/";
+                    String requestURL = global.ApiBaseUrl + "product/transactions/";
                     WSUtils utils = new WSUtils();
 
                     // JSONObject object = new JSONObject();
@@ -235,7 +231,7 @@ public class Reports extends AppCompatActivity {
 
                     user.put("startDate", "01/"+month+"/"+year+ " 12:00:00 AM");
                     user.put("endDate", getDateTime());
-                    user.put("venueId", "gprtheatre");
+                    user.put("venueUid", "gprtheatre");
 
 
                     response = utils.responsedetailsfromserver(requestURL, user.toString());
@@ -258,19 +254,30 @@ public class Reports extends AppCompatActivity {
                     dialog.dismiss();
 
                 if (o != null || !o.equalsIgnoreCase("null")) {
+
+                    ArrayList<Report> reportArrayList=new ArrayList<>();
                     try {
                         JSONObject object = new JSONObject(o);
 
-                        String payload=object.getString("payload");
-                        if(payload.equalsIgnoreCase("success"))
-                        {
-                            getHelper().getDaoSession().deleteAll(UserSession.class);
+                        JSONArray payload=object.getJSONArray("payload");
 
-                            Intent i=new Intent(Reports.this,Login.class);
-                            startActivity(i);
-                            ActivityCompat.finishAffinity(Reports.this);
+                        for(int i=0;i<payload.length();i++)
+                        {
+                            JSONObject ob=payload.getJSONObject(i);
+                            String txnDate=ob.getString("txnDate");
+                            String txnCount=ob.getString("txnCount");
+                            String amount=ob.getString("amount");
+                            String dateStr=ob.getString("dateStr");
+                            reportArrayList.add(new Report(txnDate,txnCount,amount,dateStr));
 
                         }
+
+                        adapter=new ReportAdapter(Reports.this,reportArrayList);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                        list.setLayoutManager(layoutManager);
+                        list.setItemAnimator(new DefaultItemAnimator());
+                        list.setAdapter(adapter);
+                        list.setNestedScrollingEnabled(false);
 
 
 
