@@ -15,20 +15,29 @@
 
 
     <TextView
-        android:id="@+id/timein"
+        android:id="@+id/txn_date"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:text="Time in"
+        android:text="date"
         android:gravity="center"
 
         android:layout_height="wrap_content" />
 
 
     <TextView
-        android:id="@+id/timeout"
+        android:id="@+id/txn_count"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:text="Time out"
+        android:text="Count"
+        android:gravity="center"
+
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="Amount"
         android:gravity="center"
 
         android:layout_height="wrap_content" />
