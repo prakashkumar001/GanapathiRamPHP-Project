@@ -174,10 +174,13 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
+
+
+        logout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
                 LogoutDialog();
+                return false;
             }
         });
 

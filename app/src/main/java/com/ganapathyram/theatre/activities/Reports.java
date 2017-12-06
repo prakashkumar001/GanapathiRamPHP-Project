@@ -230,6 +230,7 @@ public class Reports extends AppCompatActivity {
                     String year=dmy[2];
 
                     user.put("startDate", "01/"+month+"/"+year+ " 12:00:00 AM");
+                   // user.put("startDate", "01/"+month+"/"+year+ " 12:00:00 AM");
                     user.put("endDate", getDateTime());
                     user.put("venueUid", "gprtheatre");
 

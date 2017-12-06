@@ -161,10 +161,11 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         parkinglist.setNestedScrollingEnabled(false);
 
 
-        logout.setOnClickListener(new View.OnClickListener() {
+        logout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
                 LogoutDialog();
+                return false;
             }
         });
 
