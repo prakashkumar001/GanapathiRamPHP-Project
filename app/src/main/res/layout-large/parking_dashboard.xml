@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,10 +20,19 @@
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:textSize="20dp"
+                android:textSize="16dp"
                 android:textColor="@android:color/white"
                 android:layout_height="match_parent"
                 android:text="Parking"
+                />
+
+            <ImageView
+                android:id="@+id/logout"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/logout"
                 />
 
         </LinearLayout>
@@ -35,6 +43,7 @@
             android:src="@mipmap/appbar_icon"
             />
     </FrameLayout>
+
 
 
 
