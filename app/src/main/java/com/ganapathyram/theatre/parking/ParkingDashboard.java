@@ -702,6 +702,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
                     }
                     user.put("venueId", "gprtheatre");
+                    user.put("sessionId",getHelper().getSession().getSessionId());
 
 
 

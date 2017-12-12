@@ -232,6 +232,7 @@ public class Reports extends AppCompatActivity {
                     user.put("startDate", "01/"+month+"/"+year+ " 12:00:00 AM");
                    // user.put("startDate", "01/"+month+"/"+year+ " 12:00:00 AM");
                     user.put("endDate", getDateTime());
+                    user.put("sessionId",getHelper().getSession().getSessionId());
                     user.put("venueUid", "gprtheatre");
 
 

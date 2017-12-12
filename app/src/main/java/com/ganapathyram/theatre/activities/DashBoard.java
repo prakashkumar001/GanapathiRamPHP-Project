@@ -777,6 +777,7 @@ public class DashBoard extends AppCompatActivity {
 
                     JSONObject result=new JSONObject();
                     result.put("userId",getHelper().getSession().getUserId());
+                    result.put("sessionId",getHelper().getSession().getSessionId());
                     result.put("cartItems",cartList);
                     result.put("totalTaxAmt",totaltaxamount);
                     result.put("orderAmt",orderamount);
