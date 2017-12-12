@@ -58,70 +58,58 @@
             />
     </FrameLayout>
 
-    <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_margin="15dp"
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_title"
+        android:layout_marginLeft="@dimen/marginsmall"
+        android:layout_marginRight="@dimen/marginsmall"
+        android:layout_marginTop="@dimen/categorytext"
+        android:orientation="horizontal">
+
+
+        <RadioButton
+            android:id="@+id/snacks"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginsmall"
+            android:background="@drawable/radio_selector_circle"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginsmall"
+            android:paddingTop="@dimen/marginsmall"
+            android:text="Snacks"
+            android:textColor="@drawable/rbtn_textcolor_selector"
+            android:textSize="16dp" />
+
+        <RadioButton
+            android:id="@+id/parking"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginsmall"
+            android:background="@drawable/radio_selector_circle"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginsmall"
+            android:paddingTop="@dimen/marginsmall"
+            android:text="Parking"
+            android:textColor="@drawable/rbtn_textcolor_selector"
+            android:textSize="16dp" />
+
+
+        </RadioGroup>
+
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:background="@drawable/rounded_corner_top"
-        android:layout_height="30dp">
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/sno"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:layout_height="wrap_content"
-            android:text="S.no"
-            />
-
-
-        <TextView
-            android:id="@+id/timein"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Txn Time"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-
-            android:layout_height="wrap_content" />
-
-
-        <TextView
-            android:id="@+id/timeout"
-            android:layout_width="0dp"
-            android:textColor="@android:color/white"
-            android:layout_weight="1"
-            android:text="Txn Count"
-            android:gravity="center"
-
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/amount"
-            android:layout_width="0dp"
-            android:textColor="@android:color/white"
-            android:layout_weight="1"
-            android:text="Amount"
-            android:gravity="center"
-
-            android:layout_height="wrap_content" />
-
-        </LinearLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/report_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-
-            >
-
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
 
 </LinearLayout>
