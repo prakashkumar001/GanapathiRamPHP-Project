@@ -89,7 +89,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
     private BluetoothSocket mBluetoothSocket;
     BluetoothDevice mBluetoothDevice;
     public BufferedOutputStream outputStream;
-    ImageView logout;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,7 +142,6 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
 
         parkinglist = (RecyclerView) findViewById(R.id.parking);
-        logout=(ImageView) findViewById(R.id.logout);
         list=new ArrayList<>();
         list.add(new Parking("BIKE",R.mipmap.bike_icon));
         list.add(new Parking("CAR",R.mipmap.car_icon));
@@ -161,12 +160,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         parkinglist.setNestedScrollingEnabled(false);
 
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LogoutDialog();
-            }
-        });
+
 
     }
 
@@ -701,6 +695,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
                     }
                     user.put("venueId", "gprtheatre");
+                    user.put("sessionId",getHelper().getSession().getSessionId());
 
 
 

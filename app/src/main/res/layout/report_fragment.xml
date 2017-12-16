@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+
+        android:layout_marginRight="15dp"
+
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:background="@drawable/rounded_corner_top"
+            android:layout_height="30dp">
+
+            <TextView
+                android:id="@+id/sno"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_height="wrap_content"
+                android:text="S.no"
+                />
+
+
+            <TextView
+                android:id="@+id/timein"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Txn Time"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:id="@+id/timeout"
+                android:layout_width="0dp"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+                android:text="Txn Count"
+                android:gravity="center"
+
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="0dp"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+                android:text="Amount"
+                android:gravity="center"
+
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/report_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+
+            >
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+</LinearLayout>

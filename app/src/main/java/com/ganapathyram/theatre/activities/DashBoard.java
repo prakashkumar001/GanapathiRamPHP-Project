@@ -89,7 +89,7 @@ public class DashBoard extends AppCompatActivity {
     List<Categories> categoriesList;
     LinearLayout layout;
     CartAdapter cartadapter;
-    ImageView logout;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +101,6 @@ public class DashBoard extends AppCompatActivity {
         cartRelativeLayout=(RelativeLayout)findViewById(R.id.cartRelativeLayout);
         radioGroup= (RadioGroup) findViewById(R.id.rg_header);
         layout=(LinearLayout)findViewById(R.id.layout);
-        logout=(ImageView) findViewById(R.id.logout);
         RadioGroup.LayoutParams rprms;
 
 
@@ -174,12 +173,9 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LogoutDialog();
-            }
-        });
+
+
+
 
 
         if(global.cartList.size()>0)
@@ -774,6 +770,7 @@ public class DashBoard extends AppCompatActivity {
 
                     JSONObject result=new JSONObject();
                     result.put("userId",getHelper().getSession().getUserId());
+                    result.put("sessionId",getHelper().getSession().getSessionId());
                     result.put("cartItems",cartList);
                     result.put("totalTaxAmt",totaltaxamount);
                     result.put("orderAmt",orderamount);
