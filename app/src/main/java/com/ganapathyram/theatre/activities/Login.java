@@ -472,7 +472,13 @@ public class Login extends AppCompatActivity {
 
 
 
-                            }/*else
+                            }
+                            Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
+                            address.setId(Long.parseLong("1"));
+                            getHelper().getDaoSession().insertOrReplace(address);
+
+
+                            /*else
                             {
 
                                 if(getHelper().getSession().getEndtime()==null)

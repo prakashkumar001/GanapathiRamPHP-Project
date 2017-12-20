@@ -103,6 +103,7 @@ public class SnacksReports extends Fragment {
                     response = utils.responsedetailsfromserver(requestURL, user.toString());
 
                     System.out.println("SERVER REPLIED:" + response);
+                    dialog.dismiss();
                     //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
                     // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
                 } catch (Exception ex) {
@@ -116,8 +117,7 @@ public class SnacksReports extends Fragment {
             @Override
             protected void onPostExecute(String o) {
 
-                if (dialog != null && dialog.isShowing())
-                    dialog.dismiss();
+
 
                 if (o != null || !o.equalsIgnoreCase("null")) {
 
