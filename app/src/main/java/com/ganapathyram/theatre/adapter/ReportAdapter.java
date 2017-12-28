@@ -29,7 +29,7 @@ import static com.ganapathyram.theatre.helper.Helper.getHelper;
 public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHolder> {
 
 
-    ArrayList<Report> list = new ArrayList<>();
+    List<Report> list = new ArrayList<>();
 
     GlobalClass global;
     ImageLoader loader;
@@ -51,7 +51,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHold
     }
 
 
-    public ReportAdapter(Context context, ArrayList<Report> list) {
+    public ReportAdapter(Context context, List<Report> list) {
 
         this.context=context;
         this.list=list;

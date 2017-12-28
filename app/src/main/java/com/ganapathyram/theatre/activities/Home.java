@@ -47,7 +47,7 @@ import static com.ganapathyram.theatre.helper.Helper.getHelper;
  */
 
 public class Home extends AppCompatActivity {
-    LinearLayout order_food,parking,reports;
+    LinearLayout order_food,parking,reports,admin;
     int backPressedCount = 0;
     GlobalClass global;
     ImageView logout;
@@ -59,6 +59,7 @@ public class Home extends AppCompatActivity {
         parking=(LinearLayout)findViewById(R.id.parking);
         order_food=(LinearLayout)findViewById(R.id.orderfood);
         reports=(LinearLayout)findViewById(R.id.reports);
+        admin=(LinearLayout)findViewById(R.id.admin);
         logout=(ImageView) findViewById(R.id.logout);
        // getDashboard();
         getCategoryList();
@@ -78,6 +79,17 @@ public class Home extends AppCompatActivity {
             public void onClick(View view) {
 
                showDialogClass();
+
+            }
+        });
+
+        admin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i=new Intent(Home.this, AdminDashboard.class);
+                startActivity(i);
+                finish();
 
             }
         });

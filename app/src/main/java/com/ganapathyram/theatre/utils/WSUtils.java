@@ -18,6 +18,8 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static com.ganapathyram.theatre.helper.Helper.getHelper;
+
 /**
  * Created by ashwin on 24/09/2015.
  */
@@ -57,6 +59,7 @@ public class WSUtils {
             URL connectionURL = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) connectionURL.openConnection();
             conn.setRequestMethod(method);
+            conn.setRequestProperty("sessionId", getHelper().getSession().getSessionId());
             conn.setReadTimeout(CONNECTION_TIMEOUT);
             conn.setConnectTimeout(CONNECTION_TIMEOUT);
             if (method.equals(WSUtils.HTTP_POST)) {
@@ -233,6 +236,7 @@ public class WSUtils {
             conn.setReadTimeout(CONNECTION_TIMEOUT);
             conn.setConnectTimeout(CONNECTION_TIMEOUT);
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("sessionId", getHelper().getSession().getSessionId());
             conn.setDoInput(true);
             conn.setDoOutput(true);
             OutputStream os = conn.getOutputStream();
