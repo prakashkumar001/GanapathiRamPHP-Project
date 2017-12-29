@@ -1,9 +1,11 @@
 package com.ganapathyram.theatre.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -305,4 +307,11 @@ transcationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener
         new TranscationListServer().execute();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(AdminDashboard.this,Home.class);
+        startActivity(i);
+        ActivityCompat.finishAffinity(AdminDashboard.this);
+    }
 }

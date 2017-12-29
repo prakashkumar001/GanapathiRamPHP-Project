@@ -418,7 +418,18 @@ public class Login extends AppCompatActivity {
                     object.put("user", user);
                     object.put("venueId", "gprtheatre");
 
+                    if(getHelper().getSession()==null)
+                    {
 
+                        UserSession userSession=new UserSession();
+                        userSession.setStartTime("");
+                        userSession.setSessionId("");
+                        userSession.setUserId(pinNumber);
+                        getHelper().getDaoSession().insert(userSession);
+
+
+
+                    }
                     response = utils.responsedetailsfromserver(requestURL, object.toString());
 
                     System.out.println("SERVER REPLIED:" + response);
@@ -471,6 +482,14 @@ public class Login extends AppCompatActivity {
                                 getHelper().getDaoSession().insert(userSession);
 
 
+
+                            }else {
+                                UserSession userSession=getHelper().getSession();
+                                userSession.setStartTime(login_time);
+                                userSession.setSessionId(sessionId);
+                                userSession.setUserId(pinNumber);
+                                userSession.setId(Long.parseLong("1"));
+                                getHelper().getDaoSession().update(userSession);
 
                             }
                             Wifi_BluetoothAddress address=new Wifi_BluetoothAddress();
