@@ -9,7 +9,7 @@ public class Report {
     public String txnCount;
     public String amount;
 
-    public Report(String txnDate, String txnCount, String amount, String dateStr) {
+    public Report(String txnDate, String txnCount, String amount, String dateStr, String header) {
         this.txnDate = txnDate;
         this.txnCount = txnCount;
         this.amount = amount;

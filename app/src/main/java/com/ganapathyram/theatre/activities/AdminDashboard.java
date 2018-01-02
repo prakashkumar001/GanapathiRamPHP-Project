@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.ganapathyram.theatre.R;
+import com.ganapathyram.theatre.adapter.AdminReportAdapter;
 import com.ganapathyram.theatre.adapter.ReportAdapter;
 import com.ganapathyram.theatre.adapter.UserAdapter;
 import com.ganapathyram.theatre.common.GlobalClass;
@@ -234,7 +235,7 @@ public class AdminDashboard extends AppCompatActivity {
                         String dateStr=data.getString("dateStr");
 
 
-                        parking_list.add(new Report(txnDate,txnCount,amount,dateStr));
+                        parking_list.add(new Report(txnDate,txnCount,amount,dateStr,"false"));
                     }
 
 
@@ -246,7 +247,7 @@ public class AdminDashboard extends AppCompatActivity {
                         String amount=data.getString("amount");
                         String dateStr=data.getString("dateStr");
 
-                        snacks_list.add(new Report(txnDate,txnCount,amount,dateStr));
+                        snacks_list.add(new Report(txnDate,txnCount,amount,dateStr,"false"));
 
 
                     }
@@ -266,7 +267,7 @@ transcationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         if(i==0)
         {
-            ReportAdapter adapter=new ReportAdapter(AdminDashboard.this,snacks_list);
+            AdminReportAdapter adapter=new AdminReportAdapter(AdminDashboard.this,snacks_list);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminDashboard.this);
             transcations.setLayoutManager(layoutManager);
             transcations.setItemAnimator(new DefaultItemAnimator());
@@ -276,7 +277,7 @@ transcationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener
 
         }else if(i==1)
         {
-            ReportAdapter  adapter=new ReportAdapter(AdminDashboard.this,parking_list);
+            AdminReportAdapter  adapter=new AdminReportAdapter(AdminDashboard.this,parking_list);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminDashboard.this);
             transcations.setLayoutManager(layoutManager);
             transcations.setItemAnimator(new DefaultItemAnimator());
