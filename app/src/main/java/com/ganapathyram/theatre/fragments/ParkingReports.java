@@ -124,21 +124,40 @@ public class ParkingReports extends Fragment {
                 if (o != null || !o.equalsIgnoreCase("null")) {
 
                     ArrayList<Report> reportArrayList=new ArrayList<>();
+                    ArrayList<String> sessions=new ArrayList<>();
                     try {
                         JSONObject object = new JSONObject(o);
 
-                        JSONArray payload=object.getJSONArray("payload");
+                        JSONArray sessionList=object.getJSONArray("sessionList");
+                        for(int i=0;i<sessionList.length();i++) {
 
-                        for(int i=0;i<payload.length();i++)
-                        {
-                            JSONObject ob=payload.getJSONObject(i);
-                            String txnDate=ob.getString("txnDate");
-                            String txnCount=ob.getString("txnCount");
-                            String amount=ob.getString("amount");
-                            String dateStr=ob.getString("dateStr");
-                            reportArrayList.add(new Report(txnDate,txnCount,amount,dateStr));
+                            JSONObject session=new JSONObject();
+                            String sessionId=session.getString("sessionId");
+                            sessions.add(sessionId);
 
                         }
+
+
+                        for(int j=0;j<sessions.size();j++)
+                        {
+                            JSONArray payload=object.getJSONArray(sessions.get(j));
+
+                            String headerName="SESSION";
+                            int counts=j+1;
+                            reportArrayList.add(new Report("","","","",String.valueOf(headerName+" "+counts)));
+                            for(int i=0;i<payload.length();i++)
+                            {
+                                JSONObject ob=payload.getJSONObject(i);
+                                String txnDate=ob.getString("txnDate");
+                                String txnCount=ob.getString("txnCount");
+                                String amount=ob.getString("txnAmt");
+                                //String dateStr=ob.getString("dateStr");
+                                reportArrayList.add(new Report(txnDate,txnCount,amount,txnDate,"false"));
+
+                            }
+                        }
+
+
 
                         adapter=new ReportAdapter(getActivity(),reportArrayList);
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());

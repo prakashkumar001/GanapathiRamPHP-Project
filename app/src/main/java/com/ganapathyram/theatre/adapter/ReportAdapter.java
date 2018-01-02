@@ -26,7 +26,7 @@ import static com.ganapathyram.theatre.helper.Helper.getHelper;
  * Created by Prakash on 11/21/2017.
  */
 
-public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHolder> {
+public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     List<Report> list = new ArrayList<>();
@@ -34,6 +34,9 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHold
     GlobalClass global;
     ImageLoader loader;
     Context context;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView sno,txn_date,txn_count,amount;
@@ -60,24 +63,45 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHold
     }
 
     @Override
-    public ReportAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView=null;
+        if (viewType == TYPE_HEADER) {
+             itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.report_header, parent, false);
 
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.report_items, parent, false);
+            return new ReportAdapter.HeaderViewHolder(itemView);
+        } else if (viewType == TYPE_ITEM) {
+             itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.report_items, parent, false);
+
+            return new ReportAdapter.MyViewHolder(itemView);
+        }
+
+        throw new RuntimeException("No match for " + viewType + ".");
 
 
-        return new ReportAdapter.MyViewHolder(itemView);
     }
 
+
+
     @Override
-    public void onBindViewHolder(final ReportAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        Report report = list.get(position);
 
+        if(holder instanceof HeaderViewHolder){
+            ((HeaderViewHolder) holder).headerTitle.setText("");
+                }else if(holder instanceof MyViewHolder){
+            ((MyViewHolder) holder).sno.setText(String.valueOf(position+1));
+            ((MyViewHolder) holder).txn_date.setText(report.txnDate);
+            ((MyViewHolder) holder).txn_count.setText(report.txnCount);
+            ((MyViewHolder) holder).amount.setText(report.amount);
+        }
 
-        holder.sno.setText(String.valueOf(position+1));
+       /* holder.sno.setText(String.valueOf(position+1));
         holder.txn_date.setText(list.get(position).txnDate);
         holder.txn_count.setText(list.get(position).txnCount);
         holder.amount.setText(list.get(position).amount);
-
+*/
         if(position%2 == 0)
         {
             holder.itemView.setBackgroundColor(Color.parseColor("#FEF7E5"));
@@ -96,7 +120,28 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.MyViewHold
         return list.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (isPositionHeader(position))
+            return TYPE_HEADER;
+        return TYPE_ITEM;
+    }
+    private boolean isPositionHeader(int position) {
+        if(list.get(position).header.equalsIgnoreCase("false"))
+        {
+            return false ;
+        }else
+        {
+            return true;
+        }
 
+    }
 
-
+    public class HeaderViewHolder extends RecyclerView.ViewHolder{
+        public TextView headerTitle;
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            headerTitle = (TextView)itemView.findViewById(R.id.header);
+        }
+    }
 }

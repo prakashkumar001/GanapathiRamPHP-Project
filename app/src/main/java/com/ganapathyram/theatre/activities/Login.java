@@ -479,11 +479,11 @@ public class Login extends AppCompatActivity {
                                 userSession.setStartTime(login_time);
                                 userSession.setSessionId(sessionId);
                                 userSession.setUserId(pinNumber);
-                                getHelper().getDaoSession().insert(userSession);
+                                getHelper().getDaoSession().insertOrReplace(userSession);
 
 
 
-                            }else {
+                            }else if(getHelper().getSession()!=null) {
                                 UserSession userSession=getHelper().getSession();
                                 userSession.setStartTime(login_time);
                                 userSession.setSessionId(sessionId);

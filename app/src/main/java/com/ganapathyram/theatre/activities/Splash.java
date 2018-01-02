@@ -49,7 +49,7 @@ public class Splash extends AppCompatActivity implements NetworkConnection {
                 overridePendingTransition(R.anim.fadeinact,
                         R.anim.fadeoutact);
 
-                if(getHelper().getSession()!=null)
+                if(!getHelper().getSession().getSessionId().equalsIgnoreCase(""))
                 {
                     Intent mainIntent = new Intent(
                             Splash.this,
