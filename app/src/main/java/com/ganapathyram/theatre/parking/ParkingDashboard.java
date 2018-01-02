@@ -147,7 +147,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
         list.add(new Parking("CAR",R.mipmap.car_icon));
         list.add(new Parking("AUTO",R.mipmap.auto_icon));
         list.add(new Parking("HEAVY",R.mipmap.truck_icon));
-        list.add(new Parking("CYCLE",R.mipmap.cycle_icon));
+        list.add(new Parking("COMPLEMENTRY",R.mipmap.cycle_icon));
 
 
         final int columns = getResources().getInteger(R.integer.grid_column);
@@ -689,9 +689,9 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                     {
                         user.put("parkingType", "hmv");
 
-                    }else  if(parkingType.equalsIgnoreCase("CYCLE"))
+                    }else  if(parkingType.equalsIgnoreCase("COMPLEMENTRY"))
                     {
-                        user.put("parkingType", "cycle");
+                        user.put("parkingType", "complimentary");
 
                     }
                     user.put("venueId", "gprtheatre");

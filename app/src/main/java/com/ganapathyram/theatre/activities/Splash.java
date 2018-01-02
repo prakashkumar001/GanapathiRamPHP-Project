@@ -6,11 +6,13 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.interfaces.NetworkConnection;
 import com.ganapathyram.theatre.utils.GifImageView;
 import com.ganapathyram.theatre.utils.InternetPermissions;
@@ -49,21 +51,34 @@ public class Splash extends AppCompatActivity implements NetworkConnection {
                 overridePendingTransition(R.anim.fadeinact,
                         R.anim.fadeoutact);
 
-                if(!getHelper().getSession().getSessionId().equalsIgnoreCase(""))
-                {
-                    Intent mainIntent = new Intent(
-                            Splash.this,
-                            Home.class);
-
-                    Splash.this.startActivity(mainIntent);
-
-                }else
+                if(getHelper().getSession()==null)
                 {
                     Intent mainIntent = new Intent(
                             Splash.this,
                             Login.class);
 
                     Splash.this.startActivity(mainIntent);
+
+                }else if(getHelper().getSession()!=null)
+                {
+                    UserSession session=getHelper().getSession();
+                    if(session.getSessionId().equalsIgnoreCase(" "))
+                    {
+                        Intent mainIntent = new Intent(
+                                Splash.this,
+                                Login.class);
+
+                        Splash.this.startActivity(mainIntent);
+
+                    }else
+                    {
+                        Intent mainIntent = new Intent(
+                                Splash.this,
+                                Home.class);
+
+                        Splash.this.startActivity(mainIntent);
+
+                    }
 
                 }
 

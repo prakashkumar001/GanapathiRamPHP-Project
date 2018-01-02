@@ -422,8 +422,8 @@ public class Login extends AppCompatActivity {
                     {
 
                         UserSession userSession=new UserSession();
-                        userSession.setStartTime("");
-                        userSession.setSessionId("");
+                        userSession.setStartTime(" ");
+                        userSession.setSessionId(" ");
                         userSession.setUserId(pinNumber);
                         getHelper().getDaoSession().insert(userSession);
 
