@@ -11,20 +11,31 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class Login {
     @Id
-    public Long pin;
+    public Long id;
+
+    public String pin;
     public String status;
-    @Generated(hash = 1783392859)
-    public Login(Long pin, String status) {
+    public String loginType;
+    @Generated(hash = 738784986)
+    public Login(Long id, String pin, String status, String loginType) {
+        this.id = id;
         this.pin = pin;
         this.status = status;
+        this.loginType = loginType;
     }
     @Generated(hash = 1827378950)
     public Login() {
     }
-    public Long getPin() {
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public String getPin() {
         return this.pin;
     }
-    public void setPin(Long pin) {
+    public void setPin(String pin) {
         this.pin = pin;
     }
     public String getStatus() {
@@ -32,5 +43,11 @@ public class Login {
     }
     public void setStatus(String status) {
         this.status = status;
+    }
+    public String getLoginType() {
+        return this.loginType;
+    }
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
     }
 }

@@ -249,7 +249,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     DashBoard.productList.set(indexpos,product);
                     DashBoard.adapter.notifyDataSetChanged();
                 }*/
-                global.cartList.get(position).setTotalprice(global.cartList.get(position).getPrice());
+                global.cartList.get(position).setTotalprice(String.format("%.2f",global.cartList.get(position).getPrice()));
                 global.cartList.remove(position);
 
 
@@ -262,8 +262,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 DashBoard.adapter.notifyDataSetChanged();
 
 
-                DashBoard.totalprice.setText(rupee+" "+String.valueOf(totalvalue()+totalTaxAmount()));
-                DashBoard.subtotal.setText(String.valueOf(totalvalue()));
+                DashBoard.totalprice.setText(rupee+" "+String.format("%.2f",totalvalue()+totalTaxAmount()));
+                DashBoard.subtotal.setText(String.format("%.2f",totalvalue()));
 
                 if(totalvalue()==0.0)
                 {

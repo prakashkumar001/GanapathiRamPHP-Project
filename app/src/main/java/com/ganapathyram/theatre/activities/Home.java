@@ -62,6 +62,14 @@ public class Home extends AppCompatActivity {
         admin=(LinearLayout)findViewById(R.id.admin);
         logout=(ImageView) findViewById(R.id.logout);
        // getDashboard();
+
+        if(getHelper().getLogin().loginType.equalsIgnoreCase("user"))
+        {
+            admin.setVisibility(View.GONE);
+        }else if(getHelper().getLogin().loginType.equalsIgnoreCase("admin"))
+        {
+            admin.setVisibility(View.VISIBLE);
+        }
         getCategoryList();
         parking.setOnClickListener(new View.OnClickListener() {
             @Override

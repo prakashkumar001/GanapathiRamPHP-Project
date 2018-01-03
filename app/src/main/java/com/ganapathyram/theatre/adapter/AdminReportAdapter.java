@@ -10,11 +10,14 @@ import android.widget.TextView;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.database.UserList;
 import com.ganapathyram.theatre.model.Report;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
 /**
  * Created by Creative IT Works on 02-Jan-18.
@@ -68,7 +71,7 @@ public class AdminReportAdapter  extends RecyclerView.Adapter<AdminReportAdapter
 
 
         holder.sno.setText(String.valueOf(position+1));
-        holder.txn_date.setText(list.get(position).txnDate);
+        holder.txn_date.setText(getUserNamebyId(list.get(position).user).getUserName());
         holder.txn_count.setText(list.get(position).txnCount);
         holder.amount.setText(list.get(position).amount);
 
@@ -91,6 +94,12 @@ public class AdminReportAdapter  extends RecyclerView.Adapter<AdminReportAdapter
     }
 
 
+
+   public UserList getUserNamebyId(String id)
+    {
+
+        return getHelper().getuserName(id);
+    }
 
 
 }

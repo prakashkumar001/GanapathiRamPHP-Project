@@ -15,12 +15,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.adapter.AdminReportAdapter;
 import com.ganapathyram.theatre.adapter.ReportAdapter;
 import com.ganapathyram.theatre.adapter.UserAdapter;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.database.UserList;
 import com.ganapathyram.theatre.model.Report;
 import com.ganapathyram.theatre.model.Users;
 import com.ganapathyram.theatre.utils.WSUtils;
@@ -50,6 +52,7 @@ public class AdminDashboard extends AppCompatActivity {
     ArrayList<Users> userLists;
     List<Report> snacks_list;
     List<Report> parking_list;
+    TextView transcation_date,totalsales;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,9 @@ public class AdminDashboard extends AppCompatActivity {
         transcations = (RecyclerView) findViewById(R.id.transcations);
         userList = (Spinner) findViewById(R.id.selectusers);
         transcationType = (Spinner) findViewById(R.id.transcationType);
+        transcation_date=(TextView) findViewById(R.id.transcation_date);
+        totalsales=(TextView) findViewById(R.id.totalsales);
+        transcation_date.setText(getCurrentDateTime());
 
         GetUserList();
 
@@ -110,12 +116,19 @@ public class AdminDashboard extends AppCompatActivity {
 
                     JSONObject object=new JSONObject(o);
                     JSONArray array=object.getJSONArray("payload");
+                   // getHelper().getDaoSession().insertOrReplace(new Users("all","All Users"));
+
                     for(int i=0;i<array.length();i++)
                     {
                         JSONObject object1=array.getJSONObject(i);
                         String id=object1.getString("userId");
                         String userName=object1.getString("userName");
                         userLists.add(new Users(id,userName));
+
+                        UserList userList=new UserList();
+                        userList.setUserId(id);
+                        userList.setUserName(userName);
+                        getHelper().getDaoSession().insertOrReplace(userList);
 
                     }
                     userLists.add(0,new Users("all","All Users"));
@@ -223,7 +236,7 @@ public class AdminDashboard extends AppCompatActivity {
                 try {
                     JSONObject result=new JSONObject(o);
                     JSONObject payload=result.getJSONObject("payload");
-                    JSONArray parkingArray=payload.getJSONArray("Parking");
+                    final JSONArray parkingArray=payload.getJSONArray("Parking");
                     JSONArray snacks=payload.getJSONArray("Snacks & Beverages");
 
                     for(int i=0;i<parkingArray.length();i++)
@@ -233,9 +246,9 @@ public class AdminDashboard extends AppCompatActivity {
                         String txnCount=data.getString("txnCount");
                         String amount=data.getString("amount");
                         String dateStr=data.getString("dateStr");
+                        String userId=data.getString("userId");
 
-
-                        parking_list.add(new Report(txnDate,txnCount,amount,dateStr,"false"));
+                        parking_list.add(new Report(String.valueOf(i+1),txnDate,txnCount,amount,dateStr,"false","parking",userId));
                     }
 
 
@@ -246,8 +259,9 @@ public class AdminDashboard extends AppCompatActivity {
                         String txnCount=data.getString("txnCount");
                         String amount=data.getString("amount");
                         String dateStr=data.getString("dateStr");
+                        String userId=data.getString("userId");
 
-                        snacks_list.add(new Report(txnDate,txnCount,amount,dateStr,"false"));
+                        snacks_list.add(new Report(String.valueOf(k+1),txnDate,txnCount,amount,dateStr,"false","snacks",userId));
 
 
                     }
@@ -273,7 +287,7 @@ transcationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener
             transcations.setItemAnimator(new DefaultItemAnimator());
             transcations.setAdapter(adapter);
             transcations.setNestedScrollingEnabled(false);
-
+            totalsales.setText(String.format("%.2f",getTotalSales(snacks_list)));
 
         }else if(i==1)
         {
@@ -283,7 +297,7 @@ transcationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener
             transcations.setItemAnimator(new DefaultItemAnimator());
             transcations.setAdapter(adapter);
             transcations.setNestedScrollingEnabled(false);
-
+            totalsales.setText(String.format("%.2f",getTotalSales(parking_list)));
 
         }
     }
@@ -314,5 +328,22 @@ transcationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener
         Intent i=new Intent(AdminDashboard.this,Home.class);
         startActivity(i);
         ActivityCompat.finishAffinity(AdminDashboard.this);
+    }
+
+    public String getCurrentDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    public double getTotalSales(List<Report> list)
+    {
+        double totalValue=0.0;
+        for(int i=0;i<list.size();i++)
+        {
+            totalValue=totalValue+Double.parseDouble(list.get(i).amount);
+        }
+
+        return totalValue;
     }
 }

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.activities.Login;
@@ -27,12 +28,15 @@ import com.ganapathyram.theatre.model.Report;
 import com.ganapathyram.theatre.utils.WSUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
@@ -44,12 +48,16 @@ public class ParkingReports extends Fragment {
     GlobalClass global;
     RecyclerView list;
     ReportAdapter adapter;
+    ArrayList<Report> reportArrayList;
+    TextView totalsales,parkingTypes;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.report_fragment, container, false);
         list=(RecyclerView)view.findViewById(R.id.report_list);
-
+        totalsales=(TextView) view.findViewById(R.id.totalsales);
+        parkingTypes=(TextView) view.findViewById(R.id.timeout);
+        parkingTypes.setText("Type");
         global=new GlobalClass();
         getTranscation();
         return view;
@@ -90,7 +98,7 @@ public class ParkingReports extends Fragment {
                     JSONObject user = new JSONObject();
                     user.put("userId", getHelper().getSession().getUserId());
 
-                    String[] dates=getDateTime().split(" ");
+                   /* String[] dates=getDateTime().split(" ");
                     String[] dmy=dates[0].split("/");
                     String month=dmy[1];
                     String year=dmy[2];
@@ -99,7 +107,7 @@ public class ParkingReports extends Fragment {
                     // user.put("startDate", "01/"+month+"/"+year+ " 12:00:00 AM");
                     user.put("endDate", getDateTime());
                     user.put("sessionId",getHelper().getSession().getSessionId());
-                    user.put("venueUid", "gprtheatre");
+               */     user.put("venueUid", "gprtheatre");
 
 
                     response = utils.responsedetailsfromserver(requestURL, user.toString());
@@ -118,48 +126,45 @@ public class ParkingReports extends Fragment {
             @Override
             protected void onPostExecute(String o) {
 
-                if (dialog != null && dialog.isShowing())
-                    dialog.dismiss();
 
+                dialog.dismiss();
                 if (o != null || !o.equalsIgnoreCase("null")) {
 
-                    ArrayList<Report> reportArrayList=new ArrayList<>();
-                    ArrayList<String> sessions=new ArrayList<>();
+
                     try {
+                        reportArrayList = new ArrayList<>();
+                        ArrayList<String> sessionListKeys = new ArrayList<>();
                         JSONObject object = new JSONObject(o);
 
-                        JSONArray sessionList=object.getJSONArray("sessionList");
-                        for(int i=0;i<sessionList.length();i++) {
+                        JSONObject payload = object.getJSONObject("payload");
 
-                            JSONObject session=new JSONObject();
-                            String sessionId=session.getString("sessionId");
-                            sessions.add(sessionId);
+                        Iterator<String> keys = payload.keys();
 
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            sessionListKeys.add(key);
                         }
 
 
-                        for(int j=0;j<sessions.size();j++)
-                        {
-                            JSONArray payload=object.getJSONArray(sessions.get(j));
+                        for (int j = 0; j < sessionListKeys.size(); j++) {
+                            JSONArray array = payload.getJSONArray(sessionListKeys.get(j));
 
-                            String headerName="SESSION";
-                            int counts=j+1;
-                            reportArrayList.add(new Report("","","","",String.valueOf(headerName+" "+counts)));
-                            for(int i=0;i<payload.length();i++)
-                            {
-                                JSONObject ob=payload.getJSONObject(i);
-                                String txnDate=ob.getString("txnDate");
-                                String txnCount=ob.getString("txnCount");
-                                String amount=ob.getString("txnAmt");
-                                //String dateStr=ob.getString("dateStr");
-                                reportArrayList.add(new Report(txnDate,txnCount,amount,txnDate,"false"));
+                            String headerName = "SESSION";
+                            int counts = j + 1;
+                            reportArrayList.add(new Report("","", "", "0.0", "", String.valueOf(headerName + " " + counts),"parking",null));
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject ob = array.getJSONObject(i);
+                                String txnDate = ob.getString("txnDate");
+                                String amount = ob.getString("txnAmt");
+                                String parkingType = ob.getString("txnType");
+                                // String dateStr=ob.getString("dateStr");
+                                reportArrayList.add(new Report(String.valueOf(i+1),txnDate, parkingType, amount, txnDate, "false","parking",null));
 
                             }
                         }
 
 
-
-                        adapter=new ReportAdapter(getActivity(),reportArrayList);
+                        adapter = new ReportAdapter(getActivity(), reportArrayList);
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
                         list.setLayoutManager(layoutManager);
                         list.setItemAnimator(new DefaultItemAnimator());
@@ -167,17 +172,30 @@ public class ParkingReports extends Fragment {
                         list.setNestedScrollingEnabled(false);
 
 
+                        // toMap(object);
+                        totalsales.setText(String.format("%.2f",getTotalSales()));
 
 
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                }
 
+                }
 
             }
         }
         new getTranscationfromServer().execute();
+    }
+
+    public double getTotalSales()
+    {
+        double totalValue=0.0;
+        for(int i=0;i<reportArrayList.size();i++)
+        {
+            totalValue=totalValue+Double.parseDouble(reportArrayList.get(i).amount);
+        }
+
+        return totalValue;
     }
 }

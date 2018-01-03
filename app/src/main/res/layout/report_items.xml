@@ -27,10 +27,9 @@
     <TextView
         android:id="@+id/txn_count"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:text="Count"
         android:gravity="center"
-
         android:layout_height="wrap_content" />
 
     <TextView

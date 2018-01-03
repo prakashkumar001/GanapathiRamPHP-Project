@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.activities.Login;
@@ -27,12 +28,18 @@ import com.ganapathyram.theatre.model.Report;
 import com.ganapathyram.theatre.utils.WSUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
@@ -44,11 +51,19 @@ public class SnacksReports extends Fragment {
     GlobalClass global;
     RecyclerView list;
     ReportAdapter adapter;
+    ArrayList<Report> reportArrayList;
+    TextView totalsales,types;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.report_fragment, container, false);
         list=(RecyclerView)view.findViewById(R.id.report_list);
+        totalsales=(TextView) view.findViewById(R.id.totalsales);
+        types=(TextView) view.findViewById(R.id.timeout);
+        types.setVisibility(View.GONE);
+
         global=new GlobalClass();
         getTranscation();
         return view;
@@ -118,64 +133,80 @@ public class SnacksReports extends Fragment {
             protected void onPostExecute(String o) {
 
 
+                dialog.dismiss();
 
-                if (o != null || !o.equalsIgnoreCase("null")) {
-
-                    ArrayList<Report> reportArrayList=new ArrayList<>();
-                    ArrayList<String> sessions=new ArrayList<>();
-                    try {
-                        JSONObject object = new JSONObject(o);
-
-                        JSONArray sessionList=object.getJSONArray("sessionList");
-                        for(int i=0;i<sessionList.length();i++) {
-
-                            JSONObject session=new JSONObject();
-                            String sessionId=session.getString("sessionId");
-                            sessions.add(sessionId);
-
-                        }
+               if (o != null || !o.equalsIgnoreCase("null")) {
 
 
-                        for(int j=0;j<sessions.size();j++)
-                        {
-                            JSONArray payload=object.getJSONArray(sessions.get(j));
+                   try {
+                       reportArrayList = new ArrayList<>();
+                       ArrayList<String> sessionListKeys = new ArrayList<>();
+                       JSONObject object = new JSONObject(o);
 
-                            String headerName="SESSION";
-                            int counts=j+1;
-                            reportArrayList.add(new Report("","","","",String.valueOf(headerName+" "+counts)));
-                            for(int i=0;i<payload.length();i++)
-                            {
-                                JSONObject ob=payload.getJSONObject(i);
-                                String txnDate=ob.getString("txnDate");
-                                String txnCount=ob.getString("txnCount");
-                                String amount=ob.getString("txnAmt");
+                       JSONObject payload = object.getJSONObject("payload");
+
+                       Iterator<String> keys = payload.keys();
+
+                       while (keys.hasNext()) {
+                           String key = keys.next();
+                           sessionListKeys.add(key);
+                       }
+
+
+                       for (int j = 0; j < sessionListKeys.size(); j++) {
+                           JSONArray array = payload.getJSONArray(sessionListKeys.get(j));
+
+                           String headerName = "SESSION";
+                           int counts = j + 1;
+                           reportArrayList.add(new Report("","", "", "0.0", "", String.valueOf(headerName + " " + counts),"snacks",null));
+                           for (int i = 0; i < array.length(); i++) {
+                               JSONObject ob = array.getJSONObject(i);
+                               String txnDate = ob.getString("txnDate");
+                               String amount = ob.getString("txnAmt");
                                // String dateStr=ob.getString("dateStr");
-                                reportArrayList.add(new Report(txnDate,txnCount,amount,txnDate,"false"));
+                               reportArrayList.add(new Report(String.valueOf(i+1),txnDate, "", amount, txnDate, "false","snacks",null));
 
-                            }
-                        }
-
-
-
-                        adapter=new ReportAdapter(getActivity(),reportArrayList);
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                        list.setLayoutManager(layoutManager);
-                        list.setItemAnimator(new DefaultItemAnimator());
-                        list.setAdapter(adapter);
-                        list.setNestedScrollingEnabled(false);
+                           }
+                       }
 
 
+                       adapter = new ReportAdapter(getActivity(), reportArrayList);
+                       RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                       list.setLayoutManager(layoutManager);
+                       list.setItemAnimator(new DefaultItemAnimator());
+                       list.setAdapter(adapter);
+                       list.setNestedScrollingEnabled(false);
 
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                       // toMap(object);
 
-                }
 
+                       totalsales.setText(String.format("%.2f",getTotalSales()));
+
+
+                   } catch (JSONException e) {
+                       e.printStackTrace();
+                   }
+
+
+               }
 
             }
         }
         new getTranscationfromServer().execute();
     }
+
+
+
+    public double getTotalSales()
+    {
+        double totalValue=0.0;
+        for(int i=0;i<reportArrayList.size();i++)
+        {
+            totalValue=totalValue+Double.parseDouble(reportArrayList.get(i).amount);
+        }
+
+        return totalValue;
+    }
+
 }

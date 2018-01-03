@@ -89,12 +89,25 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         Report report = list.get(position);
 
         if(holder instanceof HeaderViewHolder){
-            ((HeaderViewHolder) holder).headerTitle.setText("");
+            ((HeaderViewHolder) holder).headerTitle.setText(report.header);
                 }else if(holder instanceof MyViewHolder){
-            ((MyViewHolder) holder).sno.setText(String.valueOf(position+1));
-            ((MyViewHolder) holder).txn_date.setText(report.txnDate);
-            ((MyViewHolder) holder).txn_count.setText(report.txnCount);
-            ((MyViewHolder) holder).amount.setText(report.amount);
+
+            if(report.reportType.equalsIgnoreCase("snacks"))
+            {
+                ((MyViewHolder) holder).sno.setText(report.Sno);
+                ((MyViewHolder) holder).txn_date.setText(report.txnDate);
+                //((MyViewHolder) holder).txn_count.setText(report.txnCount);
+                ((MyViewHolder) holder).txn_count.setVisibility(View.GONE);
+                ((MyViewHolder) holder).amount.setText(report.amount);
+            }else
+            {
+                ((MyViewHolder) holder).txn_count.setVisibility(View.VISIBLE);
+                ((MyViewHolder) holder).sno.setText(report.Sno);
+                ((MyViewHolder) holder).txn_date.setText(report.txnDate);
+                ((MyViewHolder) holder).txn_count.setText(report.txnCount);
+                ((MyViewHolder) holder).amount.setText(report.amount);
+            }
+
         }
 
        /* holder.sno.setText(String.valueOf(position+1));

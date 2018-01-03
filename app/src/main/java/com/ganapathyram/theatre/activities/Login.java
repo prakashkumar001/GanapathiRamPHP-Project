@@ -456,6 +456,7 @@ public class Login extends AppCompatActivity {
 
                         String loginStatus=payload.getString("loginStatus");
                         String userName=payload.getString("userName");
+                        String userType=payload.getString("userType");
 
 
                         if (loginStatus.equalsIgnoreCase("success")) {
@@ -466,8 +467,10 @@ public class Login extends AppCompatActivity {
 
 
                             com.ganapathyram.theatre.database.Login login=new  com.ganapathyram.theatre.database.Login();
-                            login.pin=Long.parseLong(pinNumber);
+                            login.id=Long.parseLong("1");
+                            login.pin=pinNumber;
                             login.status=loginStatus;
+                            login.loginType=userType;
                             getHelper().getDaoSession().insertOrReplace(login);
                             global.UserId=pinNumber;
 
