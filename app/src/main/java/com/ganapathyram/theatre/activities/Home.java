@@ -348,7 +348,7 @@ public class Home extends AppCompatActivity {
 
 
                                 address.setSnack_floor("firstclass");
-                                address.setWifiAddress("192.168.0.13");
+                                address.setWifiAddress("192.168.1.13");
 
 
                             getHelper().getDaoSession().update(address);
@@ -360,7 +360,7 @@ public class Home extends AppCompatActivity {
                             address.setId(Long.parseLong("1"));
 
                                 address.setSnack_floor("firstclass");
-                                address.setWifiAddress("192.168.0.13");
+                                address.setWifiAddress("192.168.1.13");
 
 
                             getHelper().getDaoSession().insert(address);
@@ -380,7 +380,7 @@ public class Home extends AppCompatActivity {
 
 
                             address.setSnack_floor("balcony");
-                            address.setWifiAddress("192.168.0.14");
+                            address.setWifiAddress("192.168.1.14");
 
 
                             getHelper().getDaoSession().update(address);
@@ -392,7 +392,7 @@ public class Home extends AppCompatActivity {
                             address.setId(Long.parseLong("1"));
 
                             address.setSnack_floor("balcony");
-                            address.setWifiAddress("192.168.0.14");
+                            address.setWifiAddress("192.168.1.14");
 
 
                             getHelper().getDaoSession().insert(address);
