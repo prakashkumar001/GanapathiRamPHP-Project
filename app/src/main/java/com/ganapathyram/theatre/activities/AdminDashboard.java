@@ -46,7 +46,7 @@ import static com.ganapathyram.theatre.helper.Helper.getHelper;
 
 public class AdminDashboard extends AppCompatActivity {
     RecyclerView transcations;
-    Spinner userList,transcationType;
+    Spinner userList,transcationType,show_time;
     String user="";
     String type="snacks";
     ArrayList<Users> userLists;
@@ -59,6 +59,7 @@ public class AdminDashboard extends AppCompatActivity {
         setContentView(R.layout.admin_panel);
         transcations = (RecyclerView) findViewById(R.id.transcations);
         userList = (Spinner) findViewById(R.id.selectusers);
+        show_time = (Spinner) findViewById(R.id.show_time);
         transcationType = (Spinner) findViewById(R.id.transcationType);
         transcation_date=(TextView) findViewById(R.id.transcation_date);
         totalsales=(TextView) findViewById(R.id.totalsales);
@@ -110,59 +111,58 @@ public class AdminDashboard extends AppCompatActivity {
 
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
+                if (o == null) {
 
-                userLists=new ArrayList<>();
-                try{
+                } else {
+                    userLists = new ArrayList<>();
+                    try {
 
-                    JSONObject object=new JSONObject(o);
-                    JSONArray array=object.getJSONArray("payload");
-                   // getHelper().getDaoSession().insertOrReplace(new Users("all","All Users"));
+                        JSONObject object = new JSONObject(o);
+                        JSONArray array = object.getJSONArray("payload");
+                        // getHelper().getDaoSession().insertOrReplace(new Users("all","All Users"));
 
-                    for(int i=0;i<array.length();i++)
-                    {
-                        JSONObject object1=array.getJSONObject(i);
-                        String id=object1.getString("userId");
-                        String userName=object1.getString("userName");
-                        userLists.add(new Users(id,userName));
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object1 = array.getJSONObject(i);
+                            String id = object1.getString("userId");
+                            String userName = object1.getString("userName");
+                            userLists.add(new Users(id, userName));
 
-                        UserList userList=new UserList();
-                        userList.setUserId(id);
-                        userList.setUserName(userName);
-                        getHelper().getDaoSession().insertOrReplace(userList);
+                            UserList userList = new UserList();
+                            userList.setUserId(id);
+                            userList.setUserName(userName);
+                            getHelper().getDaoSession().insertOrReplace(userList);
+
+                        }
+                        userLists.add(0, new Users("all", "All Users"));
+                        UserAdapter adapter = new UserAdapter(AdminDashboard.this, userLists);
+                        userList.setAdapter(adapter);
+
+
+                        userList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                                Users users = userLists.get(i);
+                                snacks_list = new ArrayList<>();
+                                parking_list = new ArrayList<>();
+                                getTransactions(users);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> adapterView) {
+
+                            }
+                        });
+
+
+                        //getTransactions();
+
+                    } catch (Exception e) {
 
                     }
-                    userLists.add(0,new Users("all","All Users"));
-                    UserAdapter adapter=new UserAdapter(AdminDashboard.this,userLists);
-                    userList.setAdapter(adapter);
 
-
-                    userList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                            Users users=userLists.get(i);
-                            snacks_list=new ArrayList<>();
-                            parking_list=new ArrayList<>();
-                            getTransactions(users);
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
-
-
-                    //getTransactions();
-
-                }catch (Exception e)
-                {
 
                 }
-
-
-
-
             }
 
 
@@ -232,89 +232,126 @@ public class AdminDashboard extends AppCompatActivity {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
 
+                if (o == null ) {
 
-                try {
-                    JSONObject result=new JSONObject(o);
-                    JSONObject payload=result.getJSONObject("payload");
-                    final JSONArray parkingArray=payload.getJSONArray("Parking");
-                    JSONArray snacks=payload.getJSONArray("Snacks & Beverages");
+                }else {
+                    try {
+                        JSONObject result = new JSONObject(o);
+                        JSONObject payload = result.getJSONObject("payload");
+                        final JSONArray parkingArray = payload.getJSONArray("Parking");
+                        JSONArray snacks = payload.getJSONArray("Snacks & Beverages");
 
-                    for(int i=0;i<parkingArray.length();i++)
-                    {
-                        JSONObject data=parkingArray.getJSONObject(i);
-                        String txnDate=data.getString("txnDate");
-                        String txnCount=data.getString("txnCount");
-                        String amount=data.getString("amount");
-                        String dateStr=data.getString("dateStr");
-                        String userId=data.getString("userId");
+                        for (int i = 0; i < parkingArray.length(); i++) {
+                            JSONObject data = parkingArray.getJSONObject(i);
+                            String txnDate = data.getString("txnDate");
+                            String txnCount = data.getString("txnCount");
+                            String amount = data.getString("amount");
+                            String dateStr = data.getString("dateStr");
+                            String userId = data.getString("userId");
 
-                        parking_list.add(new Report(String.valueOf(i+1),txnDate,txnCount,amount,dateStr,"false","parking",userId));
+                            parking_list.add(new Report(String.valueOf(i + 1), txnDate, txnCount, amount, dateStr, "false", "parking", userId));
+                        }
+
+
+                        for (int k = 0; k < snacks.length(); k++) {
+                            JSONObject data = snacks.getJSONObject(k);
+                            String txnDate = data.getString("txnDate");
+                            String txnCount = data.getString("txnCount");
+                            String amount = data.getString("amount");
+                            String dateStr = data.getString("dateStr");
+                            String userId = data.getString("userId");
+
+                            snacks_list.add(new Report(String.valueOf(k + 1), txnDate, txnCount, amount, dateStr, "false", "snacks", userId));
+
+
+                        }
+
+
+                        ArrayList<String> types = new ArrayList<>();
+                        types.add("Snacks");
+                        types.add("Parking");
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdminDashboard.this, android.R.layout.simple_list_item_1, types);
+                        transcationType.setAdapter(adapter);
+
+
+                        transcationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                if (i == 0) {
+                                    AdminReportAdapter adapter = new AdminReportAdapter(AdminDashboard.this, snacks_list);
+                                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminDashboard.this);
+                                    transcations.setLayoutManager(layoutManager);
+                                    transcations.setItemAnimator(new DefaultItemAnimator());
+                                    transcations.setAdapter(adapter);
+                                    transcations.setNestedScrollingEnabled(false);
+                                    totalsales.setText(String.format("%.2f", getTotalSales(snacks_list)));
+
+                                } else if (i == 1) {
+                                    AdminReportAdapter adapter = new AdminReportAdapter(AdminDashboard.this, parking_list);
+                                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminDashboard.this);
+                                    transcations.setLayoutManager(layoutManager);
+                                    transcations.setItemAnimator(new DefaultItemAnimator());
+                                    transcations.setAdapter(adapter);
+                                    transcations.setNestedScrollingEnabled(false);
+                                    totalsales.setText(String.format("%.2f", getTotalSales(parking_list)));
+
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> adapterView) {
+
+                            }
+                        });
+
+
+
+                        ArrayList<String> showtimes = new ArrayList<>();
+                        showtimes.add("All");
+                        showtimes.add("Morning");
+                        showtimes.add("Afternoon");
+                        showtimes.add("Evening");
+                        showtimes.add("Night");
+                        ArrayAdapter<String> showadapter = new ArrayAdapter<String>(AdminDashboard.this, android.R.layout.simple_list_item_1, showtimes);
+                        show_time.setAdapter(showadapter);
+
+
+                        show_time.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                if (i == 0) {
+                                    AdminReportAdapter adapter = new AdminReportAdapter(AdminDashboard.this, snacks_list);
+                                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminDashboard.this);
+                                    transcations.setLayoutManager(layoutManager);
+                                    transcations.setItemAnimator(new DefaultItemAnimator());
+                                    transcations.setAdapter(adapter);
+                                    transcations.setNestedScrollingEnabled(false);
+                                    totalsales.setText(String.format("%.2f", getTotalSales(snacks_list)));
+
+                                } else if (i == 1) {
+                                    AdminReportAdapter adapter = new AdminReportAdapter(AdminDashboard.this, parking_list);
+                                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminDashboard.this);
+                                    transcations.setLayoutManager(layoutManager);
+                                    transcations.setItemAnimator(new DefaultItemAnimator());
+                                    transcations.setAdapter(adapter);
+                                    transcations.setNestedScrollingEnabled(false);
+                                    totalsales.setText(String.format("%.2f", getTotalSales(parking_list)));
+
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> adapterView) {
+
+                            }
+                        });
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
-
-                    for(int k=0;k<snacks.length();k++)
-                    {
-                        JSONObject data=snacks.getJSONObject(k);
-                        String txnDate=data.getString("txnDate");
-                        String txnCount=data.getString("txnCount");
-                        String amount=data.getString("amount");
-                        String dateStr=data.getString("dateStr");
-                        String userId=data.getString("userId");
-
-                        snacks_list.add(new Report(String.valueOf(k+1),txnDate,txnCount,amount,dateStr,"false","snacks",userId));
-
-
-                    }
-
-
-                    ArrayList<String> types=new ArrayList<>();
-                    types.add("Snacks");
-                    types.add("Parking");
-                    ArrayAdapter<String> adapter=new ArrayAdapter<String>(AdminDashboard.this,android.R.layout.simple_list_item_1,types);
-                    transcationType.setAdapter(adapter);
-
-
-
-
-transcationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if(i==0)
-        {
-            AdminReportAdapter adapter=new AdminReportAdapter(AdminDashboard.this,snacks_list);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminDashboard.this);
-            transcations.setLayoutManager(layoutManager);
-            transcations.setItemAnimator(new DefaultItemAnimator());
-            transcations.setAdapter(adapter);
-            transcations.setNestedScrollingEnabled(false);
-            totalsales.setText(String.format("%.2f",getTotalSales(snacks_list)));
-
-        }else if(i==1)
-        {
-            AdminReportAdapter  adapter=new AdminReportAdapter(AdminDashboard.this,parking_list);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminDashboard.this);
-            transcations.setLayoutManager(layoutManager);
-            transcations.setItemAnimator(new DefaultItemAnimator());
-            transcations.setAdapter(adapter);
-            transcations.setNestedScrollingEnabled(false);
-            totalsales.setText(String.format("%.2f",getTotalSales(parking_list)));
-
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-});
-
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-
-
             }
 
 

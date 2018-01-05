@@ -721,7 +721,9 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
 
-                if (o != null || !o.equalsIgnoreCase("null")) {
+                if (o == null ) {
+
+                }else {
 
                     try {
                         JSONObject object=new JSONObject(o);
@@ -854,7 +856,9 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
 
-                if (o != null || !o.equalsIgnoreCase("null")) {
+                if (o == null ) {
+
+                }else {
                     try {
                         JSONObject object = new JSONObject(o);
 

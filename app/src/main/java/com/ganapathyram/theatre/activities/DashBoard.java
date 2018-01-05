@@ -259,7 +259,8 @@ public class DashBoard extends AppCompatActivity {
         // gst_amount = ( adapter.totalvalue() * 18 ) / 100;
 
         double total=totalvalue()+totalTaxAmount();
-        totalprice.setText(String.format("%.2f",total));
+        double roundofftotal=Math.round(total);
+        totalprice.setText(String.format("%.2f",roundofftotal));
 
 
 
@@ -555,12 +556,19 @@ public class DashBoard extends AppCompatActivity {
 
         global.cartList.clear();
 
-        Products(categoriesList.get(0).categoryUid);
+       /* Products(categoriesList.get(0).categoryUid);
         radioGroup.check(0);
+        */
+
         //adapter=new ProductListAdapter(DashBoard.this,productList);
         //productListView.setAdapter(adapter);
         orderdialog.dismiss();
         cartcount.setText("0");
+
+        Intent i=new Intent(DashBoard.this,DashBoard.class);
+        overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
+        startActivity(i);
+        finish();
 
 
     }
@@ -610,7 +618,9 @@ public class DashBoard extends AppCompatActivity {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
 
-                if (o != null || !o.equalsIgnoreCase("null")) {
+                if (o == null ) {
+
+                }else {
 
                     try {
                         JSONObject object=new JSONObject(o);
@@ -774,7 +784,7 @@ public class DashBoard extends AppCompatActivity {
                     result.put("cartItems",cartList);
                     result.put("totalTaxAmt",totaltaxamount);
                     result.put("orderAmt",orderamount);
-                    result.put("totalCartAmt",totalamount);
+                    result.put("totalCartAmt",Math.round(totalamount));
                     result.put("venueUid","gprtheatre");
                     result.put("classId",getHelper().getAddress().getSnack_floor());
 
@@ -806,7 +816,9 @@ public class DashBoard extends AppCompatActivity {
                 if (dialog != null && dialog.isShowing())
 
 
-                if (o != null || !o.equalsIgnoreCase("null")) {
+                    if (o == null ) {
+
+                    }else {
 
                     try {
                         JSONObject object=new JSONObject(o);
@@ -1326,7 +1338,9 @@ public class DashBoard extends AppCompatActivity {
             if (dialog != null && dialog.isShowing())
                 dialog.dismiss();
 
-            if (o != null || !o.equalsIgnoreCase("null")) {
+            if (o == null ) {
+
+            }else {
                 try {
                     JSONObject object = new JSONObject(o);
 

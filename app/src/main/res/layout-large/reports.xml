@@ -1,121 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ccc"
-
+    android:fitsSystemWindows="true"
     >
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:orientation="horizontal"
-
-            android:background="@android:color/black"
-            >
-
-            <android.support.v4.widget.Space
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:layout_height="wrap_content">
-            </android.support.v4.widget.Space>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:textSize="16dp"
-                android:textColor="@android:color/white"
-                android:layout_height="match_parent"
-                android:text="Timesheet"
-                />
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:layout_height="?attr/actionBarSize">
-
-
-
-            </LinearLayout>
-        </LinearLayout>
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="10dp"
-            android:src="@mipmap/appbar_icon"
-            />
-    </FrameLayout>
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_margin="15dp"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#ccc"
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:background="@drawable/rounded_corner_top"
-        android:layout_height="30dp">
-
-        <TextView
-            android:id="@+id/sno"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:layout_height="wrap_content"
-            android:text="S.no"
-            />
-
-
-        <TextView
-            android:id="@+id/timein"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Txn Time"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-
-            android:layout_height="wrap_content" />
-
-
-        <TextView
-            android:id="@+id/timeout"
-            android:layout_width="0dp"
-            android:textColor="@android:color/white"
-            android:layout_weight="1"
-            android:text="Txn Count"
-            android:gravity="center"
-
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/amount"
-            android:layout_width="0dp"
-            android:textColor="@android:color/white"
-            android:layout_weight="1"
-            android:text="Amount"
-            android:gravity="center"
-
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/report_list"
+        >
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:layout_height="wrap_content">
 
-            >
 
-        </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:orientation="horizontal"
+
+                android:background="@android:color/black"
+                >
+
+                <android.support.v4.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|end"
+                    android:layout_height="wrap_content">
+                </android.support.v4.widget.Space>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    android:textColor="@android:color/white"
+                    android:layout_height="match_parent"
+                    android:text="Timesheet"
+                    />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|end"
+                    android:layout_height="?attr/actionBarSize">
+
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/appbar_icon"
+                />
+        </FrameLayout>
+
+        <RadioGroup
+            android:id="@+id/radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_title"
+            android:layout_marginLeft="@dimen/marginsmall"
+            android:layout_marginRight="@dimen/marginsmall"
+            android:layout_marginTop="@dimen/categorytext"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/snacks"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginsmall"
+                android:background="@drawable/radio_selector_circle"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingBottom="@dimen/marginsmall"
+                android:paddingTop="@dimen/marginsmall"
+                android:text="Snacks"
+                android:textColor="@drawable/rbtn_textcolor_selector"
+                android:textSize="16dp" />
+
+            <RadioButton
+                android:id="@+id/parking"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginsmall"
+                android:background="@drawable/radio_selector_circle"
+                android:button="@null"
+                android:checked="false"
+                android:gravity="center"
+                android:paddingBottom="@dimen/marginsmall"
+                android:paddingTop="@dimen/marginsmall"
+                android:text="Parking"
+                android:textColor="@drawable/rbtn_textcolor_selector"
+                android:textSize="16dp" />
+
+
+        </RadioGroup>
+
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+
     </LinearLayout>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -135,7 +135,9 @@ public class SnacksReports extends Fragment {
 
                 dialog.dismiss();
 
-               if (o != null || !o.equalsIgnoreCase("null")) {
+                if (o == null ) {
+
+                }else {
 
 
                    try {
@@ -152,20 +154,20 @@ public class SnacksReports extends Fragment {
                            sessionListKeys.add(key);
                        }
 
-
+                       int count =1;
                        for (int j = 0; j < sessionListKeys.size(); j++) {
                            JSONArray array = payload.getJSONArray(sessionListKeys.get(j));
 
-                           String headerName = "SESSION";
+                           /*String headerName = "SESSION";
                            int counts = j + 1;
                            reportArrayList.add(new Report("","", "", "0.0", "", String.valueOf(headerName + " " + counts),"snacks",null));
-                           for (int i = 0; i < array.length(); i++) {
+              */             for (int i = 0; i < array.length(); i++) {
                                JSONObject ob = array.getJSONObject(i);
                                String txnDate = ob.getString("txnDate");
                                String amount = ob.getString("txnAmt");
                                // String dateStr=ob.getString("dateStr");
-                               reportArrayList.add(new Report(String.valueOf(i+1),txnDate, "", amount, txnDate, "false","snacks",null));
-
+                               reportArrayList.add(new Report(String.valueOf(count),txnDate, "", amount, txnDate, "false","snacks",null));
+                               count=count+1;
                            }
                        }
 

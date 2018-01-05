@@ -249,7 +249,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     DashBoard.productList.set(indexpos,product);
                     DashBoard.adapter.notifyDataSetChanged();
                 }*/
-                global.cartList.get(position).setTotalprice(String.format("%.2f",global.cartList.get(position).getPrice()));
+                double totalPrice=Double.parseDouble(global.cartList.get(position).getPrice());
+                global.cartList.get(position).setTotalprice(String.format("%.2f",totalPrice));
                 global.cartList.remove(position);
 
 

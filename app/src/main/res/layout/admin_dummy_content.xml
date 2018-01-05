@@ -8,7 +8,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:background="@drawable/rounded_corner_top"
         android:layout_height="30dp">
 
         <TextView
@@ -16,7 +15,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:layout_height="wrap_content"
             android:text="S.no"
             />
@@ -28,7 +27,7 @@
             android:layout_weight="1"
             android:text="User"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
 
             android:layout_height="wrap_content" />
 
@@ -36,7 +35,7 @@
         <TextView
             android:id="@+id/timeout"
             android:layout_width="0dp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:layout_weight="1"
             android:text="Txn Count"
             android:gravity="center"
@@ -46,7 +45,7 @@
         <TextView
             android:id="@+id/amount"
             android:layout_width="0dp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:layout_weight="1"
             android:text="Amount"
             android:gravity="center"
