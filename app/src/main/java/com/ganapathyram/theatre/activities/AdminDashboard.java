@@ -133,7 +133,7 @@ public class AdminDashboard extends AppCompatActivity {
                             getHelper().getDaoSession().insertOrReplace(userList);
 
                         }
-                        userLists.add(0, new Users("all", "All Users"));
+                        userLists.add(0, new Users("all", "All"));
                         UserAdapter adapter = new UserAdapter(AdminDashboard.this, userLists);
                         userList.setAdapter(adapter);
 
@@ -162,7 +162,7 @@ public class AdminDashboard extends AppCompatActivity {
                         showtimes.add("Noon");
                         showtimes.add("Evening");
                         showtimes.add("Night");
-                        ArrayAdapter<String> showadapter = new ArrayAdapter<String>(AdminDashboard.this, android.R.layout.simple_list_item_1, showtimes);
+                        ArrayAdapter<String> showadapter = new ArrayAdapter<String>(AdminDashboard.this, R.layout.spinner_item,R.id.textview, showtimes);
                         show_time.setAdapter(showadapter);
 
 
@@ -317,7 +317,7 @@ public class AdminDashboard extends AppCompatActivity {
                         ArrayList<String> types = new ArrayList<>();
                         types.add("Snacks");
                         types.add("Parking");
-                        ArrayAdapter<String> foodadapter = new ArrayAdapter<String>(AdminDashboard.this, android.R.layout.simple_list_item_1, types);
+                        ArrayAdapter<String> foodadapter = new ArrayAdapter<String>(AdminDashboard.this, R.layout.spinner_item,R.id.textview, types);
                         transcationType.setAdapter(foodadapter);
 
 

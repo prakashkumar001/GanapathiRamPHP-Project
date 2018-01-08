@@ -525,7 +525,10 @@ public class Home extends AppCompatActivity {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
 
-                if (o != null || !o.equalsIgnoreCase("null")) {
+                if (o == null ) {
+
+                }else {
+
                     try {
                         JSONObject object = new JSONObject(o);
 
