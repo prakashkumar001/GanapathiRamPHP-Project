@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -89,6 +90,7 @@ public class DashBoard extends AppCompatActivity {
     List<Categories> categoriesList;
     LinearLayout layout;
     CartAdapter cartadapter;
+
 
 
     @Override
@@ -290,7 +292,7 @@ public class DashBoard extends AppCompatActivity {
 
         return new ProductAvailable(false,-1);
     }
-    public void usbPrinter(Dialog orderdialog,String orderUId,Dialog serverDialog)
+    public void usbPrinter(ProgressDialog serverDialog,Dialog orderdialog,String orderUId)
     {
 
 
@@ -516,6 +518,7 @@ public class DashBoard extends AppCompatActivity {
 
             serverDialog.dismiss();
 
+
             if ( ESCPOSConst.CMP_SUCCESS != result )
             {
                 // Transaction Error
@@ -740,6 +743,8 @@ public class DashBoard extends AppCompatActivity {
                 dialog.setMessage(getString(R.string.loading));
                 dialog.setCancelable(false);
                 dialog.show();
+
+
             }
 
             @Override
@@ -829,7 +834,7 @@ public class DashBoard extends AppCompatActivity {
 
                         if(orderStatus.equalsIgnoreCase("COMPLETED"))
                         {
-                            usbPrinter(orderdialog,orderUId,dialog);
+                            usbPrinter(dialog,orderdialog,orderUId);
                         }
                     } catch (JSONException e) {
 

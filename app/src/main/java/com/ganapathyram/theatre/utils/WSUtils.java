@@ -110,7 +110,7 @@ public class WSUtils {
                 return response;
             } else {
 
-                return BADRESPONSE + getErrorMessage(responseCode);
+                return String.valueOf(responseCode);
             }
 
         } catch (Exception e) {

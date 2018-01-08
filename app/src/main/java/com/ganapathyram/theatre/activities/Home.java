@@ -281,33 +281,50 @@ public class Home extends AppCompatActivity {
                 if (o == null ) {
 
                 }else {
-                    try {
-                        JSONObject object = new JSONObject(o);
-                        JSONArray array=object.getJSONArray("payload");
 
-                        for(int i=0;i<array.length();i++)
-                        {
-                            JSONObject data=array.getJSONObject(i);
-                            String categoryId=data.getString("categoryId");
-                            String categoryName=data.getString("categoryName");
-                            String categoryUid=data.getString("categoryUid");
-                            String active=data.getString("active");
+                    if(response.equalsIgnoreCase("401"))
+                    {
+                        getHelper().getDaoSession().deleteAll(UserSession.class);
+                        Intent i=new Intent(Home.this,Login.class);
+                        startActivity(i);
+                        ActivityCompat.finishAffinity(Home.this);
 
-                            Categories categories=new Categories();
-                            categories.categoryId=(Long.parseLong(categoryId));
-                            categories.categoryName=categoryName;
-                            categories.categoryUid=categoryUid;
-                            categories.active=active;
 
-                            getHelper().getDaoSession().insertOrReplace(categories);
+                    }else
+                    {
+                        try {
+                            JSONObject object = new JSONObject(o);
+                            JSONArray array=object.getJSONArray("payload");
 
+                            for(int i=0;i<array.length();i++)
+                            {
+                                JSONObject data=array.getJSONObject(i);
+                                String categoryId=data.getString("categoryId");
+                                String categoryName=data.getString("categoryName");
+                                String categoryUid=data.getString("categoryUid");
+                                String active=data.getString("active");
+
+                                Categories categories=new Categories();
+                                categories.categoryId=(Long.parseLong(categoryId));
+                                categories.categoryName=categoryName;
+                                categories.categoryUid=categoryUid;
+                                categories.active=active;
+
+                                getHelper().getDaoSession().insertOrReplace(categories);
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
+
+
+
+
+
 
                 }
 
