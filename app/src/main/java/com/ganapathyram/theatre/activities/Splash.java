@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.ganapathyram.theatre.R;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.database.IpSettings;
 import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.interfaces.NetworkConnection;
 import com.ganapathyram.theatre.utils.GifImageView;
@@ -93,5 +94,24 @@ public class Splash extends AppCompatActivity implements NetworkConnection {
     @Override
     public void isInternetOn(String message) {
 
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(getHelper().getIpAddress()==null)
+        {
+            IpSettings ipSettings=new IpSettings();
+            ipSettings.setId(Long.parseLong("1"));
+            ipSettings.setBaseIpAdress("192.168.1.114");
+            getHelper().getDaoSession().insertOrReplace(ipSettings);
+
+            global.deFaultBaseUrl="http://"+getHelper().getIpAddress().getBaseIpAdress();
+        }else
+        {
+            global.deFaultBaseUrl="http://"+getHelper().getIpAddress().getBaseIpAdress();
+        }
     }
 }

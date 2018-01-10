@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.database.DaoSession;
+import com.ganapathyram.theatre.database.IpSettings;
+import com.ganapathyram.theatre.database.IpSettingsDao;
 import com.ganapathyram.theatre.database.Login;
 import com.ganapathyram.theatre.database.LoginDao;
 import com.ganapathyram.theatre.database.ParkingDao;
@@ -130,6 +132,16 @@ public class Helper {
 
 
     }
+
+    public IpSettings getIpAddress() {
+
+        QueryBuilder<IpSettings> qb = daoSession.queryBuilder(IpSettings.class);
+        qb.limit(1);
+        return  qb.unique();
+
+
+    }
+
 
     private String getDateTime() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy hh:mm:aa");

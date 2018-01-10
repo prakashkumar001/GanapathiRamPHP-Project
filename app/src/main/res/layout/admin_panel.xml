@@ -3,8 +3,45 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
     <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:orientation="horizontal"
+        android:background="@android:color/black"
+        >
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:textColor="@android:color/white"
+            android:layout_height="match_parent"
+            android:text="Admin Reports"
+            />
+
+
+
+    </LinearLayout>
+    </FrameLayout>
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/appbar_icon"
+        />
+
+    <LinearLayout
+        android:layout_below="@id/header"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -26,7 +63,6 @@
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="@drawable/admin_user_bg"
                 android:layout_height="wrap_content">
 
 
@@ -34,25 +70,11 @@
                 android:id="@+id/selectusers"
                 android:layout_width="0dp"
                 android:layout_weight=".7"
-                android:background="@android:color/transparent"
                 android:layout_height="50dp">
 
             </Spinner>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_weight=".01"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="5dp"
-                    android:background="@android:color/black"
-                    android:layout_height="30dp" />
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight=".23"
-                    android:layout_gravity="center"
-                    android:background="@drawable/download"
-                    android:layout_height="20dp" />
             </LinearLayout>
             <Space
                 android:layout_width="0dp"
@@ -91,7 +113,7 @@
 
                 <ImageView
                     android:layout_width="0dp"
-                    android:layout_weight=".23"
+                    android:layout_weight=".18"
                     android:layout_gravity="center"
                     android:background="@drawable/download"
                     android:layout_height="20dp" />
@@ -131,7 +153,7 @@
 
                 <ImageView
                     android:layout_width="0dp"
-                    android:layout_weight=".23"
+                    android:layout_weight=".18"
                     android:layout_gravity="center"
                     android:background="@drawable/download"
                     android:layout_height="20dp" />

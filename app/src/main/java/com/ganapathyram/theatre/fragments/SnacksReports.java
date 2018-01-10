@@ -96,7 +96,7 @@ public class SnacksReports extends Fragment {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "product/transactions/";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "product/transactions/";
                     WSUtils utils = new WSUtils();
 
                     // JSONObject object = new JSONObject();

@@ -16,6 +16,8 @@ import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
 
+import static com.ganapathyram.theatre.helper.Helper.getHelper;
+
 /**
  * Created by Prakash on 9/19/2017.
  */
@@ -24,11 +26,12 @@ public class GlobalClass extends Application{
 
     public static String UserId="";
     public static String UserName="";
+    public static String deFaultBaseUrl="";//http://192.168.0.114
     public static ArrayList<com.ganapathyram.theatre.database.Product> cartList=new ArrayList<>();
     public static String BadgeCount="0";
     public static String bluetoothStatus=null;
-    public static String ApiBaseUrl="http://192.168.0.114:8080/services/";    //192.168.1.110
-    public static String ApiImageUrl="http://192.168.0.114:8080/images/";
+    public static String ApiBaseUrl=":8080/services/";    //192.168.1.110
+    public static String ApiImageUrl=":8080/images/";
 
     Database db;
     public DaoSession daoSession;
@@ -68,5 +71,7 @@ public class GlobalClass extends Application{
         ImageLoader.getInstance().init(config);
 
     }
+
+
 
 }

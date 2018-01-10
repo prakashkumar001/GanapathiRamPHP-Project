@@ -1,5 +1,6 @@
 package com.ganapathyram.theatre.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -9,11 +10,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -22,7 +27,9 @@ import android.widget.Toast;
 
 import com.ganapathyram.theatre.MainActivity;
 import com.ganapathyram.theatre.R;
+import com.ganapathyram.theatre.adapter.CartAdapter;
 import com.ganapathyram.theatre.common.GlobalClass;
+import com.ganapathyram.theatre.database.IpSettings;
 import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
 import com.ganapathyram.theatre.utils.InternetPermissions;
@@ -35,6 +42,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.R.attr.data;
 import static com.ganapathyram.theatre.common.GlobalClass.UserName;
@@ -49,7 +58,7 @@ import static com.ganapathyram.theatre.helper.Helper.getHelper;
 public class Login extends AppCompatActivity {
 
     Button bOne, bTwo, bThree, bFour, bFive, bSix, bSeven, bEight, bNine, bZero, submit;
-    ImageView iv_delete;
+    ImageView iv_delete,settings;
     TextView one, two, three, four;
     Button login;
     String pinNumber;
@@ -105,6 +114,7 @@ public class Login extends AppCompatActivity {
         layout=(LinearLayout)findViewById(R.id.layout);
 
         iv_delete = (ImageView) findViewById(R.id.iv_delete);
+        settings= (ImageView) findViewById(R.id.settings);
         //select_class=(Spinner)findViewById(R.id.select_class);
 
        /* TextView marque = (TextView) this.findViewById(R.id.marquee_text);
@@ -147,6 +157,13 @@ public class Login extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), "Please Enter Correct PIN", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ipSettings();
             }
         });
 
@@ -407,7 +424,7 @@ public class Login extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "user/login";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "user/login";
                     WSUtils utils = new WSUtils();
 
                     JSONObject object = new JSONObject();
@@ -589,5 +606,81 @@ public class Login extends AppCompatActivity {
         Date date = new Date();
         return dateFormat.format(date);
     }
+    public void ipSettings() {
+
+        // custom dialog
+        final Dialog dialog = new Dialog(Login.this, R.style.ThemeDialogCustom);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.settings_dialog);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        Button submit=(Button)dialog.findViewById(R.id.submit);
+        final ImageView close=(ImageView)dialog.findViewById(R.id.iv_close);
+        final EditText ipaddress=(EditText)dialog.findViewById(R.id.ipaddress);
+        if(getHelper().getIpAddress()!=null)
+        {
+            ipaddress.setText(getHelper().getIpAddress().getBaseIpAdress());
+        }
+
+
+        DisplayMetrics metrics =getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        dialog.show();
+        dialog.getWindow().setLayout((8 * width) / 10, (8 * height) / 10);
+
+
+
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+            }
+        });
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Pattern IP_ADDRESS
+                        = Pattern.compile(
+                        "((25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(25[0-5]|2[0-4]"
+                                + "[0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]"
+                                + "[0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}"
+                                + "|[1-9][0-9]|[0-9]))");
+                Matcher matcher = IP_ADDRESS.matcher(ipaddress.getText().toString());
+                if (matcher.matches()) {
+                    // ip is correct
+
+                    if(getHelper().getIpAddress()!=null)
+                    {
+                        IpSettings ipSettings=getHelper().getIpAddress();
+                        ipSettings.setBaseIpAdress(ipaddress.getText().toString());
+                        ipSettings.setId(Long.parseLong("1"));
+                        getHelper().getDaoSession().update(ipSettings);
+
+                    }
+                    global.deFaultBaseUrl="http://"+getHelper().getIpAddress().getBaseIpAdress();
+                    dialog.dismiss();
+                }else
+                {
+                    Toast.makeText(Login.this,"Ip Address Invalid",Toast.LENGTH_SHORT).show();
+
+                }
+
+
+            }
+        });
+
+
+
+
+        dialog.show();
+
+
+
+    }
+
 
 }

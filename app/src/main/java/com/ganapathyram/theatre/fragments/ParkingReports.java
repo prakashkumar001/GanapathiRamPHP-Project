@@ -91,7 +91,7 @@ public class ParkingReports extends Fragment {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "parking/transactions/";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "parking/transactions/";
                     WSUtils utils = new WSUtils();
 
                     // JSONObject object = new JSONObject();

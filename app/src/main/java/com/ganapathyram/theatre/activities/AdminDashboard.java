@@ -90,7 +90,7 @@ public class AdminDashboard extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = GlobalClass.ApiBaseUrl + "user/details";
+                    String requestURL = GlobalClass.deFaultBaseUrl+GlobalClass.ApiBaseUrl + "user/details";
                     WSUtils utils = new WSUtils();
 
 
@@ -229,7 +229,7 @@ public class AdminDashboard extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = GlobalClass.ApiBaseUrl + "transaction/details";
+                    String requestURL = GlobalClass.deFaultBaseUrl+ GlobalClass.ApiBaseUrl + "transaction/details";
                     WSUtils utils = new WSUtils();
                     // JSONObject object = new JSONObject();
                     JSONObject user = new JSONObject();

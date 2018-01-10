@@ -252,7 +252,7 @@ public class Home extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "product/categories";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "product/categories";
                     WSUtils utils = new WSUtils();
 
 
@@ -494,7 +494,7 @@ public class Home extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "user/logout";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "user/logout";
                     WSUtils utils = new WSUtils();
 
                     // JSONObject object = new JSONObject();

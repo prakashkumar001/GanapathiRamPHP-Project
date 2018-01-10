@@ -668,7 +668,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "parking/confirm";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "parking/confirm";
                     WSUtils utils = new WSUtils();
                     JSONObject user = new JSONObject();
                     user.put("userId", getHelper().getSession().getUserId());
@@ -825,7 +825,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "user/logout";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "user/logout";
                     WSUtils utils = new WSUtils();
 
                     // JSONObject object = new JSONObject();

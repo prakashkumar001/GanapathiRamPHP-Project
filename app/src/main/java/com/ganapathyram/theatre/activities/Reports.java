@@ -148,7 +148,7 @@ public class Reports extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.ApiBaseUrl + "user/logout";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "user/logout";
                     WSUtils utils = new WSUtils();
 
                     // JSONObject object = new JSONObject();
