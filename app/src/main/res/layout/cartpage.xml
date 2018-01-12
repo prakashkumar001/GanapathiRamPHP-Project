@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="@drawable/cart_dialog"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
 
     >
 
@@ -106,9 +106,8 @@
                 android:layout_width="0dp"
                 android:layout_weight=".5"
                 android:hint="Seat No."
-                android:textAllCaps="true"
                 android:maxLength="3"
-                android:inputType="text"
+                android:inputType="textCapCharacters"
                 android:paddingLeft="10dp"
                 android:background="@drawable/login_editext_bg"
                 android:layout_height="50dp" />

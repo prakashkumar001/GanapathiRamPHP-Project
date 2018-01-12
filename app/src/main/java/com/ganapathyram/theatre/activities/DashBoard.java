@@ -21,6 +21,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -207,9 +208,6 @@ public class DashBoard extends AppCompatActivity {
         //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         String rupee = getResources().getString(R.string.Rupee_symbol);
 
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        int width = metrics.widthPixels;
-        int height = metrics.heightPixels;
         dialog.show();
         //dialog.getWindow().setLayout((8 * width) / 10, (8 * height) / 10);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -218,6 +216,7 @@ public class DashBoard extends AppCompatActivity {
          totalprice=(TextView) dialog.findViewById(R.id.total_price) ;
         seatno=(EditText) dialog.findViewById(R.id.seatno) ;
         subtotal=(TextView) dialog.findViewById(R.id.sub_total) ;
+        seatno.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         seatno.setText("");
         ImageView iv_close=(ImageView)dialog.findViewById(R.id.iv_close);
@@ -241,18 +240,7 @@ public class DashBoard extends AppCompatActivity {
 
                 Checkout(dialog,seatno.getText().toString());
 
-                //dummyprint();
 
-              /*  Toast.makeText(getApplicationContext(),"Payment Successfull",Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-
-
-                usbPrinter();
-                //finish();
-                global.cartList.clear();
-                adapter=new ProductListAdapter(DashBoard.this,productList);
-                productListView.setAdapter(adapter);
-                cartcount.setText("0");*/
             }
         });
         final int columns = getResources().getInteger(R.integer.grid_column);
@@ -562,6 +550,7 @@ public class DashBoard extends AppCompatActivity {
 
 
             serverDialog.dismiss();
+            orderdialog.dismiss();
             // Connect Error
             Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
 
@@ -836,7 +825,7 @@ public class DashBoard extends AppCompatActivity {
                             usbPrinter(dialog, orderdialog, orderUId, seatno);
                         }
                     } catch (JSONException e) {
-
+                        dialog.dismiss();
                         try {
                             JSONObject jsonObject=new JSONObject(o);
                             String payload=jsonObject.getString("payload");
@@ -854,7 +843,7 @@ public class DashBoard extends AppCompatActivity {
 
                                 }
 
-                                dialog.dismiss();
+
                                 lowStockDialog(lowstock);
 
 
@@ -1309,11 +1298,6 @@ public class DashBoard extends AppCompatActivity {
             }
 
 
-
-            // Connect Error
-            Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
-
-            copydatabasetosd();
 
 
 
