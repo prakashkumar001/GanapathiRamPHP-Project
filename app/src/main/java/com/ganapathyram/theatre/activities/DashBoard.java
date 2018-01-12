@@ -198,6 +198,8 @@ public class DashBoard extends AppCompatActivity {
 
         // custom dialog
         final Dialog dialog = new Dialog(DashBoard.this, R.style.ThemeDialogCustom);
+
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.cartpage);
@@ -209,8 +211,8 @@ public class DashBoard extends AppCompatActivity {
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
         dialog.show();
-        dialog.getWindow().setLayout((8 * width) / 10, (8 * height) / 10);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        //dialog.getWindow().setLayout((8 * width) / 10, (8 * height) / 10);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
          cartview=(RecyclerView)dialog.findViewById(R.id.cartlist) ;
          totalprice=(TextView) dialog.findViewById(R.id.total_price) ;
@@ -522,14 +524,15 @@ public class DashBoard extends AppCompatActivity {
 
 
 
-            // Disconnect
-            posPtr.disconnect();
 
             if(!seatno.equalsIgnoreCase(""))
             {
-            customerCopy(serverDialog,orderdialog,orderUId,seatno);
+            customerCopy(serverDialog,orderdialog,orderUId,seatno,posPtr,result);
             }else
             {
+                // Disconnect
+                posPtr.disconnect();
+
                 serverDialog.dismiss();
 
                 global.cartList.clear();
@@ -1106,49 +1109,22 @@ public class DashBoard extends AppCompatActivity {
 }
 
 
-    public void customerCopy(ProgressDialog serverDialog,Dialog orderdialog,String orderUId,String seatno)
+    public void customerCopy(ProgressDialog serverDialog,Dialog orderdialog,String orderUId,String seatno,ESCPOSPrinter posPtr,int result)
     {
 
 
 
-        String  address=getHelper().getAddress().getWifiAddress();
 
-
-        // Constructor
-        ESCPOSPrinter posPtr = new ESCPOSPrinter();
-
-        // Set context
-        posPtr.setContext( DashBoard.this );
-
-        // Get Address
-        // UsbDevice usbDevice = null;												// null (Automatic detection)
-        //
-        // Connect
-        int result = posPtr.connect( ESCPOSConst.CMP_PORT_WiFi, address );		// Android 3.1 ( API Level 12 ) or later
-        if ( ESCPOSConst.CMP_SUCCESS == result )
-        {
             Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.printer_logo);
             // Character set
             posPtr.setEncoding( "ISO-8859-1" );		// Latin-1
-            //posPtr.setEncoding( "Shift_JIS" );	// Japanese 日本語を印字する場合は、この行を有効にしてください.
 
-            // Start Transaction ( Batch )
             posPtr.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
-            /*ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayBitmapStream);
-            byte[] b = byteArrayBitmapStream.toByteArray();
-            posPtr.printBitmap(b,150,150,);*/
 
-            // posPtr.printBitmap(bitmap,100,200);
             posPtr.printBitmap(bitmap,
                     150,
                     ESCPOSConst.CMP_ALIGNMENT_CENTER);
 
-          /*  double gst=gst_amount/2;
-             gstvalue=String.format("%.2f", gst);
-*/
-
-            // Print Text 33AAJFGO516A1Z7
             posPtr.printText( "Customer Bill" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( "Seat No: "+seatno + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
@@ -1181,8 +1157,6 @@ public class DashBoard extends AppCompatActivity {
             }
 
 
-            // posPtr.printText( "- Sample Print 1 -\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_2HEIGHT );
-            // posPtr.printText( "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             if(snacks.size()>0)
             {
@@ -1307,14 +1281,6 @@ public class DashBoard extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
             double grand=totalvalue()+totalTaxAmount();
             double grTotal=Math.round(grand);
 
@@ -1341,28 +1307,20 @@ public class DashBoard extends AppCompatActivity {
                 // Transaction Error
                 Toast.makeText( DashBoard.this, "Transaction Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
             }
-        }
-        else
-        {
 
 
-            serverDialog.dismiss();
+
             // Connect Error
             Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
 
             copydatabasetosd();
-        }
+
 
 
 
         global.cartList.clear();
 
-       /* Products(categoriesList.get(0).categoryUid);
-        radioGroup.check(0);
-        */
 
-        //adapter=new ProductListAdapter(DashBoard.this,productList);
-        //productListView.setAdapter(adapter);
         orderdialog.dismiss();
         cartcount.setText("0");
 
