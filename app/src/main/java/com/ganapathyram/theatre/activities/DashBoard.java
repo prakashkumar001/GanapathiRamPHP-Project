@@ -340,7 +340,13 @@ public class DashBoard extends AppCompatActivity {
 
             posPtr.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( "Bill.no: "+printError.orderId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( leftRightAlign("Name  :"+global.UserName,getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( leftRightAlign("Name  :"+getHelper().getLogin().getUserName(),getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+            if(!printError.seatno.equalsIgnoreCase(""))
+            {
+                printError.escposPrinter.printText( "Seat No: "+seatno + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+            }
 
             ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
@@ -1131,7 +1137,6 @@ public class DashBoard extends AppCompatActivity {
                     ESCPOSConst.CMP_ALIGNMENT_CENTER);
 
         printError.escposPrinter.printText( "Customer Bill" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-        printError.escposPrinter.printText( "Seat No: "+seatno + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
         printError.escposPrinter.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
         printError.escposPrinter.printText( "101, LB Road, Adyar Chennai, 600020" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
@@ -1139,9 +1144,11 @@ public class DashBoard extends AppCompatActivity {
 
         printError.escposPrinter.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
         printError.escposPrinter.printText( "Bill.no: "+printError.orderId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-        printError.escposPrinter.printText( leftRightAlign("Name  :"+global.UserName,getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( leftRightAlign("Name  :"+getHelper().getLogin().getUserName(),getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-            ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
+        printError.escposPrinter.printText( "Seat No: "+seatno + "\n", ESCPOSConst.CMP_FNT_BOLD, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+
+        ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> water=new ArrayList<>();
             for(int k=0;k<global.cartList.size();k++)

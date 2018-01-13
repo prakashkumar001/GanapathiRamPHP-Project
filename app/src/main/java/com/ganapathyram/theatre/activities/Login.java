@@ -489,6 +489,7 @@ public class Login extends AppCompatActivity {
                             login.id=Long.parseLong("1");
                             login.pin=pinNumber;
                             login.status=loginStatus;
+                            login.userName=userName;
                             login.loginType=userType;
                             getHelper().getDaoSession().insertOrReplace(login);
                             global.UserId=pinNumber;
