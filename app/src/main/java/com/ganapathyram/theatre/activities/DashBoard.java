@@ -49,6 +49,7 @@ import com.ganapathyram.theatre.database.Categories;
 import com.ganapathyram.theatre.database.LocalSalesError;
 import com.ganapathyram.theatre.database.UserSession;
 import com.ganapathyram.theatre.database.Wifi_BluetoothAddress;
+import com.ganapathyram.theatre.model.PrintError;
 import com.ganapathyram.theatre.model.Product;
 import com.ganapathyram.theatre.model.ProductAvailable;
 import com.ganapathyram.theatre.utils.InternetPermissions;
@@ -94,6 +95,7 @@ public class DashBoard extends AppCompatActivity {
     LinearLayout layout;
     CartAdapter cartadapter;
     EditText seatno;
+    PrintError printError;
 
 
 
@@ -289,7 +291,7 @@ public class DashBoard extends AppCompatActivity {
 
         return new ProductAvailable(false,-1);
     }
-    public void usbPrinter(ProgressDialog serverDialog,Dialog orderdialog,String orderUId,String seatno)
+    public void usbPrinter(PrintError printError)
     {
 
 
@@ -337,7 +339,7 @@ public class DashBoard extends AppCompatActivity {
             posPtr.printText( "Phone: 044 2441 7424" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             posPtr.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( "Bill.no: "+orderUId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+            posPtr.printText( "Bill.no: "+printError.orderId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             posPtr.printText( leftRightAlign("Name  :"+global.UserName,getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
@@ -513,20 +515,22 @@ public class DashBoard extends AppCompatActivity {
 
 
 
-            if(!seatno.equalsIgnoreCase(""))
+            if(!printError.seatno.equalsIgnoreCase(""))
             {
-            customerCopy(serverDialog,orderdialog,orderUId,seatno,posPtr,result);
+                printError.result=result;
+                printError.escposPrinter=posPtr;
+            customerCopy(printError);
             }else
             {
                 // Disconnect
                 posPtr.disconnect();
 
-                serverDialog.dismiss();
+                printError.progressdialog.dismiss();
 
                 global.cartList.clear();
 
 
-                orderdialog.dismiss();
+                printError.orderdialog.dismiss();
                 cartcount.setText("0");
 
                 Intent i=new Intent(DashBoard.this,DashBoard.class);
@@ -548,11 +552,11 @@ public class DashBoard extends AppCompatActivity {
         else
         {
 
-
-            serverDialog.dismiss();
-            orderdialog.dismiss();
+            reprintDialog(printError);
+           // printError.progressdialog.dismiss();
+           // printError.orderdialog.dismiss();
             // Connect Error
-            Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+           // Toast.makeText( DashBoard.this, "Connect or Printer Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
 
             copydatabasetosd();
         }
@@ -822,7 +826,8 @@ public class DashBoard extends AppCompatActivity {
                         String orderUId=object1.getString("orderUId");
 
                         if(orderStatus.equalsIgnoreCase("COMPLETED") ) {
-                            usbPrinter(dialog, orderdialog, orderUId, seatno);
+                            printError=new PrintError(dialog,orderdialog,orderUId,seatno);
+                            usbPrinter(printError);
                         }
                     } catch (JSONException e) {
                         dialog.dismiss();
@@ -974,7 +979,7 @@ public class DashBoard extends AppCompatActivity {
     }
 
 
-    void LogoutDialog() {
+    void reprintDialog(final PrintError printError) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 DashBoard.this);
 
@@ -983,17 +988,17 @@ public class DashBoard extends AppCompatActivity {
 
         // set dialog message
         alertDialogBuilder
-                .setMessage("Are you sure want to exit ?")
+                .setMessage("Are you sure want to Reprint Receipt ?")
                 .setCancelable(false)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Reprint", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close
                         // current activity
-
-                        logout();
-
-
                         dialog.dismiss();
+                        usbPrinter(printError);
+
+
+
                     }
                 })
 
@@ -1001,7 +1006,18 @@ public class DashBoard extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+                global.cartList.clear();
+
+
+                cartcount.setText("0");
+
+                printError.progressdialog.dismiss();
+                printError.orderdialog.dismiss();
                 dialogInterface.dismiss();
+                Intent intent=new Intent(DashBoard.this,DashBoard.class);
+                overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
+                startActivity(intent);
+                finish();
 
             }
         });
@@ -1098,7 +1114,7 @@ public class DashBoard extends AppCompatActivity {
 }
 
 
-    public void customerCopy(ProgressDialog serverDialog,Dialog orderdialog,String orderUId,String seatno,ESCPOSPrinter posPtr,int result)
+    public void customerCopy(PrintError printError)
     {
 
 
@@ -1106,24 +1122,24 @@ public class DashBoard extends AppCompatActivity {
 
             Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.printer_logo);
             // Character set
-            posPtr.setEncoding( "ISO-8859-1" );		// Latin-1
+        printError.escposPrinter.setEncoding( "ISO-8859-1" );		// Latin-1
 
-            posPtr.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
+        printError.escposPrinter.transactionPrint( ESCPOSConst.CMP_TP_TRANSACTION );
 
-            posPtr.printBitmap(bitmap,
+        printError.escposPrinter.printBitmap(bitmap,
                     150,
                     ESCPOSConst.CMP_ALIGNMENT_CENTER);
 
-            posPtr.printText( "Customer Bill" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( "Seat No: "+seatno + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( "Customer Bill" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( "Seat No: "+seatno + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-            posPtr.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( "101, LB Road, Adyar Chennai, 600020" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( "Phone: 044 2441 7424" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( "Ganapathy Ram Theatre" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( "101, LB Road, Adyar Chennai, 600020" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( "Phone: 044 2441 7424" + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-            posPtr.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( "Bill.no: "+orderUId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-            posPtr.printText( leftRightAlign("Name  :"+global.UserName,getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( "GST.no : 33AAJFGO516A1Z7" + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( "Bill.no: "+printError.orderId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText( leftRightAlign("Name  :"+global.UserName,getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
@@ -1172,18 +1188,18 @@ public class DashBoard extends AppCompatActivity {
                 String gstvalue=String.format("%.2f", gst);
 
 
-                posPtr.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText(data.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("CGST "+gstpercent+"% "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.printText("SGST "+gstpercent+"% "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("CGST "+gstpercent+"% "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("SGST "+gstpercent+"% "+gstvalue+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
 
-                posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.writeData(ESCPOSDriver.LINE_FEED);
+                printError.escposPrinter.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.writeData(ESCPOSDriver.LINE_FEED);
             }
 
 
@@ -1213,17 +1229,17 @@ public class DashBoard extends AppCompatActivity {
                 String gstvalue2=String.format("%.2f", gst);
 
                 String gstpercent=String.format("%.2f",Double.parseDouble(beverages.get(0).getTaxPercent())/2);
-                posPtr.printText(data2.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText(data2.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("CGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.printText("SGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal2))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("CGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("SGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal2))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
 
-                posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.writeData(ESCPOSDriver.LINE_FEED);
+                printError.escposPrinter.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.writeData(ESCPOSDriver.LINE_FEED);
             }
 
 
@@ -1254,17 +1270,17 @@ public class DashBoard extends AppCompatActivity {
                 String gstvalue2=String.format("%.2f", gst);
 
                 String gstpercent=String.format("%.2f",Double.parseDouble(water.get(0).getTaxPercent())/2);
-                posPtr.printText(data3.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText(data3.toString(),ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("-----------------------------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
 
-                posPtr.printText("CGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.printText("SGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal2))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("CGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("SGST "+gstpercent+"% "+gstvalue2+ "\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.printText("TOTAL "+String.format("%.2f",Double.parseDouble(subtotal2))+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
 
-                posPtr.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
-                posPtr.writeData(ESCPOSDriver.LINE_FEED);
+                printError.escposPrinter.printText("------------"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER,ESCPOSConst.CMP_FNT_DEFAULT,ESCPOSConst.CMP_TXT_1WIDTH| ESCPOSConst.CMP_TXT_1HEIGHT );
+                printError.escposPrinter.writeData(ESCPOSDriver.LINE_FEED);
             }
 
 
@@ -1273,28 +1289,30 @@ public class DashBoard extends AppCompatActivity {
             double grand=totalvalue()+totalTaxAmount();
             double grTotal=Math.round(grand);
 
-            posPtr.printText("GRAND TOTAL "+String.format("%.2f",grTotal)+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText("GRAND TOTAL "+String.format("%.2f",grTotal)+"\n", ESCPOSConst.CMP_ALIGNMENT_RIGHT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
 
 
 
-            posPtr.printText("Thank you for coming"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        printError.escposPrinter.printText("Thank you for coming"+"\n",ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
             // Partial Cut with Pre-Feed
-            posPtr.cutPaper( ESCPOSConst.CMP_CUT_PARTIAL_PREFEED );
+        printError.escposPrinter.cutPaper( ESCPOSConst.CMP_CUT_PARTIAL_PREFEED );
 
             // End Transaction ( Batch )
-            result = posPtr.transactionPrint( ESCPOSConst.CMP_TP_NORMAL );
+            printError.result = printError.escposPrinter.transactionPrint( ESCPOSConst.CMP_TP_NORMAL );
 
             // Disconnect
-            posPtr.disconnect();
+        printError.escposPrinter.disconnect();
 
-            serverDialog.dismiss();
+        printError.progressdialog.dismiss();
 
 
-            if ( ESCPOSConst.CMP_SUCCESS != result )
+            if ( ESCPOSConst.CMP_SUCCESS != printError.result )
             {
                 // Transaction Error
-                Toast.makeText( DashBoard.this, "Transaction Error : " + Integer.toString( result ), Toast.LENGTH_LONG ).show();
+              //  Toast.makeText( DashBoard.this, "Transaction Error : " + Integer.toString( printError.result ), Toast.LENGTH_LONG ).show();
+
+                reprintDialog(printError);
             }
 
 
@@ -1305,7 +1323,7 @@ public class DashBoard extends AppCompatActivity {
         global.cartList.clear();
 
 
-        orderdialog.dismiss();
+        printError.orderdialog.dismiss();
         cartcount.setText("0");
 
         Intent i=new Intent(DashBoard.this,DashBoard.class);
@@ -1315,6 +1333,9 @@ public class DashBoard extends AppCompatActivity {
 
 
     }
+
+
+
 
 }
 
