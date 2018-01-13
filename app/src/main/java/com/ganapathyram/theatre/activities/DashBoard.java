@@ -344,7 +344,7 @@ public class DashBoard extends AppCompatActivity {
 
             if(!printError.seatno.equalsIgnoreCase(""))
             {
-                printError.escposPrinter.printText( "Seat No: "+seatno + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+                posPtr.printText( "Seat No: "+printError.seatno + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
             }
 
@@ -524,6 +524,7 @@ public class DashBoard extends AppCompatActivity {
             if(!printError.seatno.equalsIgnoreCase(""))
             {
                 printError.result=result;
+                printError.seatno=seatno.getText().toString();
                 printError.escposPrinter=posPtr;
             customerCopy(printError);
             }else
@@ -1146,8 +1147,11 @@ public class DashBoard extends AppCompatActivity {
         printError.escposPrinter.printText( "Bill.no: "+printError.orderId + "\n", ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
         printError.escposPrinter.printText( leftRightAlign("Name  :"+getHelper().getLogin().getUserName(),getDateTime()+"\n") , ESCPOSConst.CMP_ALIGNMENT_LEFT, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
-        printError.escposPrinter.printText( "Seat No: "+seatno + "\n", ESCPOSConst.CMP_FNT_BOLD, ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
+        if(!printError.seatno.equalsIgnoreCase(""))
+        {
+            printError.escposPrinter.printText( "Seat No: "+printError.seatno + "\n", ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD, ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT );
 
+        }
         ArrayList<com.ganapathyram.theatre.database.Product> snacks=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> beverages=new ArrayList<>();
             ArrayList<com.ganapathyram.theatre.database.Product> water=new ArrayList<>();
