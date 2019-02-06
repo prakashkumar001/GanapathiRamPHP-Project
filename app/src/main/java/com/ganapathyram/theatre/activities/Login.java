@@ -434,6 +434,7 @@ public class Login extends AppCompatActivity {
 
                     object.put("user", user);
                     object.put("venueId", "gprtheatre");
+                    Log.e("Request", "Request" + object);
 
                     if(getHelper().getSession()==null)
                     {
@@ -450,6 +451,7 @@ public class Login extends AppCompatActivity {
                     response = utils.responsedetailsfromserver(requestURL, object.toString());
 
                     System.out.println("SERVER REPLIED:" + response);
+                    Toast.makeText(getApplicationContext(),response,Toast.LENGTH_SHORT).show();
                     //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
                     // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
                 } catch (Exception ex) {
