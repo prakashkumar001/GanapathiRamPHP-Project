@@ -30,8 +30,10 @@ public class GlobalClass extends Application{
     public static ArrayList<com.ganapathyram.theatre.database.Product> cartList=new ArrayList<>();
     public static String BadgeCount="0";
     public static String bluetoothStatus=null;
-    public static String ApiBaseUrl=":8080/services/";    //192.168.1.110
-    public static String ApiImageUrl=":8080/images/";
+   // public static String ApiBaseUrl=":8080/services/";    //192.168.1.110
+    public static String ApiImageUrl="/theatre/snacks/";
+    public static String ApiBaseUrl="/theatre/";
+
 
     Database db;
     public DaoSession daoSession;

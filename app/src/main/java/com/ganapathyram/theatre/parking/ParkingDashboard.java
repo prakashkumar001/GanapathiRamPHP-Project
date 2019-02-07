@@ -301,55 +301,11 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
     public void onItemClick(int position) {
 
+        String name=list.get(position).name;
+
+        getParkingStatus(name);
 
 
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null) {
-            Toast.makeText(ParkingDashboard.this, "Bluetooth not connected", 2000).show();
-        } else {
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(
-                        BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent,
-                        REQUEST_ENABLE_BT);
-            } else {
-
-                if(bluetoothStatus!=null)
-                {
-
-                    String name=list.get(position).name;
-
-                        getParkingStatus(name);
-                       // printCheck(R.drawable.bike_bw,name);
-                    /*else  if(name.equalsIgnoreCase("CAR PARKING"))
-                    {
-                        getParkingStatus(name);
-                        printCheck(R.drawable.car_bw,name);
-
-                    }else  if(name.equalsIgnoreCase("AUTO PARKING"))
-                    {
-                        getParkingStatus(name);
-                        printCheck(R.drawable.auto_bw,name);
-                    }else  if(name.equalsIgnoreCase("HEAVY PARKING"))
-                    {
-                        printCheck(R.drawable.bus_bw,name);
-                    }else  if(name.equalsIgnoreCase("CYCLE PARKING"))
-                    {
-                        printCheck(R.drawable.bike_bw,name);
-                    }*/
-
-
-                }else
-                {
-                    ListPairedDevices();
-                    Intent connectIntent = new Intent(ParkingDashboard.this,
-                            DeviceListActivity.class);
-                    startActivityForResult(connectIntent,
-                            REQUEST_CONNECT_DEVICE);
-                }
-
-            }
-        }
 
         }
 
@@ -668,7 +624,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
                 try {
 
 
-                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "parking/confirm";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "parking.php";
                     WSUtils utils = new WSUtils();
                     JSONObject user = new JSONObject();
                     user.put("userId", getHelper().getSession().getUserId());
@@ -699,6 +655,7 @@ public class ParkingDashboard extends AppCompatActivity implements Runnable{
 
 
 
+                    Log.e("Request", "Request" + user);
 
 
                     response = utils.responsedetailsfromserver(requestURL, user.toString());

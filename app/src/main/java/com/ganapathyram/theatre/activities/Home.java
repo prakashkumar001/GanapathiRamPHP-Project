@@ -63,13 +63,13 @@ public class Home extends AppCompatActivity {
         logout=(ImageView) findViewById(R.id.logout);
        // getDashboard();
 
-        if(getHelper().getLogin().loginType.equalsIgnoreCase("user"))
+      /*  if(getHelper().getLogin().loginType.equalsIgnoreCase("user"))
         {
             admin.setVisibility(View.GONE);
         }else if(getHelper().getLogin().loginType.equalsIgnoreCase("admin"))
         {
             admin.setVisibility(View.VISIBLE);
-        }
+        }*/
         getCategoryList();
         parking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,7 +252,9 @@ public class Home extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "product/categories";
+                    //String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "product/categories";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "category_list.php";
+
                     WSUtils utils = new WSUtils();
 
 

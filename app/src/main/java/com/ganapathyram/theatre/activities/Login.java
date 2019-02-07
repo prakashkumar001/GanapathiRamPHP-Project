@@ -424,7 +424,9 @@ public class Login extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "user/login";
+                    //String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "user/login";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "login.php";
+                    Log.e("URL","URLlogin"+requestURL);
                     WSUtils utils = new WSUtils();
 
                     JSONObject object = new JSONObject();
@@ -451,7 +453,7 @@ public class Login extends AppCompatActivity {
                     response = utils.responsedetailsfromserver(requestURL, object.toString());
 
                     System.out.println("SERVER REPLIED:" + response);
-                    Toast.makeText(getApplicationContext(),response,Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(),response,Toast.LENGTH_SHORT).show();
                     //{"status":"success","message":"Registration Successful","result":[],"statusCode":200}
                     // {"status":"success","message":"Logged in Successfully","result":{"statusCode":4},"statusCode":200}
                 } catch (Exception ex) {
@@ -482,6 +484,15 @@ public class Login extends AppCompatActivity {
 
                         if (loginStatus.equalsIgnoreCase("success")) {
                             global.UserName=userName;
+
+                            //jhhgajshdgjwa
+                            Intent intent = new Intent(
+                                    Login.this,
+                                    Home.class);
+
+                            Login.this.startActivity(intent);
+                            //hjgassdhyiedgasijh
+
                             JSONObject session=payload.getJSONObject("session");
                             String sessionId=session.getString("sessionId");
                             String login_time=session.getString("loggedInTime");
@@ -582,11 +593,11 @@ public class Login extends AppCompatActivity {
 
 */
 
-                            Intent intent = new Intent(
+                            /*Intent intent = new Intent(
                                     Login.this,
                                     Home.class);
 
-                            Login.this.startActivity(intent);
+                            Login.this.startActivity(intent);*/
 
 
                         }

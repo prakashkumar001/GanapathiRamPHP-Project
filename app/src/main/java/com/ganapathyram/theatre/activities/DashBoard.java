@@ -596,7 +596,10 @@ public class DashBoard extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "product/details/"+CateroryId+"/"+getHelper().getSession().getUserId();
+                    //String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "product/details/"+CateroryId+"/"+getHelper().getSession().getUserId();
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "product_list.php?id="+CateroryId;
+
+                    Log.e("URL","URL"+requestURL);
                     WSUtils utils = new WSUtils();
 
 
@@ -751,8 +754,9 @@ public class DashBoard extends AppCompatActivity {
                 try {
 
 
-                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "cart/checkout";
+                    String requestURL = global.deFaultBaseUrl+global.ApiBaseUrl + "checkout.php";
                     WSUtils utils = new WSUtils();
+                    Log.e("URLCheckout","URLCheckout"+requestURL);
 
                     JSONObject object;
 
@@ -796,6 +800,7 @@ public class DashBoard extends AppCompatActivity {
                     arraydetails.put(result);
 
 
+                    Log.e("Request","Request"+arraydetails.toString());
 
                     //usbPrinter();
 
